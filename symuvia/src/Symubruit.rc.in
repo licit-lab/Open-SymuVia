@@ -1,0 +1,118 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winresrc.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Français (France) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRA)
+LANGUAGE LANG_FRENCH, SUBLANG_FRENCH
+#pragma code_page(1252)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION @SYMUVIA_VERSION_MAJOR@,@SYMUVIA_VERSION_MINOR@,@SYMUVIA_VERSION_REVISION@,@SYMUVIA_VERSION_BUILD@
+ PRODUCTVERSION @SYMUVIA_VERSION_MAJOR@,@SYMUVIA_VERSION_MINOR@,@SYMUVIA_VERSION_REVISION@,@SYMUVIA_VERSION_BUILD@
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x21L
+#else
+ FILEFLAGS 0x20L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040c04e4"
+        BEGIN
+            VALUE "CompanyName", "IFSTTAR/ENTPE-LICIT ; IFSTTAR-LTE"
+            VALUE "FileDescription", "Librairie SymuVia"
+            VALUE "FileVersion", "@SYMUVIA_VERSION_MAJOR@.@SYMUVIA_VERSION_MINOR@.@SYMUVIA_VERSION_REVISION@.@SYMUVIA_VERSION_BUILD@"
+            VALUE "InternalName", "SymuVia.dll"
+            VALUE "LegalCopyright", " (c) <IFSTTAR/ENTPE>. Tous droits réservés."
+            VALUE "OriginalFilename", "SymuVia.dll"
+            VALUE "ProductName", "SYMUVIA"
+            VALUE "ProductVersion", "@SYMUVIA_VERSION_MAJOR@.@SYMUVIA_VERSION_MINOR@.@SYMUVIA_VERSION_REVISION@.@SYMUVIA_VERSION_BUILD@"
+            VALUE "SpecialBuild", "1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x40c, 1252
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// REGISTRY
+//
+
+IDR_SYMUBRUIT           REGISTRY                "Symubruit.rgs"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_PROJNAME            "SymuVia"
+END
+
+#endif    // Français (France) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

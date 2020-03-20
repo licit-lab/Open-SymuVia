@@ -1,0 +1,11 @@
+HKCR
+{
+	NoRemove AppID
+	{
+		'%APPID%' = s 'Symubruit'
+		'Symubruit.DLL'
+		{
+			val AppID = s '%APPID%'
+		}
+	}
+}

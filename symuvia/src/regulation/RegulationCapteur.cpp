@@ -1,0 +1,71 @@
+#include "stdafx.h"
+#include "RegulationCapteur.h"
+#include "PythonUtils.h"
+
+#include "../reseau.h"
+#include "../SystemUtil.h"
+#include "../Logger.h"
+
+#include <xercesc/dom/DOMNode.hpp>
+
+#include <boost/python/exec.hpp>
+
+using namespace boost::python;
+
+XERCES_CPP_NAMESPACE_USE
+
+RegulationCapteur::RegulationCapteur(void)
+{
+}
+
+
+RegulationCapteur::~RegulationCapteur(void)
+{
+}
+
+std::string RegulationCapteur::getBuiltinModuleName()
+{
+    return SCRIPTS_SENSOR_MODULE_NAME;
+}
+
+void RegulationCapteur::initialize(Reseau * pReseau, DOMNode * pNodeCapteur)
+{
+    // Appel à la méthode mère
+    RegulationElement::initialize(pReseau, pNodeCapteur);
+
+    // récupération du nom de fonction correspondant à la fonction du capteur
+    GetXmlAttributeValue(pNodeCapteur, "id", m_strID, pReseau->GetLogger());
+}
+
+// mise à jour des mesures du capteur
+void RegulationCapteur::update()
+{
+    try
+    {
+        object globals = m_pReseau->GetPythonUtils()->getMainModule()->attr("__dict__");
+        dict locals;
+        locals["network"] = ptr(m_pReseau);
+        locals["parameters"] = m_FuncParamDict;
+        locals["context"] = m_ContextDict;
+        m_Result = eval((getModuleName() + "." + m_strFunc + "(context,network,parameters)\n").c_str(), globals, locals);
+    }
+    catch( error_already_set )
+    {
+        m_pReseau->log() << Logger::Error << m_pReseau->GetPythonUtils()->getPythonErrorString() << std::endl;
+        m_pReseau->log() << Logger::Info; // rebascule en mode INFO pour ne pas avoir à reprendre tous les appels aux log en précisant que c'est des INFO. à supprimer si on reprend tous les appels au log.
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Sérialisation
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+template void RegulationCapteur::serialize(boost::archive::xml_woarchive & ar, const unsigned int version);
+template void RegulationCapteur::serialize(boost::archive::xml_wiarchive & ar, const unsigned int version);
+
+template<class Archive>
+void RegulationCapteur::serialize(Archive & ar, const unsigned int version)
+{
+    ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(RegulationElement);
+
+    ar & BOOST_SERIALIZATION_NVP(m_strID);
+}
