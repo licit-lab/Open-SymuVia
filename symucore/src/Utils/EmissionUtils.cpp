@@ -2,14 +2,16 @@
 #include "SymuCoreConstants.h"
 #include <math.h>
 
+#include <limits>
+
 using namespace SymuCore;
 
 const std::vector<double> SymuCore::EmissionUtils::getCOPERTvector(Pollutant p)
 {
-	std::vector<double> p_CO = { -0.00000078455,0.00018777,-0.0140,0.4799 };
-	std::vector<double> p_FC = { -0.00021068, 0.0437,-2.9795,111.2141 };
-	std::vector<double> p_NOx = { -0.00000044286,0.00019039,-0.0196,0.9783 };
-	std::vector<double> p_PM = { -0.00000000010531,0.0000024216,-0.00031248,0.0221 };
+	std::vector<double> p_CO = {-0.00000078455, 0.00018777, -0.0140, 0.4799};
+	std::vector<double> p_FC = {-0.00021068, 0.0437, -2.9795, 111.2141};
+	std::vector<double> p_NOx = {-0.00000044286, 0.00019039, -0.0196, 0.9783};
+	std::vector<double> p_PM = {-0.00000000010531, 0.0000024216, -0.00031248, 0.0221};
 
 	switch (p)
 	{
@@ -38,10 +40,10 @@ double EmissionUtils::a1(Pollutant p, double a, double b, double c)
 	const double p1 = p_pol[2];
 	const double p0 = p_pol[3];
 
-	return  pow(c, 4) * pow(MPS2KPH_MF, 3) * p3 +
-			pow(c, 3) * pow(MPS2KPH_MF, 2) * p2 +
-			pow(c, 2) * MPS2KPH_MF * p1 +
-			c * p0;
+	return pow(c, 4) * pow(MPS2KPH_MF, 3) * p3 +
+		   pow(c, 3) * pow(MPS2KPH_MF, 2) * p2 +
+		   pow(c, 2) * MPS2KPH_MF * p1 +
+		   c * p0;
 }
 
 double EmissionUtils::a2(Pollutant p, double a, double b, double c)
@@ -56,10 +58,10 @@ double EmissionUtils::a2(Pollutant p, double a, double b, double c)
 	const double p1 = p_pol[2];
 	const double p0 = p_pol[3];
 
-	return  4 * b * pow(c, 3) * pow(MPS2KPH_MF, 3) * p3 +
-			3 * b * pow(c, 2) * pow(MPS2KPH_MF, 2) * p2 +
-			2 * b * c * MPS2KPH_MF * p1 +
-				b * p0;
+	return 4 * b * pow(c, 3) * pow(MPS2KPH_MF, 3) * p3 +
+		   3 * b * pow(c, 2) * pow(MPS2KPH_MF, 2) * p2 +
+		   2 * b * c * MPS2KPH_MF * p1 +
+		   b * p0;
 }
 
 double EmissionUtils::a3(Pollutant p, double a, double b, double c)
@@ -74,13 +76,13 @@ double EmissionUtils::a3(Pollutant p, double a, double b, double c)
 	const double p1 = p_pol[2];
 	const double p0 = p_pol[3];
 
-	return  4 * a * pow(c, 3) * pow(MPS2KPH_MF, 3) * p3 +
-			3 * a * pow(c, 2) * pow(MPS2KPH_MF, 2) * p2 +
-			2 * a * c * MPS2KPH_MF * p1 +
-				a * p0 + 
-			6 * pow(b,2) * pow(c, 2) * pow(MPS2KPH_MF, 3) * p3 +
-			3 * pow(b,2) * c * pow(MPS2KPH_MF,2) * p2 +
-				pow(b, 2) * MPS2KPH_MF * p1;
+	return 4 * a * pow(c, 3) * pow(MPS2KPH_MF, 3) * p3 +
+		   3 * a * pow(c, 2) * pow(MPS2KPH_MF, 2) * p2 +
+		   2 * a * c * MPS2KPH_MF * p1 +
+		   a * p0 +
+		   6 * pow(b, 2) * pow(c, 2) * pow(MPS2KPH_MF, 3) * p3 +
+		   3 * pow(b, 2) * c * pow(MPS2KPH_MF, 2) * p2 +
+		   pow(b, 2) * MPS2KPH_MF * p1;
 }
 
 double EmissionUtils::a4(Pollutant p, double a, double b, double c)
@@ -95,11 +97,11 @@ double EmissionUtils::a4(Pollutant p, double a, double b, double c)
 	const double p1 = p_pol[2];
 	const double p0 = p_pol[3];
 
-	return  12 * a * b * pow(c, 2) * pow(MPS2KPH_MF, 3) * p3 +
-		6 * a * b * c * pow(MPS2KPH_MF, 2) * p2 +
-		2 * a * b * MPS2KPH_MF * p1 +
-		4 * pow(b, 3) * c * pow(MPS2KPH_MF, 3) * p3 +
-		pow(b, 3) * pow(MPS2KPH_MF, 2) * p2;
+	return 12 * a * b * pow(c, 2) * pow(MPS2KPH_MF, 3) * p3 +
+		   6 * a * b * c * pow(MPS2KPH_MF, 2) * p2 +
+		   2 * a * b * MPS2KPH_MF * p1 +
+		   4 * pow(b, 3) * c * pow(MPS2KPH_MF, 3) * p3 +
+		   pow(b, 3) * pow(MPS2KPH_MF, 2) * p2;
 }
 
 double EmissionUtils::a5(Pollutant p, double a, double b, double c)
@@ -114,12 +116,12 @@ double EmissionUtils::a5(Pollutant p, double a, double b, double c)
 	const double p1 = p_pol[2];
 	const double p0 = p_pol[3];
 
-	return	6 * pow(a,2) * pow(c,2) * pow(MPS2KPH_MF,3) * p3 +
-			3 * pow(a,2) * c * pow(MPS2KPH_MF,2) * p2 +
-			pow(a,2) * MPS2KPH_MF * p1 +
-			12 * a * pow(b,2) * c * pow(MPS2KPH_MF,3) * p3 +
-			3 * a * pow(b,2) * pow(MPS2KPH_MF,2) * p2 +
-			pow(b,4) * pow(MPS2KPH_MF,3) * p3;
+	return 6 * pow(a, 2) * pow(c, 2) * pow(MPS2KPH_MF, 3) * p3 +
+		   3 * pow(a, 2) * c * pow(MPS2KPH_MF, 2) * p2 +
+		   pow(a, 2) * MPS2KPH_MF * p1 +
+		   12 * a * pow(b, 2) * c * pow(MPS2KPH_MF, 3) * p3 +
+		   3 * a * pow(b, 2) * pow(MPS2KPH_MF, 2) * p2 +
+		   pow(b, 4) * pow(MPS2KPH_MF, 3) * p3;
 }
 
 double EmissionUtils::a6(Pollutant p, double a, double b, double c)
@@ -134,9 +136,9 @@ double EmissionUtils::a6(Pollutant p, double a, double b, double c)
 	const double p1 = p_pol[2];
 	const double p0 = p_pol[3];
 
-	return  12 * pow(a, 2) * b * c * pow(MPS2KPH_MF, 3) * p3 +
-		3 * pow(a, 2) * b * pow(MPS2KPH_MF, 2) * p2 +
-		4 * a * pow(b, 3) * pow(MPS2KPH_MF, 3) * p3;
+	return 12 * pow(a, 2) * b * c * pow(MPS2KPH_MF, 3) * p3 +
+		   3 * pow(a, 2) * b * pow(MPS2KPH_MF, 2) * p2 +
+		   4 * a * pow(b, 3) * pow(MPS2KPH_MF, 3) * p3;
 }
 
 double EmissionUtils::a7(Pollutant p, double a, double b, double c)
@@ -151,9 +153,9 @@ double EmissionUtils::a7(Pollutant p, double a, double b, double c)
 	const double p1 = p_pol[2];
 	const double p0 = p_pol[3];
 
-	return  4 * pow(a, 3) * c * pow(MPS2KPH_MF, 3) * p3 +
-		pow(a, 3) * pow(MPS2KPH_MF, 2) * p2 +
-		6 * pow(a, 2) * pow(b, 2) * pow(MPS2KPH_MF, 3) * p3;
+	return 4 * pow(a, 3) * c * pow(MPS2KPH_MF, 3) * p3 +
+		   pow(a, 3) * pow(MPS2KPH_MF, 2) * p2 +
+		   6 * pow(a, 2) * pow(b, 2) * pow(MPS2KPH_MF, 3) * p3;
 }
 
 double EmissionUtils::a8(Pollutant p, double a, double b, double c)
@@ -168,7 +170,7 @@ double EmissionUtils::a8(Pollutant p, double a, double b, double c)
 	const double p1 = p_pol[2];
 	const double p0 = p_pol[3];
 
-	return  4 * pow(a, 3) * b * pow(MPS2KPH_MF, 3) * p3;
+	return 4 * pow(a, 3) * b * pow(MPS2KPH_MF, 3) * p3;
 }
 
 double EmissionUtils::a9(Pollutant p, double a, double b, double c)
@@ -183,7 +185,7 @@ double EmissionUtils::a9(Pollutant p, double a, double b, double c)
 	const double p1 = p_pol[2];
 	const double p0 = p_pol[3];
 
-	return  pow(a, 4) * pow(MPS2KPH_MF, 3) * p3;
+	return pow(a, 4) * pow(MPS2KPH_MF, 3) * p3;
 }
 
 double EmissionUtils::b0(Pollutant p, double a, double b, double c)
@@ -198,15 +200,15 @@ double EmissionUtils::b0(Pollutant p, double a, double b, double c)
 	const double p1 = p_pol[2];
 	const double p0 = p_pol[3];
 
-/*	return  pow(c, 4) * pow(MPS2KPH_MF, 3) * p3 +
+	/*	return  pow(c, 4) * pow(MPS2KPH_MF, 3) * p3 +
 		pow(c, 3) * pow(MPS2KPH_MF, 2) * p2 +
 		pow(c, 2) * MPS2KPH_MF * p1 +
 		c * p0;*/
 
-	return  pow(c, 3) * pow(MPS2KPH_MF, 3) * p3 +
-		pow(c, 2) * pow(MPS2KPH_MF, 2) * p2 +
-		pow(c, 1) * MPS2KPH_MF * p1 +
-		p0;
+	return pow(c, 3) * pow(MPS2KPH_MF, 3) * p3 +
+		   pow(c, 2) * pow(MPS2KPH_MF, 2) * p2 +
+		   pow(c, 1) * MPS2KPH_MF * p1 +
+		   p0;
 }
 
 double EmissionUtils::b1(Pollutant p, double a, double b, double c)
@@ -226,9 +228,9 @@ double EmissionUtils::b1(Pollutant p, double a, double b, double c)
 		4 * b * c * MPS2KPH_MF * p1 +
 		2 * b * p0;*/
 
-	return  6 * b * pow(c, 2) * pow(MPS2KPH_MF, 3) * p3 +
-		4 * b * c * pow(MPS2KPH_MF, 2) * p2 +
-		2 * b * MPS2KPH_MF * p1;
+	return 6 * b * pow(c, 2) * pow(MPS2KPH_MF, 3) * p3 +
+		   4 * b * c * pow(MPS2KPH_MF, 2) * p2 +
+		   2 * b * MPS2KPH_MF * p1;
 }
 
 double EmissionUtils::b2(Pollutant p, double a, double b, double c)
@@ -251,12 +253,11 @@ double EmissionUtils::b2(Pollutant p, double a, double b, double c)
 		9 * pow(b, 2) * c *pow(MPS2KPH_MF, 2) * p2 +
 		3 * pow(b, 2) * MPS2KPH_MF * p1;*/
 
-	return  9 * a * pow(c, 2) * pow(MPS2KPH_MF, 3) * p3 +
-		6 * a * c * pow(MPS2KPH_MF, 2) * p2 +
-		3 * a * MPS2KPH_MF * p1 +
-		9 * pow(b, 2) * c * pow(MPS2KPH_MF, 3) * p3 +
-		3 * pow(b, 2) * pow(MPS2KPH_MF, 2) * p2 ;
-
+	return 9 * a * pow(c, 2) * pow(MPS2KPH_MF, 3) * p3 +
+		   6 * a * c * pow(MPS2KPH_MF, 2) * p2 +
+		   3 * a * MPS2KPH_MF * p1 +
+		   9 * pow(b, 2) * c * pow(MPS2KPH_MF, 3) * p3 +
+		   3 * pow(b, 2) * pow(MPS2KPH_MF, 2) * p2;
 }
 
 double EmissionUtils::b3(Pollutant p, double a, double b, double c)
@@ -278,8 +279,8 @@ double EmissionUtils::b3(Pollutant p, double a, double b, double c)
 		4 * pow(b,3) * pow(MPS2KPH_MF,2) * p2;*/
 
 	return 24 * a * b * c * pow(MPS2KPH_MF, 3) * p3 +
-		8 * a * b * pow(MPS2KPH_MF, 2) * p2 +
-		4 * pow(b, 3) * pow(MPS2KPH_MF, 3) * p3;
+		   8 * a * b * pow(MPS2KPH_MF, 2) * p2 +
+		   4 * pow(b, 3) * pow(MPS2KPH_MF, 3) * p3;
 }
 
 double EmissionUtils::b4(Pollutant p, double a, double b, double c)
@@ -302,8 +303,8 @@ double EmissionUtils::b4(Pollutant p, double a, double b, double c)
 		5 * pow(b,4) * pow(MPS2KPH_MF,3) * p3;*/
 
 	return 15 * pow(a, 2) * c * pow(MPS2KPH_MF, 3) * p3 +
-		5 * pow(a, 2) * pow(MPS2KPH_MF, 2) * p2 +
-		15 * a * pow(b, 2) * pow(MPS2KPH_MF, 3) * p3;
+		   5 * pow(a, 2) * pow(MPS2KPH_MF, 2) * p2 +
+		   15 * a * pow(b, 2) * pow(MPS2KPH_MF, 3) * p3;
 }
 
 double EmissionUtils::b5(Pollutant p, double a, double b, double c)
@@ -341,7 +342,7 @@ double EmissionUtils::b6(Pollutant p, double a, double b, double c)
 		7 * pow(a, 3) * pow(MPS2KPH_MF, 2) * p2 +
 		42 * pow(a, 2) * pow(b, 2) * pow(MPS2KPH_MF, 3) * p3;*/
 
-	return 7 * pow(a, 3) * pow(MPS2KPH_MF, 3) * p3 ;
+	return 7 * pow(a, 3) * pow(MPS2KPH_MF, 3) * p3;
 }
 
 double EmissionUtils::b7(Pollutant p, double a, double b, double c)
@@ -371,7 +372,7 @@ double EmissionUtils::b8(Pollutant p, double a, double b, double c)
 	const double p1 = p_pol[2];
 	const double p0 = p_pol[3];
 
-	return 9 * pow(a,4) * pow(MPS2KPH_MF, 3) * p3;
+	return 9 * pow(a, 4) * pow(MPS2KPH_MF, 3) * p3;
 }
 
 double SymuCore::EmissionUtils::emission_v(Pollutant p, double v)
@@ -391,7 +392,7 @@ double SymuCore::EmissionUtils::emission_v(Pollutant p, double v)
 
 double SymuCore::EmissionUtils::emission(Pollutant p, double n, double v, double T)
 {
-	double Ev = emission_v(p, v*MPS2KPH_MF);
+	double Ev = emission_v(p, v * MPS2KPH_MF);
 	return T * n * v * Ev;
 }
 
@@ -453,14 +454,13 @@ double SymuCore::EmissionUtils::derivative_emission(Pollutant p, double a, doubl
 		b1(p, a, b, c) * pow(n, 1) +
 		b0(p, a, b, c) ) ;*/
 
-	return T * (
-		b6(p, a, b, c) * pow(n, 6) +
-		b5(p, a, b, c) * pow(n, 5) +
-		b4(p, a, b, c) * pow(n, 4) +
-		b3(p, a, b, c) * pow(n, 3) +
-		b2(p, a, b, c) * pow(n, 2) +
-		b1(p, a, b, c) * n +
-		b0(p, a, b, c));
+	return T * (b6(p, a, b, c) * pow(n, 6) +
+				b5(p, a, b, c) * pow(n, 5) +
+				b4(p, a, b, c) * pow(n, 4) +
+				b3(p, a, b, c) * pow(n, 3) +
+				b2(p, a, b, c) * pow(n, 2) +
+				b1(p, a, b, c) * n +
+				b0(p, a, b, c));
 }
 
 double SymuCore::EmissionUtils::emission_factor(Pollutant p, double speed, double length)
@@ -483,20 +483,21 @@ double SymuCore::EmissionUtils::emission_factor(Pollutant p, double speed, doubl
 		p0 * speed;*/
 
 	eV = p3 * pow(MPS2KPH_MF, 3) * pow(speed, 3) +
-		p2 * pow(MPS2KPH_MF, 2) * pow(speed, 2) +
-		p1 * pow(MPS2KPH_MF, 1) * pow(speed, 1) +
-		p0;
+		 p2 * pow(MPS2KPH_MF, 2) * pow(speed, 2) +
+		 p1 * pow(MPS2KPH_MF, 1) * pow(speed, 1) +
+		 p0;
 
-		return eV;
+	return eV;
 }
 
 double SymuCore::EmissionUtils::link_marginal_emission(Pollutant p, double a, double b, double c, double n, double nmin, double nmax, double T, double length, double nc, double mle)
 {
 	double eV, eV1, deVdV, dVdn, speed, speed1, LME;
-    double n1;
+	double n1;
 	std::vector<double> p_pol = getCOPERTvector(p);
 
-	if (p_pol.empty()) return 0.0;
+	if (p_pol.empty())
+		return 0.0;
 
 	const double p3 = p_pol[0];
 	const double p2 = p_pol[1];
@@ -513,19 +514,19 @@ double SymuCore::EmissionUtils::link_marginal_emission(Pollutant p, double a, do
 		else
 			return std::numeric_limits<double>::infinity();
 	}
-    
-	n1 = n + ( (1/50.0) * length);
-    
-    //speed = length / ((a * pow(n, 2)) + (b * n) + c);
-    //speed1 = length / ((a * pow(n1, 2)) + (b * n1) + c);
+
+	n1 = n + ((1 / 50.0) * length);
+
+	//speed = length / ((a * pow(n, 2)) + (b * n) + c);
+	//speed1 = length / ((a * pow(n1, 2)) + (b * n1) + c);
 
 	speed = a * pow(n, 2) + (b * n) + c;
 	speed1 = a * pow(n1, 2) + (b * n1) + c;
-    
-    eV = emission_factor(p, speed, length);
-    eV1 = emission_factor(p, speed1, length);
-	
-    LME = length * (n1*eV1 - n*eV) / (n1-n);
+
+	eV = emission_factor(p, speed, length);
+	eV1 = emission_factor(p, speed1, length);
+
+	LME = length * (n1 * eV1 - n * eV) / (n1 - n);
 
 	//LME = length * ( (n1*eV1*speed1) - (n*eV*speed)) / ( (n1*speed1) - (n*speed));
 
@@ -536,8 +537,6 @@ double SymuCore::EmissionUtils::link_marginal_emission(Pollutant p, double a, do
 	dVdn = length * ( (-2 * a * n) - b) / pow( (a * pow(n, 2) + b * n + c), 2);
 
 	LME = length * (eV + (n * deVdV * dVdn));*/
-    
-    
 
 	return LME;
 }
@@ -545,10 +544,11 @@ double SymuCore::EmissionUtils::link_marginal_emission(Pollutant p, double a, do
 void SymuCore::EmissionUtils::link_marginal_emission_ex(Pollutant p, double a, double b, double c, double nmin, double nmax, double length, double &nc, double &lmec)
 {
 	double eV, eV1, deVdV, dVdn, speed, LME;
-    double n, n1;
+	double n, n1;
 	std::vector<double> p_pol = getCOPERTvector(p);
 
-	if (p_pol.empty()) return;
+	if (p_pol.empty())
+		return;
 
 	const double p3 = p_pol[0];
 	const double p2 = p_pol[1];
@@ -557,21 +557,21 @@ void SymuCore::EmissionUtils::link_marginal_emission_ex(Pollutant p, double a, d
 
 	double LMEPrev = 0;
 	double step = 0.01;
-    
-    double speed1;
 
-	for (n = nmin+step; n <= nmax; n=n+ step)
+	double speed1;
+
+	for (n = nmin + step; n <= nmax; n = n + step)
 	{
-        n1 = n+1;
-        
+		n1 = n + 1;
+
 		//speed = length / ((a * pow(n, 2)) + (b * n) + c);
-        //speed1 = length / ((a * pow(n1, 2)) + (b * n1) + c);
+		//speed1 = length / ((a * pow(n1, 2)) + (b * n1) + c);
 
 		speed = a * pow(n, 2) + (b * n) + c;
 		speed1 = a * pow(n1, 2) + (b * n1) + c;
-        
-        eV = emission_factor(p, speed, length);
-        eV1 = emission_factor(p, speed1, length);
+
+		eV = emission_factor(p, speed, length);
+		eV1 = emission_factor(p, speed1, length);
 
 		/*eV = emission_factor(p, speed, length);
 
@@ -582,11 +582,11 @@ void SymuCore::EmissionUtils::link_marginal_emission_ex(Pollutant p, double a, d
 		dVdn = length * ((-2 * a * n) - b) / pow((a * pow(n, 2) + b * n + c), 2);*/
 
 		//LME = length * (eV + (n * deVdV * dVdn));
-        
-        LME = length * (n1*eV1 - n*eV);
+
+		LME = length * (n1 * eV1 - n * eV);
 
 		if (LMEPrev > LME)
-		{ 
+		{
 			nc = n - step;
 			lmec = LMEPrev;
 			return;
