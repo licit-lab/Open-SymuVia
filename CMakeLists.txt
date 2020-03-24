@@ -181,5 +181,5 @@ function(print_files list_files)
 endfunction()
 
 
-add_subdirectory(SymuCore)
-add_subdirectory(SymuVia)
+add_subdirectory(symucore)
+add_subdirectory(symuvia)
