@@ -7,6 +7,8 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <deque>
+#include <vector>
+
 
 #ifdef MICROSOFT
 #pragma warning(disable : 4996)
@@ -146,5 +148,3 @@ public:
 
 
 #endif
-      
- 
