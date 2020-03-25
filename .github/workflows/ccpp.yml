@@ -34,7 +34,7 @@ jobs:
     - name: Listing libraries 
       run: |
         ls -alh /usr/include/
-        ls -alh /usr/include/x86_64-linux-gnu
+        ls -alh /usr/include/x86_64-linux-gnu/
         
     - name: Building SymuVia
       run: |
