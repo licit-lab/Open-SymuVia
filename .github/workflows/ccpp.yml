@@ -30,6 +30,10 @@ jobs:
         sudo apt-get update 
         sudo apt-get install cmake xqilla libboost-all-dev aptitude gdal-bin rapidjson-dev libgdal-dev unixodbc
         aptitude search -y boost
+      
+    - name: Listing libraries 
+      run: |
+        ls -alh /usr/include/
         
     - name: Building SymuVia
       run: |
