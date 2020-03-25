@@ -17,18 +17,26 @@ On Linux `install`
 
 ```
       apt-get update && apt-get install -y \
-      cmake \
+      wget bzip2 ca-certificates \
+      xz-utils \
+      build-essential \ 
+      curl \   
+      git \
       xqilla \
       libboost-all-dev \
       aptitude \
       gdal-bin \
-      rapidjson-dev  &&\
+      rapidjson-dev \
+      libgdal-dev \
+      unixodbc \
+      libpq-dev &&\
       aptitude search -y \
-      boost 
+      boost \
+      && rm -rf /var/lib/apt/lists/*
 ```
 
 On OS X `install`
 
 ```
-      brew install boost boost-python3 gdal xqilla rapidjson # python (optional) in case anaconda is not installed 
+      brew install boost boost-python3 gdal xqilla rapidjson unixodbc # python (optional) in case anaconda is not installed 
 ```
