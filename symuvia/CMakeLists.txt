@@ -171,3 +171,5 @@ target_link_libraries( SymuVia ${Python_LIBRARIES})
 
 # Visible                               
 target_include_directories(SymuVia PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/reseau.xsd DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
