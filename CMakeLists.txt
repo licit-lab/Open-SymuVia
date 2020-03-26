@@ -184,6 +184,7 @@ function(print_files list_files)
     endforeach()
 endfunction()
 
+file(COPY symuvia/config/ DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
 add_subdirectory(symucore)
 add_subdirectory(symuvia)
