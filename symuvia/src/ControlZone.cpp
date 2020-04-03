@@ -35,6 +35,10 @@ void ControlZone::Init(int nID, double dbAcceptanceRate, double dbDistanceLimit,
 
 void ControlZone::Activation()
 {
+	// Nothing to do if acceptance rate is zero
+	if(m_dbAcceptanceRate<= DBL_EPSILON)
+		return;
+
 	// Reroute vehicles already on the network
 
 	// Search affected vehicles
@@ -50,6 +54,10 @@ void ControlZone::Activation()
 
 bool ControlZone::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> pVeh)
 {
+	// Nothing to do if acceptance rate is zero
+	if(m_dbAcceptanceRate<= DBL_EPSILON)
+		return false;
+
 	// Check vehicle type
 	std::string sVL = "VL";
 	if (pVeh->GetType()->GetLabel() != sVL)
@@ -111,6 +119,10 @@ bool ControlZone::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> pVeh)
 
 void ControlZone::Deactivation()
 {
+	// Nothing to do if acceptance rate is zero
+	if(m_dbAcceptanceRate<= DBL_EPSILON)
+		return;
+
 	// Reconsider vehicles that have been rerouted
 	std::map<int, std::vector<Tuyau*>>::iterator itRV;
 	std::vector<Tuyau*> linkstoavoid;
