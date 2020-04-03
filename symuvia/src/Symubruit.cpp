@@ -1005,6 +1005,7 @@ SYMUBRUIT_EXPORT bool SYMUBRUIT_CDECL SymRunNextStep(eveShared::TrafficState * &
 		             		
     return true;
 }
+
 SYMUBRUIT_EXPORT bool SYMUBRUIT_CDECL SymRunNextStep(string &sXmlFluxInstant, bool bTrace, bool &bNEnd)
 { 
 	std::string sFlow;
@@ -1027,6 +1028,16 @@ SYMUBRUIT_EXPORT bool SYMUBRUIT_CDECL SymRunNextStep(string &sXmlFluxInstant, bo
 
 	sXmlFluxInstant = sFlow;
 		             		
+    return true;
+}
+
+SYMUBRUIT_EXPORT bool SYMUBRUIT_CDECL SymRunNextStep(bool bTrace, bool &bNEnd)
+{ 
+	std::string sFlow;
+
+    if (!_SymRunNextStep(DEFAULT_NETWORK_ID, sFlow, bTrace, bNEnd))
+		return false;
+	             		
     return true;
 }
 
@@ -4165,6 +4176,11 @@ extern "C"
 	DECLDIR bool SymRunNextStepEx(char *sXmlFluxInstant, bool bTrace, bool *bNEnd)
 	{
 		return SymRunNextStep(sXmlFluxInstant, bTrace, *bNEnd);
+	}
+
+    DECLDIR bool SymRunNextStepLiteEx(bool bTrace, bool *bNEnd)
+	{
+		return SymRunNextStep(bTrace, *bNEnd); 
 	}
 
 	DECLDIR char * SymRunNextStepJSONEx(bool *bNEnd)
