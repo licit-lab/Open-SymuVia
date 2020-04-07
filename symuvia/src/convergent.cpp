@@ -1,8 +1,12 @@
 #include "stdafx.h"
 #include "convergent.h"
 
-#include "voie.h"
 #include "reseau.h"
+
+#include "Logger.h"
+
+
+#include "voie.h"
 #include "divergent.h"
 #include "giratoire.h"
 #include "RandManager.h"
@@ -575,7 +579,6 @@ void Convergent::InitSimuTrafic()
             dbDemande2 = std::min<double>(m_pCvg->GetReseau()->GetMaxDebitMax(), m_pCvg->m_pGestionCapteur->GetDebitMoyen( m_pCvg->GetCapteur((TuyauMicro*)pVAmNP->GetParent()), std::min<int>(pVAmNP->GetNum(),nVoieGir) ));
         else
             dbDemande2 = m_pCvg->GetReseau()->GetMaxDebitMax();
-
     }
     else                // Régime fluide
     {
@@ -590,7 +593,7 @@ void Convergent::InitSimuTrafic()
 
         if(pVehAttente)
         {            
-            bInsertion[j] = pVehAttente->GetCarFollowing()->TestConvergentInsertion(this, pTAmP, pVAmP, pVAmNP, nVoieGir, dbInstant, j, dbOffre, dbDemande1, dbDemande2, pVehLeader, pVehFollower, dbtr, dbta);
+            bInsertion[j] = pVehAttente->GetCarFollowing()->TestConvergentInsertion(this, pTAmP, pVAmP, pVAmNP, nVoieGir, dbInstant, j, dbDemande1, dbDemande2, dbOffre, pVehLeader, pVehFollower, dbtr, dbta);
         }
     }
 

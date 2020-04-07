@@ -345,7 +345,7 @@ bool AbstractCarFollowing::TestConvergentInsertion(PointDeConvergence * pPointDe
     if(!pPointDeConvergence->IsFreeFlow())    // Régime congestionné en aval
     {        
         double dbq2g = pPointDeConvergence->GetCvg()->m_dbGamma * dbOffre / (1+pPointDeConvergence->GetCvg()->m_dbGamma);
-
+        
         if( dbDemande2 < dbq2g)
         {
             bResult = true;           // l'insertion est possible
