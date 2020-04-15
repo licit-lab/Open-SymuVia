@@ -629,7 +629,7 @@ Si ce code n'est pas défini (ainsi que le code des données d'entrée - attribu
 </xsd:documentation>
             </xsd:annotation>
           </xsd:attribute>
-          <xsd:attribute default="true" name="vehicules_capteur_extraction" type="xsd:boolean">
+          <xsd:attribute default="false" name="vehicules_capteur_extraction" type="xsd:boolean">
             <xsd:annotation>
               <xsd:documentation>Indique si on doit extraire les listes de véhicules des capteurs ponctuels</xsd:documentation>
             </xsd:annotation>
@@ -6158,13 +6158,11 @@ Le VGP disparaît du réseau après avoir atteint le dernier arrêt de la ligne,
       <xsd:field xpath="@motif"/>
     </xsd:keyref>
     <xsd:keyref name="FluxRepMotifOrigin" refer="MotifKey">
-      <xsd:selector
-        xpath=".//FLUX_TYPEVEH/FLUX/REP_MOTIFS/REP_MOTIF/REP_MOTIF_DEST/MOTIF_COEFF"/>
+      <xsd:selector xpath=".//FLUX_TYPEVEH/FLUX/REP_MOTIFS/REP_MOTIF/REP_MOTIF_DEST/MOTIF_COEFF"/>
       <xsd:field xpath="@motif_origine"/>
     </xsd:keyref>
     <xsd:keyref name="FluxRepMotifDst" refer="MotifKey">
-      <xsd:selector
-        xpath=".//FLUX/REP_MOTIFS/REP_MOTIF/REP_MOTIF_DEST/MOTIF_COEFF"/>
+      <xsd:selector xpath=".//FLUX/REP_MOTIFS/REP_MOTIF/REP_MOTIF_DEST/MOTIF_COEFF"/>
       <xsd:field xpath="@motif_destination"/>
     </xsd:keyref>
   </xsd:element>
