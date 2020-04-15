@@ -859,6 +859,23 @@ SYMUBRUIT_EXPORT bool SYMUBRUIT_CDECL SymLoadNetwork(std::string sTmpXmlDataFile
 	return bOk;
 }
 
+/// <summary>
+/// Wrapper method to unload the current scenario
+/// </summary>
+///<returns></returns>
+SYMUBRUIT_EXPORT void SymUnloadCurrentNetwork()
+{
+    Reseau* pNetwork = theApp.GetNetwork(DEFAULT_NETWORK_ID);
+
+    if(pNetwork)
+    {
+        pNetwork->FinSimuTrafic();
+
+        if(pNetwork->IsSimuAcoustique() || pNetwork->IsSimuAir() || pNetwork->IsSimuSirane())
+            pNetwork->FinSimuEmissions(pNetwork->IsSimuAcoustique(), pNetwork->IsSimuAir(), pNetwork->IsSimuSirane());        
+    }
+}
+
 SYMUBRUIT_EXPORT bool SYMUBRUIT_CDECL SymRun()
 {
     Reseau* pReseau = theApp.GetNetwork(DEFAULT_NETWORK_ID);
@@ -4171,6 +4188,11 @@ extern "C"
 	DECLDIR int SymLoadNetworkEx(char* sFile)
 	{
 		return SymLoadNetwork(std::string(sFile));
+	}
+
+    DECLDIR void SymUnloadCurrentNetworkEx()
+	{
+		SymUnloadCurrentNetwork();
 	}
 
 	DECLDIR bool SymRunNextStepEx(char *sXmlFluxInstant, bool bTrace, bool *bNEnd)

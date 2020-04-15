@@ -415,7 +415,7 @@ void Reseau::Initialize()
 #endif // USE_SYMUCOM
 }
 
-// destructeur
+// Destructor
 Reseau::~Reseau()
 {
     if(IsInitSimuTrafic())
