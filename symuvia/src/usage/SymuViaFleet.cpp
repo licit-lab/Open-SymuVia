@@ -131,7 +131,7 @@ void SymuViaFleet::ActivateVehicle(double dbInstant, VehicleToCreate * pVehicleT
         pVeh->SetNextRouteID(pVehicle->GetNextRouteID());
         m_pNetwork->GetSymuViaFleet()->OnVehicleActivated(pVeh, dbInstant);
 
-		if (m_pNetwork->GetControlZoneManagement() && m_pNetwork->GetControlZoneManagement()->IsActive())
+		if (m_pNetwork->GetControlZoneManagement() )
 			m_pNetwork->GetControlZoneManagement()->CheckAndRerouteVehicle(pVeh);
     }
 

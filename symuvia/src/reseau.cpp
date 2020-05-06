@@ -4415,7 +4415,7 @@ bool Reseau::RemoveControlZone(int nID)
 	if (!m_pControlZoneManagement)
 		return false;
 
-	m_pControlZoneManagement->RemoveControlZone(nID);
+	//m_pControlZoneManagement->RemoveControlZone(nID);
 	return true;
 }
 
@@ -4425,6 +4425,16 @@ bool Reseau::ModifyControlZone(int nID, double dbAcceptanceRate)
 		return false;
 
 	m_pControlZoneManagement->ModifyControlZone(nID, dbAcceptanceRate);
+	return true;
+}
+
+bool Reseau::UpdateControlZones()
+{
+
+	if (!m_pControlZoneManagement)
+		return false;
+
+	m_pControlZoneManagement->Update();
 	return true;
 }
 

@@ -33,29 +33,10 @@ void ControlZone::Init(int nID, double dbAcceptanceRate, double dbDistanceLimit,
 	m_Links = Links;
 }
 
-void ControlZone::Activation()
+
+bool ControlZone::IsVehicleCandidate(boost::shared_ptr<Vehicule> pVeh)
 {
-	// Nothing to do if acceptance rate is zero
-	if(m_dbAcceptanceRate<= DBL_EPSILON)
-		return;
-
-	// Reroute vehicles already on the network
-
-	// Search affected vehicles
-	std::vector<boost::shared_ptr<Vehicule>> m_LstVehicles;
-	
-	for (size_t iVeh = 0; iVeh < m_pNetwork->m_LstVehicles.size(); iVeh++)
-	{
-		boost::shared_ptr<Vehicule> pVeh = m_pNetwork->m_LstVehicles[iVeh];
-		CheckAndRerouteVehicle(pVeh);
-	}
-	
-}
-
-bool ControlZone::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> pVeh)
-{
-	// Nothing to do if acceptance rate is zero
-	if(m_dbAcceptanceRate<= DBL_EPSILON)
+	if (m_dbAcceptanceRate <= DBL_EPSILON)
 		return false;
 
 	// Check vehicle type
@@ -83,86 +64,10 @@ bool ControlZone::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> pVeh)
 
 	// Is candidate ?
 	double dbRand = m_pNetwork->GetRandManager()->myRand() / (double)MAXIMUM_RANDOM_NUMBER;
-	if (dbRand > m_dbAcceptanceRate)
-		return false;
+	if (dbRand <= m_dbAcceptanceRate)
+		return true;
 
-	// Calculate new path
-	std::vector<PathResult> newremainingpaths;
-	std::map<std::vector<Tuyau*>, double> MapFilteredItis;
-	
-	TronconOrigine	*pTO = new TronconOrigine(remainingPath.front(), NULL);
-
-	m_pNetwork->GetSymuScript()->ComputePaths(pTO,
-		pVeh->GetDestination(), pVeh->GetType(),
-		m_pNetwork->GetInstSim()*m_pNetwork->GetTimeStep(),
-		1, 0, remainingPath, m_Links, newremainingpaths, MapFilteredItis, false);
-
-	delete(pTO);
-
-	if (newremainingpaths.size() == 0)		// No other paths
-		return false;
-
-	// Apply new path
-	const std::vector<Tuyau*> newremainingpath = newremainingpaths.front().links;
-	if (!pVeh->GetTrip()->ChangeRemainingPath(newremainingpath, pVeh.get()))
-		return false;
-
-	std::cout << "Rerouted vehicle id: " << pVeh->GetID() << std::endl;
-	m_pManager->Write(pVeh->GetID(), m_nID, 1);
-
-	m_routedvehs.insert(std::make_pair(pVeh->GetID(), std::vector<Tuyau*>()));
-	for (size_t i = 0; i < pVeh->GetTrip()->GetFullPath()->size(); i++)
-		m_routedvehs[pVeh->GetID()].push_back((pVeh->GetTrip()->GetFullPath()->at(i)));
-
-	return true;
-}
-
-void ControlZone::Deactivation()
-{
-	// Nothing to do if acceptance rate is zero
-	if(m_dbAcceptanceRate<= DBL_EPSILON)
-		return;
-
-	// Reconsider vehicles that have been rerouted
-	std::map<int, std::vector<Tuyau*>>::iterator itRV;
-	std::vector<Tuyau*> linkstoavoid;
-
-	for (itRV = m_routedvehs.begin(); itRV != m_routedvehs.end(); itRV++)
-	{
-		boost::shared_ptr<Vehicule> pVeh = m_pNetwork->GetVehiculeFromID(itRV->first);
-
-		if (!pVeh)				// maybe, vehicle has gone off the network
-			continue;
-
-		std::vector<Tuyau*> remainingPath = pVeh->GetTrip()->GetRemainingPath();
-
-		// Calculate path
-		std::vector<PathResult> newremainingpaths;
-		std::map<std::vector<Tuyau*>, double> MapFilteredItis;
-
-		TronconOrigine	*pTO = new TronconOrigine(remainingPath.front(), NULL);
-
-		m_pNetwork->GetSymuScript()->ComputePaths(pTO,
-			pVeh->GetDestination(), pVeh->GetType(),
-			m_pNetwork->GetInstSim()*m_pNetwork->GetTimeStep(),
-			1, 0, remainingPath, linkstoavoid, newremainingpaths, MapFilteredItis, false);
-
-		delete(pTO);
-
-		if (newremainingpaths.size() == 0)		// No other paths
-			continue;
-
-		// Apply new path
-		const std::vector<Tuyau*> newremainingpath = newremainingpaths.front().links;
-		if (!pVeh->GetTrip()->ChangeRemainingPath(newremainingpath, pVeh.get()))
-			continue;
-
-		std::cout << "Retrieving the initial route for the vehicle with id: " << pVeh->GetID() << std::endl;
-
-		m_pManager->Write(pVeh->GetID(), m_nID, 0);
-	}
-
-	m_routedvehs.erase(m_routedvehs.begin(), m_routedvehs.end());
+	return false;
 }
 
 ControlZoneManagement::ControlZoneManagement()
@@ -174,12 +79,14 @@ ControlZoneManagement::ControlZoneManagement(Reseau * pNetwork)
 	m_pNetwork = pNetwork;
 	m_nCount = 330;
 
+	m_bChangedSinceLastUpdate = false;
+
 	if (!m_output.is_open())
 	{
 		m_output.open((pNetwork->GetPrefixOutputFiles() + "_ctrlzonedata_" + ".csv").c_str(), std::ios::out);
 		m_output.setf(std::ios::fixed);
 
-		m_output << "time" << CSV_SEPARATOR << "zone" << CSV_SEPARATOR << "veh" << CSV_SEPARATOR << "activation" << CSV_NEW_LINE;
+		m_output << "time" << CSV_SEPARATOR << "veh" << CSV_SEPARATOR << "activation" << CSV_NEW_LINE;
 	}
 }
 
@@ -196,9 +103,23 @@ ControlZoneManagement::~ControlZoneManagement()
 		delete (*itCZ);
 }
 
-bool ControlZoneManagement::IsActive()
+bool ControlZoneManagement::Update()
 {
-	return m_ControlZones.size() > 0;
+	if (m_ControlZones.size() == 0)
+		return false;
+
+	if (!m_bChangedSinceLastUpdate)
+		return false;
+
+	for (size_t iVeh = 0; iVeh < m_pNetwork->m_LstVehicles.size(); iVeh++)
+	{
+		boost::shared_ptr<Vehicule> pVeh = m_pNetwork->m_LstVehicles[iVeh];
+		CheckAndRerouteVehicle(pVeh);
+	}
+
+	m_bChangedSinceLastUpdate = true;
+
+	return true;
 }
 
 int ControlZoneManagement::AddControlZone(double dbAcceptanceRate, double dbDistanceLimit, std::vector<Tuyau*> Links)
@@ -206,25 +127,13 @@ int ControlZoneManagement::AddControlZone(double dbAcceptanceRate, double dbDist
 	ControlZone* pControlZone = new ControlZone(m_pNetwork, this);
 	pControlZone->Init(++m_nCount,dbAcceptanceRate, dbDistanceLimit, Links);
 
-	pControlZone->Activation();
-
 	m_ControlZones.push_back(pControlZone);
+
+	m_bChangedSinceLastUpdate = true;
 
 	return m_nCount;
 }
 
-void ControlZoneManagement::RemoveControlZone(int id)
-{
-	std::vector< ControlZone*>::iterator itCZ;
-
-	for(itCZ=m_ControlZones.begin(); itCZ != m_ControlZones.end(); itCZ++)
-		if ( (*itCZ)->GetID() == id)
-		{
-			(*itCZ)->Deactivation();
-			m_ControlZones.erase(itCZ);
-			break;
-		}
-}
 
 void ControlZoneManagement::ModifyControlZone(int id, double dbAcceptanceRate)
 {
@@ -233,9 +142,9 @@ void ControlZoneManagement::ModifyControlZone(int id, double dbAcceptanceRate)
 	for (itCZ = m_ControlZones.begin(); itCZ != m_ControlZones.end(); itCZ++)
 		if ((*itCZ)->GetID() == id)
 		{
-			(*itCZ)->Deactivation();
 			(*itCZ)->SetAcceptanceRate(dbAcceptanceRate);
-			(*itCZ)->Activation();
+			m_bChangedSinceLastUpdate = true;
+
 			break;
 		}
 }
@@ -243,19 +152,59 @@ void ControlZoneManagement::ModifyControlZone(int id, double dbAcceptanceRate)
 bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> pVeh)
 {
 	std::vector< ControlZone*>::iterator itCZ;
-	bool bRerouted=false;
+	std::vector<Tuyau*> BannedLinks;
+	bool bRerouted = false;
 
 	for (itCZ = m_ControlZones.begin(); itCZ != m_ControlZones.end(); itCZ++)
 	{
-		bRerouted |= (*itCZ)->CheckAndRerouteVehicle(pVeh);
+		if ((*itCZ)->IsVehicleCandidate(pVeh))
+		{
+			bRerouted = true;
+
+			BannedLinks.insert(BannedLinks.end(), (*itCZ)->m_Links.begin(), (*itCZ)->m_Links.end());
+		}
 	}
-	return bRerouted;
+
+	if (!bRerouted)
+		return false;
+
+	// Calculate new path
+	std::vector<Tuyau*> remainingPath = pVeh->GetTrip()->GetRemainingPath();
+
+	std::vector<PathResult> newremainingpaths;
+	std::map<std::vector<Tuyau*>, double> MapFilteredItis;
+
+	TronconOrigine	*pTO = new TronconOrigine(remainingPath.front(), NULL);
+
+	m_pNetwork->GetSymuScript()->ComputePaths(pTO,
+		pVeh->GetDestination(), pVeh->GetType(),
+		m_pNetwork->GetInstSim()*m_pNetwork->GetTimeStep(),
+		1, 0, remainingPath, BannedLinks, newremainingpaths, MapFilteredItis, false);
+
+	delete(pTO);
+
+	if (newremainingpaths.size() == 0)		// No other paths
+		return false;
+
+	// Apply new path
+	const std::vector<Tuyau*> newremainingpath = newremainingpaths.front().links;
+	if (!pVeh->GetTrip()->ChangeRemainingPath(newremainingpath, pVeh.get()))
+		return false;
+
+	std::cout << "Rerouted vehicle id: " << pVeh->GetID() << std::endl;
+	Write(pVeh->GetID(), 1);
+
+/*	m_routedvehs.insert(std::make_pair(pVeh->GetID(), std::vector<Tuyau*>()));
+	for (size_t i = 0; i < pVeh->GetTrip()->GetFullPath()->size(); i++)
+		m_routedvehs[pVeh->GetID()].push_back((pVeh->GetTrip()->GetFullPath()->at(i)));*/
+
+	return true;
 }
 
-void ControlZoneManagement::Write(int idVeh, int sidZone, bool bActivation)
+void ControlZoneManagement::Write(int idVeh, bool bActivation)
 {
 	if (m_output.is_open())
 	{
-		m_output << m_pNetwork->GetInstSim() << CSV_SEPARATOR << sidZone << CSV_SEPARATOR << idVeh << CSV_SEPARATOR << bActivation << CSV_NEW_LINE;
+		m_output << m_pNetwork->GetInstSim() << CSV_SEPARATOR  << idVeh << CSV_SEPARATOR << bActivation << CSV_NEW_LINE;
 	}
 }

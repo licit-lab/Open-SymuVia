@@ -1097,6 +1097,7 @@ public:
 		int		AddControlZone(double dbAcceptanceRate, double dbDistanceLimit, std::vector<Tuyau*> Links);
 		bool	RemoveControlZone(int nID);
 		bool	ModifyControlZone(int nID, double dbAcceptanceRate);
+		bool	UpdateControlZones();
 
 private:
     void Initialize();

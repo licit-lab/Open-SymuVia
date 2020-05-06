@@ -2193,7 +2193,6 @@ SYMUBRUIT_EXPORT char * SYMUBRUIT_CDECL SymRunNextStepJSON(bool &bNEnd)
 
 	if (!_SymRunNextStepJSON(sJsonFluxInstant, bNEnd))
 	{
-		//std::cout << sJsonFluxInstant << std::endl;
 		return NULL;
 	}
 
@@ -4119,6 +4118,17 @@ SYMUBRUIT_EXPORT bool SYMUBRUIT_CDECL SymAllowZone(char* areaJSON)
 	return pReseau->AllowLinks(intersectedLinks);
 }
 
+// Apply the new acceptance rates of control zones
+SYMUBRUIT_EXPORT int SYMUBRUIT_CDECL SymApplyControlZones(int networkId)
+{
+	Reseau* pNetwork = theApp.GetNetwork(networkId);
+
+	if (pNetwork)
+		return pNetwork->UpdateControlZones();
+
+	return -1;
+}
+
 SYMUBRUIT_EXPORT bool SYMUBRUIT_CDECL SymSetODPaths(char* pathsDefJSON)
 {
 	Reseau* pReseau = theApp.GetNetwork(DEFAULT_NETWORK_ID);
@@ -4354,6 +4364,7 @@ extern "C"
 
 	DECLDIR int SymAddControlZoneEx(int networkId, double dbAcceptanceRate, double dbDistanceLimit, char* links)
 	{
+
 		std::vector<std::string> linkNames;
 		std::string slinks = std::string(links);
 		
@@ -4370,6 +4381,11 @@ extern "C"
 	DECLDIR int SymModifyControlZoneEx(int networkId, int nControlZoneID, double dbAcceptanceRate)
 	{
 		return SymModifyControlZone(networkId, nControlZoneID, dbAcceptanceRate);
+	}
+
+	DECLDIR int SymApplyControlZonesEx(int networkId)
+	{
+		return SymApplyControlZones(networkId);
 	}
 
 	DECLDIR double SymGetTotalTravelTimeEx(char* MFDSensorID)
