@@ -54,7 +54,25 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-find_package(Boost COMPONENTS chrono date_time locale log thread serialization wserialization filesystem system python REQUIRED)
+# Boost python version component for Linux
+if(APPLE)
+    set( BOOST_PYTHONLIB python)
+elseif(UNIX)
+    set( BOOST_PYTHONLIB python3)
+endif()
+
+find_package(Boost COMPONENTS 
+    chrono 
+    date_time 
+    locale 
+    log 
+    thread 
+    serialization 
+    wserialization 
+    filesystem 
+    system 
+    ${BOOST_PYTHONLIB} 
+    REQUIRED)
 
     if(Boost_FOUND)
         message(STATUS "Library Boost is available")
