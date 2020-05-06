@@ -1,6 +1,6 @@
 # Build SymuCore - SymuVia
 
-![](https://img.shields.io/badge/platform-osx--64-blue) 
+![](https://img.shields.io/badge/platform-osx--64-blue) ![](https://img.shields.io/badge/platform-linux-green)
 
 A simple project structure to Build `SymuVia`. 
 
@@ -22,7 +22,7 @@ On Linux `install`
       build-essential \ 
       curl \   
       git \
-      xqilla \
+      libxqilla-dev \
       libboost-all-dev \
       aptitude \
       gdal-bin \
