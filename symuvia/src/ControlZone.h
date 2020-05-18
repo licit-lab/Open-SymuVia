@@ -9,7 +9,8 @@
 #include <boost/shared_ptr.hpp>
 #include <fstream>
 
-#define CSV_SEPARATOR ","
+#define CSV_SEPARATOR ";"
+#define CSV_MINOR_SEPARATOR " "
 #define CSV_NEW_LINE std::endl
 
 class Reseau;
@@ -41,7 +42,9 @@ private:
 public:
 	void		Init(int nID, double dbAcceptanceRate, double dbDistanceLimit, std::vector<Tuyau*>	Links);
 
-	bool		IsVehicleCandidate(boost::shared_ptr<Vehicule> pVeh);
+	bool 		IsSelectedBannedZone(boost::shared_ptr<Vehicule> pVeh);
+	bool 		IsVehiclePassesThrough(boost::shared_ptr<Vehicule> pVeh);
+	bool		IsVehicleTooClose(boost::shared_ptr<Vehicule> pVeh);
 
 	int			GetID() { return m_nID; }
 

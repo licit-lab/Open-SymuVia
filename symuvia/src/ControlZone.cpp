@@ -33,40 +33,62 @@ void ControlZone::Init(int nID, double dbAcceptanceRate, double dbDistanceLimit,
 	m_Links = Links;
 }
 
-
-bool ControlZone::IsVehicleCandidate(boost::shared_ptr<Vehicule> pVeh)
+bool ControlZone::IsSelectedBannedZone(boost::shared_ptr<Vehicule> pVeh)
 {
 	if (m_dbAcceptanceRate <= DBL_EPSILON)
-		return false;
+		return false; // nothing to do
 
 	// Check vehicle type
 	std::string sVL = "VL";
 	if (pVeh->GetType()->GetLabel() != sVL)
-		return false;
+		return false; // nothing to do
 
-	// Check vehicle remaining path (if it has to go through the control zone)
+	// Random
+	double dbRand = m_pNetwork->GetRandManager()->myRand() / (double)MAXIMUM_RANDOM_NUMBER;
+	if (dbRand <= m_dbAcceptanceRate)
+		return true;
+
+	return false;
+}
+
+bool ControlZone::IsVehiclePassesThrough(boost::shared_ptr<Vehicule> pVeh)
+{
 	std::vector<Tuyau*> remainingPath = pVeh->GetTrip()->GetRemainingPath();
-	bool bFound = false;
+	
+	for (size_t i = 0; i < this->m_Links.size(); i++)
+	{
+		if (std::find(remainingPath.begin(), remainingPath.end(), m_Links[i]) != remainingPath.end())
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool ControlZone::IsVehicleTooClose(boost::shared_ptr<Vehicule> pVeh)
+{
+	// Check distance (if it has to go through the control zone)
+
+	std::vector<Tuyau*> remainingPath = pVeh->GetTrip()->GetRemainingPath();
+	//bool bFound = false;
 	double dbDst;
 	for (size_t i = 0; i < this->m_Links.size(); i++)
 	{
 		if (std::find(remainingPath.begin(), remainingPath.end(), m_Links[i]) != remainingPath.end())
 		{
+			//std::cout << this->GetID() << " " << m_Links[i]->GetLabel() << " ";
 			// Check distance limit 
-			pVeh->ComputeDistance(pVeh->GetLink(1), pVeh->GetPos(1), m_Links[i], 0, dbDst);
-			if (dbDst > this->m_dbDistanceLimit)
-				bFound = true;
-			break;
+			if(pVeh->ComputeDistance(pVeh->GetLink(1), pVeh->GetPos(1), m_Links[i], 0, dbDst))
+			{
+				//std::cout <<  dbDst << " " << m_dbDistanceLimit << " " ;
+				if (dbDst < m_dbDistanceLimit)
+				{
+					return true;
+				}
+			}
+			//std::cout << std::endl;
 		}
 	}
-	if (!bFound)
-		return false;
-
-	// Is candidate ?
-	double dbRand = m_pNetwork->GetRandManager()->myRand() / (double)MAXIMUM_RANDOM_NUMBER;
-	if (dbRand <= m_dbAcceptanceRate)
-		return true;
-
 	return false;
 }
 
@@ -86,7 +108,7 @@ ControlZoneManagement::ControlZoneManagement(Reseau * pNetwork)
 		m_output.open((pNetwork->GetPrefixOutputFiles() + "_ctrlzonedata_" + ".csv").c_str(), std::ios::out);
 		m_output.setf(std::ios::fixed);
 
-		m_output << "time" << CSV_SEPARATOR << "veh" << CSV_SEPARATOR << "activation" << CSV_NEW_LINE;
+		m_output << "time" << CSV_SEPARATOR << "veh" << CSV_SEPARATOR << "curlink" << CSV_SEPARATOR << "zones not selected at random" << CSV_SEPARATOR << "zones selected but no candidate" << CSV_SEPARATOR << "zones selected at random" << CSV_SEPARATOR << "path" << CSV_NEW_LINE;
 	}
 }
 
@@ -117,7 +139,7 @@ bool ControlZoneManagement::Update()
 		CheckAndRerouteVehicle(pVeh);
 	}
 
-	m_bChangedSinceLastUpdate = true;
+	m_bChangedSinceLastUpdate = false;
 
 	return true;
 }
@@ -153,50 +175,139 @@ bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> p
 {
 	std::vector< ControlZone*>::iterator itCZ;
 	std::vector<Tuyau*> BannedLinks;
+	
 	bool bRerouted = false;
 
-	for (itCZ = m_ControlZones.begin(); itCZ != m_ControlZones.end(); itCZ++)
-	{
-		if ((*itCZ)->IsVehicleCandidate(pVeh))
-		{
-			bRerouted = true;
+	std::vector<ControlZone*> NoSelectedBannedZone;
+	std::vector<ControlZone*> SelectedBannedZones;
+	std::vector<ControlZone*> BannedZones;
+	std::vector<ControlZone*> NoCandidateBannedZone;
+	
+	TronconOrigine	*pTO;
+	std::vector<Tuyau*> remainingPath;
+	std::vector<PathResult> newremainingpaths;
+	std::map<std::vector<Tuyau*>, double> MapFilteredItis;
 
-			BannedLinks.insert(BannedLinks.end(), (*itCZ)->m_Links.begin(), (*itCZ)->m_Links.end());
-		}
+	//std::cout << "veh id: " << pVeh->GetID() << " ";
+
+	// Selection of banned zones
+	for (itCZ = m_ControlZones.begin(); itCZ != m_ControlZones.end(); itCZ++)
+		if ((*itCZ)->IsSelectedBannedZone(pVeh))
+			SelectedBannedZones.push_back((*itCZ));
+		else
+			NoSelectedBannedZone.push_back((*itCZ));
+
+	//std::cout << SelectedBannedZones.size() << " " << NoSelectedBannedZone.size() << " ";
+
+	if(SelectedBannedZones.size()==0)
+		return false;
+
+	// Check if the vehicle passes through the banned zones
+	bool bPasses = false;
+	for (itCZ = SelectedBannedZones.begin(); itCZ != SelectedBannedZones.end(); itCZ++)
+	{
+		if ((*itCZ)->IsVehiclePassesThrough(pVeh))
+			bPasses = true;
+	}
+	if(!bPasses)
+	{
+		//std::cout << "the vehicle doesn't pass through the banned zones" << std::endl;
+		return false; // noting to do
 	}
 
+	// Check if the vehicle is too close to the banned zones
+	for (itCZ = SelectedBannedZones.begin(); itCZ != SelectedBannedZones.end(); itCZ++)
+	{
+		if (!(*itCZ)->IsVehicleTooClose(pVeh))
+		{
+			bRerouted = true;
+			BannedLinks.insert(BannedLinks.end(), (*itCZ)->m_Links.begin(), (*itCZ)->m_Links.end());
+			BannedZones.push_back((*itCZ));
+		}
+		else
+		{
+			 NoCandidateBannedZone.push_back((*itCZ));
+		}
+	}
+	
+	
+	if (m_output.is_open())
+	{
+		remainingPath = pVeh->GetTrip()->GetRemainingPath();
+
+		pTO = new TronconOrigine(remainingPath.front(), NULL);
+
+		m_output << m_pNetwork->GetInstSim() << CSV_SEPARATOR  << pVeh->GetID() << CSV_SEPARATOR;
+
+		if (pTO)
+			m_output << pTO->GetTuyau()->GetLabel() << CSV_SEPARATOR;
+		else
+		{
+			m_output << "?" << CSV_SEPARATOR;
+		}
+
+		for(itCZ=NoSelectedBannedZone.begin();itCZ!=NoSelectedBannedZone.end();itCZ++)
+			m_output << (*itCZ)->GetID() << CSV_MINOR_SEPARATOR;
+
+		m_output << CSV_SEPARATOR;
+
+		for(itCZ=NoCandidateBannedZone.begin();itCZ!=NoCandidateBannedZone.end();itCZ++)
+			m_output << (*itCZ)->GetID() << CSV_MINOR_SEPARATOR;
+
+		m_output << CSV_SEPARATOR;
+
+		for(itCZ=BannedZones.begin();itCZ!=BannedZones.end();itCZ++)
+			m_output << (*itCZ)->GetID() << CSV_MINOR_SEPARATOR;
+
+		m_output << CSV_SEPARATOR;
+
+		if(!bRerouted)
+			m_output << CSV_NEW_LINE;
+	}
+	
 	if (!bRerouted)
 		return false;
 
 	// Calculate new path
-	std::vector<Tuyau*> remainingPath = pVeh->GetTrip()->GetRemainingPath();
-
-	std::vector<PathResult> newremainingpaths;
-	std::map<std::vector<Tuyau*>, double> MapFilteredItis;
-
-	TronconOrigine	*pTO = new TronconOrigine(remainingPath.front(), NULL);
-
 	m_pNetwork->GetSymuScript()->ComputePaths(pTO,
 		pVeh->GetDestination(), pVeh->GetType(),
 		m_pNetwork->GetInstSim()*m_pNetwork->GetTimeStep(),
 		1, 0, remainingPath, BannedLinks, newremainingpaths, MapFilteredItis, false);
 
-	delete(pTO);
-
 	if (newremainingpaths.size() == 0)		// No other paths
+	{
+		m_output << CSV_NEW_LINE;
 		return false;
+	}
 
 	// Apply new path
-	const std::vector<Tuyau*> newremainingpath = newremainingpaths.front().links;
+	std::vector<Tuyau*> newremainingpath = newremainingpaths.front().links;
 	if (!pVeh->GetTrip()->ChangeRemainingPath(newremainingpath, pVeh.get()))
+	{
+		m_output << CSV_NEW_LINE;
 		return false;
+	}
 
-	std::cout << "Rerouted vehicle id: " << pVeh->GetID() << std::endl;
-	Write(pVeh->GetID(), 1);
+	//std::cout << "Rerouted vehicle id: " << pVeh->GetID() << std::endl;
+	//Write(pVeh->GetID(), 1);
 
 /*	m_routedvehs.insert(std::make_pair(pVeh->GetID(), std::vector<Tuyau*>()));
 	for (size_t i = 0; i < pVeh->GetTrip()->GetFullPath()->size(); i++)
 		m_routedvehs[pVeh->GetID()].push_back((pVeh->GetTrip()->GetFullPath()->at(i)));*/
+
+	if (m_output.is_open())
+	{
+		std::vector<Tuyau*>::iterator itL;
+		for(itL=newremainingpath.begin();itL!=newremainingpath.end();itL++)
+		{
+			m_output << (*itL)->GetLabel() << " ";
+		}
+		m_output << CSV_SEPARATOR;
+
+		m_output << CSV_NEW_LINE;
+	}
+
+	delete(pTO);
 
 	return true;
 }
