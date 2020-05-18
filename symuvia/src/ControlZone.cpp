@@ -80,7 +80,6 @@ bool ControlZone::IsVehicleTooClose(boost::shared_ptr<Vehicule> pVeh)
 			// Check distance limit 
 			if(pVeh->ComputeDistance(pVeh->GetLink(1), pVeh->GetPos(1), m_Links[i], 0, dbDst))
 			{
-				//std::cout <<  dbDst << " " << m_dbDistanceLimit << " " ;
 				if (dbDst < m_dbDistanceLimit)
 				{
 					return true;

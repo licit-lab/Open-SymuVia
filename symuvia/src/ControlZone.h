@@ -35,8 +35,6 @@ private:
 									// if its distance to the zone is lesser than this value, the 
 									// re-routing is not apply
 
-	//std::vector<Tuyau*>	m_Links;	// List of links compound the zone
-
 	std::map<int, std::vector<Tuyau*>>		m_routedvehs;	// List of rerouted vehicles with their initial path
 
 public:
