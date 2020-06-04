@@ -279,6 +279,8 @@ Vehicule::Vehicule
 
     m_ExternalID = -1;
 
+    m_bAlreadyRerouted=false;
+
     InitChgtVoie();
 }
 
@@ -402,6 +404,8 @@ Vehicule::Vehicule
     m_pCurrentTuyauMeso = other.m_pCurrentTuyauMeso;
     m_timeCode = other.m_timeCode;
     m_pNextTuyauMeso = other.m_pNextTuyauMeso;
+
+    m_bAlreadyRerouted=other.m_bAlreadyRerouted;
 
 #ifdef USE_SYMUCOM
 	m_pConnectedVehicle = other.m_pConnectedVehicle;
@@ -559,6 +563,8 @@ Vehicule::Vehicule
     m_ExternalID = -1;
 
     InitChgtVoie();
+
+    m_bAlreadyRerouted=false;
 
 #ifdef USE_SYMUCOM
     m_pConnectedVehicle = NULL;

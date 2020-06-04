@@ -4018,6 +4018,11 @@ SYMUBRUIT_EXPORT int SYMUBRUIT_CDECL SymAddControlZone(int networkId, double dbA
 		{
 			lstLinks.push_back(pLink);
 		}
+        else
+        {
+            std::cout << " error on " << linkNames[iLinkName] << std::endl;
+        }
+        
 	}
 
 	return pNetwork->AddControlZone(dbAcceptanceRate, dbDistanceLimit, lstLinks);
@@ -4367,7 +4372,7 @@ extern "C"
 
 		std::vector<std::string> linkNames;
 		std::string slinks = std::string(links);
-		
+
 		linkNames = SystemUtil::split2vct(slinks, ' ');
 
 		return SymAddControlZone(networkId, dbAcceptanceRate, dbDistanceLimit, linkNames);

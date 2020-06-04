@@ -445,6 +445,9 @@ protected:
 
     boost::mutex        m_Mutex;
 
+    // Banned zones management
+    bool                m_bAlreadyRerouted;
+
 #ifdef USE_SYMUCOM
     ITSStation*         m_pConnectedVehicle;
 #endif // USE_SYMUCOM
@@ -768,6 +771,9 @@ virtual void        CalculVoiesPossibles(double dbInstant);
 
     bool IsMeso();
     void SetInsertionMesoEnAttente(Tuyau * pNextTuyauMeso);
+
+    bool    IsAlreadyRerouted(){return m_bAlreadyRerouted;};
+    void    SetAlreadyRerouted(bool bAlreadyRerouted){m_bAlreadyRerouted=bAlreadyRerouted;};
 
     std::set<AbstractSensor*> GetPotentiallyImpactedSensors(SensorsManager * pSensorsManager);
 
