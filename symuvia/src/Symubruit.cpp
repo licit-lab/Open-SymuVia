@@ -4000,7 +4000,7 @@ SYMUBRUIT_EXPORT bool SYMUBRUIT_CDECL SymForbidLinks(int networkId, const std::v
 	return pReseau->ForbidLinks(lstLinks);
 }
 
-SYMUBRUIT_EXPORT int SYMUBRUIT_CDECL SymAddControlZone(int networkId, double dbAcceptanceRate, double dbDistanceLimit, const std::vector<std::string> & linkNames)
+SYMUBRUIT_EXPORT int SYMUBRUIT_CDECL SymAddControlZone(int networkId, double dbAcceptanceRate, double dbDistanceLimit, double dbComplianceRate, const std::vector<std::string> & linkNames)
 {
 	Reseau* pNetwork = theApp.GetNetwork(networkId);
 
@@ -4025,7 +4025,7 @@ SYMUBRUIT_EXPORT int SYMUBRUIT_CDECL SymAddControlZone(int networkId, double dbA
         
 	}
 
-	return pNetwork->AddControlZone(dbAcceptanceRate, dbDistanceLimit, lstLinks);
+	return pNetwork->AddControlZone(dbAcceptanceRate, dbDistanceLimit, dbComplianceRate, lstLinks);
 }
 
 SYMUBRUIT_EXPORT int SYMUBRUIT_CDECL SymRemoveControlZone(int networkId, int nControlZoneID)
@@ -4144,6 +4144,19 @@ SYMUBRUIT_EXPORT bool SYMUBRUIT_CDECL SymSetODPaths(char* pathsDefJSON)
 	return pReseau->SetODPaths(pathsDefJSON);
 }
 
+// Set demand value for one origin
+SYMUBRUIT_EXPORT bool SymSetDemand(std::string originID, double dbValue)
+{
+	Reseau* pReseau = theApp.GetNetwork(DEFAULT_NETWORK_ID);
+
+	if (!pReseau)
+		return false;
+
+	std::string sVehicleType = "ID";
+
+	return pReseau->SetDemand(originID, sVehicleType, dbValue);
+}
+
 // Return last computed value of total travel time of a MFD sensor
 SYMUBRUIT_EXPORT double SYMUBRUIT_CDECL SymGetTotalTravelTime(std::string sMFDSensorID)
 {
@@ -4164,6 +4177,51 @@ SYMUBRUIT_EXPORT double SYMUBRUIT_CDECL SymGetTotalTravelDistance(std::string sM
 		return false;
 
 	return pReseau->GetTotalTravelDistance(sMFDSensorID);
+}
+
+SYMUBRUIT_EXPORT bool SymSetSignalPlan(std::string strTrafficLightID, std::string strJsonSignalPlan)
+{
+	Reseau* pReseau = theApp.GetNetwork(DEFAULT_NETWORK_ID);
+
+	if (!pReseau)
+		return false;
+
+	return pReseau->SetSignalPlan(strTrafficLightID, strJsonSignalPlan);
+}
+
+SYMUBRUIT_EXPORT std::string SymGetSignalPlan(std::string strTrafficLightID)
+{
+	Reseau* pReseau = theApp.GetNetwork(DEFAULT_NETWORK_ID);
+
+	if (!pReseau)
+		return "";
+
+	std::string sTmp = pReseau->GetSignalPlan(strTrafficLightID);
+	std::cout << sTmp << std::endl;
+
+	return sTmp;
+
+}
+
+// Public transport stop duration 
+SYMUBRUIT_EXPORT int SymSetPTStopDuration(std::string StopID, double dbDuration)
+{
+    Reseau* pReseau = theApp.GetNetwork(DEFAULT_NETWORK_ID);
+
+    if (!pReseau)
+        return false;
+
+    return pReseau->SetPTStopDuration(StopID, dbDuration);
+}
+
+SYMUBRUIT_EXPORT double SymGetPTStopDuration(std::string StopID)
+{
+    Reseau* pReseau = theApp.GetNetwork(DEFAULT_NETWORK_ID);
+
+    if (!pReseau)
+        return -1;
+
+    return pReseau->GetPTStopDuration(StopID);
 }
 
 //-------------------------------------------------------------------------------------
@@ -4367,7 +4425,7 @@ extern "C"
 		return ok;
 	}
 
-	DECLDIR int SymAddControlZoneEx(int networkId, double dbAcceptanceRate, double dbDistanceLimit, char* links)
+	DECLDIR int SymAddControlZoneEx(int networkId, double dbAcceptanceRate, double dbDistanceLimit, double dbComplianceRate, char* links)
 	{
 
 		std::vector<std::string> linkNames;
@@ -4375,7 +4433,7 @@ extern "C"
 
 		linkNames = SystemUtil::split2vct(slinks, ' ');
 
-		return SymAddControlZone(networkId, dbAcceptanceRate, dbDistanceLimit, linkNames);
+		return SymAddControlZone(networkId, dbAcceptanceRate, dbDistanceLimit, dbComplianceRate, linkNames);
 	}
 
 	DECLDIR int SymRemoveControlZoneEx(int networkId, int nControlZoneID)
@@ -4404,4 +4462,51 @@ extern "C"
 		std::string sMFDSensorID = std::string(MFDSensorID);
 		return SymGetTotalTravelDistance(sMFDSensorID);
 	}
+
+    	// Pilotage d'un contrôleur de feux
+	DECLDIR int SymSetSignalPlanEx(char* TrafficLightID, char* sJsonSignalPlan)
+	{
+		std::string strTrafficLightID = std::string(TrafficLightID);
+		std::string strJsonSignalPlan = std::string(sJsonSignalPlan);
+
+		return SymSetSignalPlan(strTrafficLightID, strJsonSignalPlan);
+	}
+
+	// Pilotage d'un contrôleur de feux
+	SYMUBRUIT_EXPORT char * SYMUBRUIT_CDECL SymGetSignalPlanEx(char* TrafficLightID)
+	{
+		std::string strTrafficLightID = std::string(TrafficLightID);
+		std::string sJsonSignalPlan;
+
+		sJsonSignalPlan = SymGetSignalPlan(strTrafficLightID);
+
+		char* retValue = new char[sJsonSignalPlan.length() + 1];
+#ifdef WIN32
+		strcpy_s(retValue, sJsonSignalPlan.length() + 1, sJsonSignalPlan.c_str());
+#else
+		strcpy(retValue, sJsonSignalPlan.c_str());
+#endif
+		return retValue;
+	}
+
+    DECLDIR bool SymSetDemandEx(char* originID, double dbValue)
+	{
+		std::string sOriginID = std::string(sOriginID);
+		return SymSetDemand(sOriginID, dbValue);
+	}
+
+    // Public transport stop duration 
+	DECLDIR int SymSetPTStopDurationEx(char* StopID, double dbDuration)
+	{
+		std::string strStopID = std::string(StopID);
+
+		return SymSetPTStopDuration(strStopID, dbDuration);
+	}
+
+	DECLDIR double SymGetPTStopDurationEx(char* StopID)
+	{
+		std::string strStopID = std::string(StopID);
+
+		return SymGetPTStopDuration(strStopID);
+    }
 }

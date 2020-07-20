@@ -4402,12 +4402,12 @@ DeliveryFleet* Reseau::GetDeliveryFleet()
     return (DeliveryFleet*)m_LstFleets[2];
 }
 
-int Reseau::AddControlZone(double dbAcceptanceRate, double dbDistanceLimit, std::vector<Tuyau*> Links)
+int Reseau::AddControlZone(double dbAcceptanceRate, double dbDistanceLimit, double dbComplianceRate, std::vector<Tuyau*> Links)
 {
 	if (!m_pControlZoneManagement)
 		m_pControlZoneManagement = new ControlZoneManagement(this);
 
-	return m_pControlZoneManagement->AddControlZone(dbAcceptanceRate, dbDistanceLimit, Links);
+	return m_pControlZoneManagement->AddControlZone(dbAcceptanceRate, dbDistanceLimit, dbComplianceRate, Links);
 }
 
 bool Reseau::RemoveControlZone(int nID)
@@ -13536,6 +13536,74 @@ Voie* Reseau::GetVoieFromID(const std::string & sTuyauID, int NumVoie)
     return pVehicle->GetVehicleID();
 }
 
+	// Modify current value of demand for an origin and a type of vehicle
+	// The new value is applied until the end of simulation
+	bool Reseau::SetDemand(std::string originID, std::string sVehicleType, double dbValue)
+	{
+		SymuViaTripNode *pOrigin;
+		char cType;
+
+		// Check origin
+		pOrigin = GetOrigineFromID(originID, cType);
+		if (!pOrigin)
+			return false;
+
+		// Check type of vehicle
+		TypeVehicule *pVT = this->GetVehicleTypeFromID(sVehicleType);
+		if (!pVT)
+			return false;
+
+		// Modify value demand
+		ListOfTimeVariation<tracked_double>* Demands;
+		Demands = pOrigin->GetLstDemande().at(pVT);
+		if (Demands)
+			return false;
+
+		boost::shared_ptr<tracked_double> pdbTmp = boost::make_shared<tracked_double>();
+		*pdbTmp = dbValue;
+
+		Demands->RemoveVariations();
+		Demands->AddVariation(GetDureeSimu(), pdbTmp);
+		
+		return true;
+	}
+
+
+	std::string Reseau::GetSignalPlan(std::string strTrafficLightID)
+	{
+		ControleurDeFeux* pTrafficLight;
+		std::string strJsonSignalPlan;
+
+		pTrafficLight = GetTrafficLightControllerFromID(strTrafficLightID);
+
+		if (!pTrafficLight)
+			return "";
+
+		STimeSpan   tsInst((int)GetInstSim());
+		STime tHrCrt = GetSimuStartTime() + tsInst;
+		PlanDeFeux *pTLC = pTrafficLight->GetLstTrafficLightCycles()->GetVariationEx(tHrCrt);
+
+		if (!pTLC)
+			return "";
+
+		std::string sTmp = pTLC->GetJsonDescription();
+
+		std::cout << sTmp << std::endl;
+
+		return sTmp;
+	}
+
+	bool Reseau::SetSignalPlan(std::string strTrafficLightID, std::string strJsonSignalPlan)
+	{
+		ControleurDeFeux* pTrafficLight;
+
+		pTrafficLight = GetTrafficLightControllerFromID(strTrafficLightID);
+		if (!pTrafficLight)
+			return false;
+		
+		return pTrafficLight->ReplaceSignalPlan(strJsonSignalPlan);
+	}
+
 int Reseau::CreatePublicTransportUser(const std::string & startStop, const std::string & endStop, const std::string & lineName, double dbt, int externalUserID)
 {
     // r�cup�ration de l'arr�t de d�part
@@ -18904,6 +18972,44 @@ double Reseau::GetTotalTravelDistance(std::string sMFDSensorID)
 		return -1;
 
 	return pMFDSensor->GetTotalTravelDistance();
+}
+
+double Reseau::GetPTStopDuration(std::string StopID)
+{
+    PublicTransportFleet* pPTFleet;
+
+    pPTFleet = GetPublicTransportFleet();
+    
+    if(!pPTFleet)
+        return -2;
+
+    Arret* pStop;
+    pStop=(Arret*)pPTFleet->GetTripNode(StopID);
+
+    if(!pStop)
+        return -3;
+
+    return pStop->getTempsArret();
+}
+
+int Reseau::SetPTStopDuration(std::string StopID, double dbDuration)
+{
+    PublicTransportFleet* pPTFleet;
+
+    pPTFleet = GetPublicTransportFleet();
+    
+    if(!pPTFleet)
+        return -2;
+
+    Arret* pStop;
+    pStop=(Arret*)pPTFleet->GetTripNode(StopID);
+
+    if(!pStop)
+        return -3;
+
+    pStop->setTempsArret(dbDuration);
+
+    return 1;
 }
 
 template void Reseau::serialize(boost::archive::xml_woarchive & ar, const unsigned int version);

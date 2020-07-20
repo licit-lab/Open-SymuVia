@@ -94,10 +94,15 @@ private:
 	std::ofstream m_outputProbabilities;				// csv output 
 
 	bool			m_bChangedSinceLastUpdate;
-		
+
+	double			m_dbComplianceRate;		// Rate of users' compliance (equal at 1 if all users follows the guideline) 
+
+	std::vector<int> m_CompliantVehicle;	// List of compliant vehicle
+	std::vector<int> m_NoCompliantVehicle;	// List of NO compliant vehicle
+
 public:
 	bool	Update();
-	int		AddControlZone(double dbAcceptanceRate, double dbDistanceLimit, std::vector<Tuyau*> Links);
+	int		AddControlZone(double dbAcceptanceRate, double dbDistanceLimit, double dbComplianceRate, std::vector<Tuyau*> Links);
 	
 	bool	CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> pVeh);
 	void	ModifyControlZone(int id, double dbAcceptanceRate);

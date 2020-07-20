@@ -22,6 +22,7 @@ ControlZone::ControlZone(Reseau * pNetwork, ControlZoneManagement *pManager)
 
 	m_dbCurrentAcceptanceRate=0;
 	m_dbAcceptanceRateToApply=0;
+
 }
 
 ControlZone::~ControlZone()
@@ -129,6 +130,8 @@ ControlZoneManagement::ControlZoneManagement(Reseau * pNetwork)
 
 	m_bChangedSinceLastUpdate = false;
 
+	m_dbComplianceRate = 1;
+
 	if (!m_output.is_open())
 	{
 		m_output.open((pNetwork->GetPrefixOutputFiles() + "_ctrlzonedata_" + ".csv").c_str(), std::ios::out);
@@ -145,7 +148,6 @@ ControlZoneManagement::ControlZoneManagement(Reseau * pNetwork)
 		m_outputProbabilities << "TimeEnd" << CSV_SEPARATOR << "Zone" << CSV_SEPARATOR << "InitialProba" << CSV_SEPARATOR << "NbVehsPassingBeforeReroutingProcess" << CSV_SEPARATOR << "NbVehsPassingAfterReroutingProcess" << CSV_SEPARATOR << "NbVehsNotPassingBofReroutingProcess" << CSV_SEPARATOR << "NbVehsPassingBofReroutingProcess" << CSV_NEW_LINE;
 	}
 
-	
 }
 
 ControlZoneManagement::~ControlZoneManagement()
@@ -202,7 +204,7 @@ bool ControlZoneManagement::Update()
 	return true;
 }
 
-int ControlZoneManagement::AddControlZone(double dbAcceptanceRate, double dbDistanceLimit, std::vector<Tuyau*> Links)
+int ControlZoneManagement::AddControlZone(double dbAcceptanceRate, double dbDistanceLimit, double dbComplianceRate, std::vector<Tuyau*> Links)
 {
 	ControlZone* pControlZone = new ControlZone(m_pNetwork, this);
 	pControlZone->Init(++m_nCount,dbAcceptanceRate, dbDistanceLimit, Links);
@@ -210,6 +212,8 @@ int ControlZoneManagement::AddControlZone(double dbAcceptanceRate, double dbDist
 	m_ControlZones.push_back(pControlZone);
 
 	m_bChangedSinceLastUpdate = true;
+
+	m_dbComplianceRate = dbComplianceRate;
 
 	return m_nCount;
 }
@@ -247,6 +251,31 @@ bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> p
 	std::vector<PathResult> newremainingpaths;
 	std::map<std::vector<Tuyau*>, double> MapFilteredItis;
 
+	// Get compliance of vehicle
+	/*if( std::find(m_CompliantVehicle.begin(), m_CompliantVehicle.end(), pVeh->GetID()) == m_CompliantVehicle.end() and 
+	std::find(m_NoCompliantVehicle.begin(), m_NoCompliantVehicle.end(), pVeh->GetID())== m_NoCompliantVehicle.end() )
+	{
+		{
+			double dbRand = m_pNetwork->GetRandManager()->myRand() / (double)MAXIMUM_RANDOM_NUMBER;
+			if (dbRand > m_dbComplianceRate)
+			{
+				m_NoCompliantVehicle.push_back(pVeh->GetID());
+				std::cout << pVeh->GetID() << ": No Compliant Vehicle " << std::endl;
+			}
+			else
+			{
+				m_CompliantVehicle.push_back(pVeh->GetID());
+				std::cout << pVeh->GetID() << " Compliant Vehicle " << std::endl; 
+			}
+		}	
+	}*/
+
+	/*bool bCompliantVehicle = (std::find(m_CompliantVehicle.begin(), m_CompliantVehicle.end(), pVeh->GetID()) != m_CompliantVehicle.end());
+	std::cout << pVeh->GetID() << " " << bCompliantVehicle << std::endl; 
+	
+	if(!bCompliantVehicle)
+		return false;*/
+
 	//std::cout << "CheckAndRerouteVehicle id: " << pVeh->GetID() << std::endl;
 
 	m_output << m_pNetwork->GetInstSim() << CSV_SEPARATOR << pVeh->GetID() << CSV_SEPARATOR << pVeh->IsAlreadyRerouted() << CSV_SEPARATOR;
@@ -254,7 +283,7 @@ bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> p
 	remainingPath = pVeh->GetTrip()->GetRemainingPath();
     pTO = new TronconOrigine(remainingPath.front(), NULL);
 
-	// Trace
+	// Trace - Par quel zone passe le véhicule avant le processus de bannissement ?
 	for (itCZ = m_ControlZones.begin(); itCZ != m_ControlZones.end(); itCZ++)
 	{
 		if( (*itCZ)->IsPathPassesThrough(remainingPath) ) 
@@ -263,7 +292,21 @@ bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> p
 			InitialCrossedPassedZones.push_back((*itCZ)); 
 		}
 	}
-	
+
+	double dbRand = m_pNetwork->GetRandManager()->myRand() / (double)MAXIMUM_RANDOM_NUMBER;
+	std::cout << pVeh->GetID() << " " << m_dbComplianceRate << " " << dbRand << std::endl; 
+	if (dbRand > m_dbComplianceRate)
+	{
+		// Trace - Par quel zone passe le véhicule après le processus de bannissement ?
+		for (itCZ = m_ControlZones.begin(); itCZ != m_ControlZones.end(); itCZ++)
+		{
+			if( (*itCZ)->IsPathPassesThrough(remainingPath) ) 
+			{
+				(*itCZ)->IncNbVehsPassingAfterReroutingProcess();
+			}
+		}
+		return false;
+	}
 
     // The vehicles not already rerouted are not taken into account - they stay on their initial path
     if(pVeh->IsAlreadyRerouted())
@@ -539,6 +582,20 @@ bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> p
 		return false;
 	}
 
+	// Compliance computation
+	//if (m_dbComplianceRate < 1)
+	//{
+	//	double dbRand = m_pNetwork->GetRandManager()->myRand() / (double)MAXIMUM_RANDOM_NUMBER;
+	//	if (dbRand > m_dbComplianceRate)
+	//	{
+	//		m_output << CSV_NEW_LINE;
+	//
+	//		std::cout << " No compliance for vehicle id: " << pVeh->GetID() << std::endl;
+	//
+	//		return false;
+	//	}
+	//}
+
 	// Apply new path
 	std::vector<Tuyau*> newremainingpath = newremainingpaths.front().links;
 	if (!pVeh->GetTrip()->ChangeRemainingPath(newremainingpath, pVeh.get()))
@@ -553,6 +610,8 @@ bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> p
 		}
 		return false;
 	}
+
+	// Change path OK
 	pVeh->SetAlreadyRerouted( true );
 	std::vector<Tuyau*>::iterator itL;
 	

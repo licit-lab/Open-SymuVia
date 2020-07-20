@@ -996,6 +996,12 @@ public:
         bool                            GetExtensionBarycentresSirane() {return m_bExtensionBarycentresSirane;}
 
 // Pilotage
+        // Demand
+		bool							SetDemand(std::string originID, std::string sVehicleType, double dbValue);
+
+		std::string						GetSignalPlan(std::string strTrafficLightID);
+		bool							SetSignalPlan(std::string strTrafficLightID, std::string strJsonSignalPlan);
+
         int								CreateVehicle(const std::string & sType, const std::string & sEntree, const std::string & sSortie, int nVoie, double dbt, std::deque<std::string> * pIti, const std::string & junctionName, int externalUserID = -1, std::string nextRouteId = std::string());
         int                             CreatePublicTransportUser(const std::string & startStop, const std::string & endStop, const std::string & lineName, double dbt, int externalUserID);
 		int								DeleteVehicle(int nID);
@@ -1089,12 +1095,15 @@ public:
         // Renvoie la flotte des transports guidés
         PublicTransportFleet*           GetPublicTransportFleet();
 
+        double                          GetPTStopDuration(std::string StopID);
+        int                             SetPTStopDuration(std::string StopID,double dbDuration);
+
         // Renvoie la flotte des engins de livraison
         DeliveryFleet*                  GetDeliveryFleet();
 
 		// Control zone
 		ControlZoneManagement*			GetControlZoneManagement() { return m_pControlZoneManagement; };
-		int		AddControlZone(double dbAcceptanceRate, double dbDistanceLimit, std::vector<Tuyau*> Links);
+		int		AddControlZone(double dbAcceptanceRate, double dbDistanceLimit, double dbComplianceRate, std::vector<Tuyau*> Links);
 		bool	RemoveControlZone(int nID);
 		bool	ModifyControlZone(int nID, double dbAcceptanceRate);
 		bool	UpdateControlZones();

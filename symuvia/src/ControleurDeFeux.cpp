@@ -23,6 +23,11 @@
 #include <boost/serialization/shared_ptr.hpp>
 #include <boost/serialization/vector.hpp>
 
+#pragma warning(disable : 4003)
+#include <rapidjson/document.h>
+#include <rapidjson/writer.h>
+#pragma warning(default : 4003)
+
 #include <list>
 
 using namespace std;
@@ -1238,6 +1243,78 @@ double PlanDeFeux::GetDureeCumSeq
     return dbCum;
 }
 
+// Replace all signal plans by a new signal stored in Json string
+bool ControleurDeFeux::ReplaceSignalPlan(std::string strJsonSignalPlan)
+{
+	// decode JSON signal plan input
+	rapidjson::Document document;
+	document.Parse(strJsonSignalPlan.c_str());
+
+	if (!document.IsObject())
+		return false;
+
+	double dbDuration;
+
+	STime dtDebut;
+	SDateTime dt;
+	dtDebut = dt.ToTime();
+
+	PlanDeFeux *pPlanDeFeux = new PlanDeFeux("NewFromJSON", dtDebut);
+	bool bOK = true;
+
+	rapidjson::Value sequences = document["sequences"].GetArray();
+	for (rapidjson::SizeType iSq = 0; iSq < sequences.Size(); iSq++)
+	{
+		dbDuration = sequences[iSq]["duration"].GetDouble();
+		rapidjson::Value signals = sequences[iSq]["signals"].GetArray();
+
+		CDFSequence *pSequence = new CDFSequence(dbDuration, (int)iSq);
+
+		for (rapidjson::SizeType iSg = 0; iSg < signals.Size(); iSg++)
+		{
+			std::string sInputID = signals[iSg]["input_id"].GetString();
+			Tuyau* pInput = m_pReseau->GetLinkFromLabel(sInputID);
+			if (!pInput)
+			{
+				bOK = false;
+				continue;
+			}
+
+			std::string sOutputID = signals[iSg]["output_id"].GetString();
+			Tuyau* pOutput = m_pReseau->GetLinkFromLabel(sOutputID);
+			if (!pOutput)
+			{
+				bOK = false;
+				continue;
+			}
+
+			double dbGreenDuration = signals[iSg]["green_duration"].GetDouble();
+			double dbDelayActivation = signals[iSg]["delay_activation"].GetDouble();
+
+			AddCoupleEntreeSortie(pInput, pOutput);
+			SignalActif *pSignal = new SignalActif(pInput, pOutput, dbGreenDuration, 0.0, dbDelayActivation);
+
+			pSequence->AddActiveSignal(pSignal);
+		}
+		pPlanDeFeux->AddSequence(pSequence);
+	}
+
+	if (!bOK)
+	{
+		delete pPlanDeFeux;
+		return false;
+	}
+
+	// TO DO: problem with m_pLstPlanDeFeuxInit !
+	//for (int i = 0; i < (int)m_pLstPlanDeFeux->GetLstTV()->size(); i++)
+		//delete (m_pLstPlanDeFeux->GetVariation(i));
+
+	m_pLstPlanDeFeux->GetLstTV()->clear();
+	m_pLstPlanDeFeux->AddVariation(dtDebut, pPlanDeFeux);
+	
+	return true;
+}
+
 CDFSequence* PlanDeFeux::GetNextSequence(CDFSequence *pSeq)
 {
     for(int i=0; i<(int)m_LstSequence.size(); i++)
@@ -1252,6 +1329,53 @@ CDFSequence* PlanDeFeux::GetNextSequence(CDFSequence *pSeq)
     }
 
     return NULL;
+}
+
+std::string PlanDeFeux::GetJsonDescription()
+{
+	rapidjson::Document JsonSignalPlan(rapidjson::kObjectType);
+	rapidjson::Document::AllocatorType& allocator = JsonSignalPlan.GetAllocator();
+
+	rapidjson::Value sequences(rapidjson::kArrayType);
+
+	std::vector<CDFSequence*>::iterator itSeq;
+	for( itSeq=m_LstSequence.begin();itSeq!= m_LstSequence.end();itSeq++)
+	{
+		rapidjson::Value sequence(rapidjson::kObjectType);
+		sequence.AddMember("duration", (*itSeq)->GetTotalLength(), allocator);
+		rapidjson::Value signals(rapidjson::kArrayType);
+
+		std::vector<SignalActif*>::iterator itSA;
+		for (itSA = (*itSeq)->m_LstSignActif.begin(); itSA != (*itSeq)->m_LstSignActif.end(); itSA++)
+		{
+			rapidjson::Value signal(rapidjson::kObjectType);
+
+			rapidjson::Value strValue(rapidjson::kStringType);
+			strValue.SetString((*itSA)->GetInputLink()->GetLabel().c_str(),allocator);
+			signal.AddMember("input_id", strValue, allocator);
+
+			strValue.SetString((*itSA)->GetOutputLink()->GetLabel().c_str(), allocator);
+			signal.AddMember("output_id", strValue, allocator);
+
+			signal.AddMember("green_duration", (*itSA)->GetGreenDuration(), allocator);
+			signal.AddMember("delay_activation", (*itSA)->GetActivationDelay(), allocator);
+
+			signals.PushBack(signal, allocator);
+		}
+		sequence.AddMember("signals", signals, allocator);
+		sequences.PushBack(sequence, allocator);
+	}
+
+	JsonSignalPlan.AddMember("sequences", sequences, allocator);
+
+	rapidjson::StringBuffer buffer;
+	buffer.Clear();
+	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+	JsonSignalPlan.Accept(writer);
+
+	std::cout << buffer.GetString() << std::endl;
+
+	return buffer.GetString();
 }
 
 CDFSequence::CDFSequence(double dbDureeTotale, int nNum)

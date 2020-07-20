@@ -27,7 +27,7 @@ public:
     std::vector<double> lastRatioMontee;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Sérialisation
+// Sï¿½rialisation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 private:
 	friend class boost::serialization::access;
@@ -35,12 +35,12 @@ private:
 	void serialize(Archive & ar, const unsigned int version);
 };
 
-// La classe arrêt décrit les différents paramètres relatifs aux lieux d'arrêt des
-// autobus sur le réseau
+// La classe arrï¿½t dï¿½crit les diffï¿½rents paramï¿½tres relatifs aux lieux d'arrï¿½t des
+// autobus sur le rï¿½seau
 class Arret : public TripNode
 {
 public:
-    // Constructeurs, destructeurs et assimilés
+    // Constructeurs, destructeurs et assimilï¿½s
     Arret();
     Arret(const std::string & strID, Reseau * pNetwork, Tuyau*, double distance, double tps, bool bSurVoie);
     virtual ~Arret();
@@ -48,32 +48,33 @@ public:
     // Initialisation des variables
     virtual void Initialize(std::deque< TimeVariation<TraceDocTrafic> > & docTrafics);
 
-    // Traitement sur entrée d'un véhicule dans le TripNode
+    // Traitement sur entrï¿½e d'un vï¿½hicule dans le TripNode
     virtual void VehiculeEnter(boost::shared_ptr<Vehicule> pVehicle, VoieMicro * pDestinationEnterLane, double dbInstDestinationReached, double dbInstant, double dbTimeStep, bool bForcedOutside = false);
 
-    // Traitement sur sortie d'un véhicule du TripNode
+    // Traitement sur sortie d'un vï¿½hicule du TripNode
     virtual void VehiculeExit(boost::shared_ptr<Vehicule> pVehicle);
 
     // Fonctions permettant la gestion des lignes d'autobus
-    void AjoutLigne(Trip* ligne, bool bDureeArretDynamique, bool bPoisson, double dbRatioDescente, bool bBinomial, int nStockInit, RepartitionTypeVehicule * pRepTypesVeh, int num_voie = -1);   // ajoute la ligne de bus a la liste des lignes concernées par cet arrêt
+    void AjoutLigne(Trip* ligne, bool bDureeArretDynamique, bool bPoisson, double dbRatioDescente, bool bBinomial, int nStockInit, RepartitionTypeVehicule * pRepTypesVeh, int num_voie = -1);   // ajoute la ligne de bus a la liste des lignes concernï¿½es par cet arrï¿½t
 
-    // Fonctions de renvoi des paramètres de l'arrêt
-    double getTempsArret();         // retourne le temps d'arret
+    // Fonctions de renvoi des paramï¿½tres de l'arrï¿½t
+    double  getTempsArret();         // retourne le temps d'arret
+    void    setTempsArret(double dbTempsArret){tps_arret=dbTempsArret;};
 
-    // Vérifie si une ligne passe par l'arrêt
+    // Vï¿½rifie si une ligne passe par l'arrï¿½t
     bool hasLine(PublicTransportLine * pLine);
 
-    // Indique si le TripNode correspond à un numéro de voie en particulier ou non
+    // Indique si le TripNode correspond ï¿½ un numï¿½ro de voie en particulier ou non
     virtual bool hasNumVoie(Trip * pLigne);
 
-    // Indique le numéro de voie du TripNode
+    // Indique le numï¿½ro de voie du TripNode
     virtual int getNumVoie(Trip * pLigne, TypeVehicule * pTypeVeh);
 
     std::deque<Trip*> & getLstLTPs() { return m_LstLTPs; }
 
     std::deque<TimeVariation<tracked_double>>* GetLstDemandeTV() { return &m_LstDemandes; }
 
-    // Renvoie l'objet ligne de bus (différent du Trip associé aux véhicules)
+    // Renvoie l'objet ligne de bus (diffï¿½rent du Trip associï¿½ aux vï¿½hicules)
     Trip * getLine(Trip * pTrip);
 
     void    setInstantDernierRamassage(Trip * pLigne, double dbInstant);
@@ -88,20 +89,20 @@ public:
     void    SetEligibleParcRelais(bool bEligibleParcRelais) { m_bEligibleParcRelais = bEligibleParcRelais; }
     bool    IsEligibleParcRelais() { return m_bEligibleParcRelais; }
 
-    // Calcule le temps d'arrêt du véhicule dans le TripNode
+    // Calcule le temps d'arrï¿½t du vï¿½hicule dans le TripNode
     virtual double GetStopDuration(boost::shared_ptr<Vehicule> pVehicle, bool bIsRealStop);
 
-    // Renvoie une map d'attributs à sortir de façon spécifique pour un véhicule dans le TripNode
+    // Renvoie une map d'attributs ï¿½ sortir de faï¿½on spï¿½cifique pour un vï¿½hicule dans le TripNode
     virtual std::map<std::string, std::string> GetOutputAttributes(Vehicule * pV);
 
-    // Accès aux instants de passage des bus
+    // Accï¿½s aux instants de passage des bus
     std::map<Trip*, std::map<int, std::pair<double, double> > > & GetPassingTimes() { return m_LastPassingTimes; }
 
     std::vector<Passenger> & getRealStockRestant(Trip * pLigne);
     double getLastRatioMontee(Trip * pLigne);
     void setLastRatioMontee(Trip * pLigne, double dbLastRatio);
 
-    // méthode pour la sauvegarde et restitution de l'état des arrêts (affectation dynamique convergente).
+    // mï¿½thode pour la sauvegarde et restitution de l'ï¿½tat des arrï¿½ts (affectation dynamique convergente).
     virtual TripNodeSnapshot * TakeSnapshot();
     virtual void Restore(Reseau * pNetwork, TripNodeSnapshot * backup);
 
@@ -112,19 +113,20 @@ private:
 
 
 private:
-    // Variables caractéristiques de l'arrêt
+    // Variables caractï¿½ristiques de l'arrï¿½t
     double tps_arret ;                      // temps d'arret des bus passant a cet arret
-    bool m_bEligibleParcRelais;             // vrai si l'arrêt peut être associé à un parc relais proche
-	std::deque<Trip*> m_LstLTPs ;           // liste des lignes concernées par cet arret
-    std::vector<int> m_LstVoies;            // liste du numéro de la voie pour chaque ligne associée
-    std::vector<bool>   m_LstDureeArretDynamique;   // liste des flags indiquant si la durée des arrêts est dynamique pour chaque ligne de l'arrêt
-    std::vector<bool>   m_LstPoissonCreation;       // Liste indiquant si on doit utiliser une distribution de poisson pour gérer le nombre de piétons créés
-    std::vector<double> m_LstRatioDescente; // liste des ratios de descente pour chaque ligne passant par l'arrêt
-    std::vector<bool>   m_LstBinomialDescente;      // Liste indiquant si on doit utiliser une loi binomiale pour gérer le nombre de descentes à l'arrêt
-    std::vector<int> m_LstStockRestant;     // liste des stocks initial de piétons en attente d'un bus de la ligne à cet arrêt
-    std::deque<TimeVariation<tracked_double>> m_LstDemandes; // liste des variations de demande pour cet arrêt et pour chaque ligne
+    
+    bool m_bEligibleParcRelais;             // vrai si l'arrï¿½t peut ï¿½tre associï¿½ ï¿½ un parc relais proche
+	std::deque<Trip*> m_LstLTPs ;           // liste des lignes concernï¿½es par cet arret
+    std::vector<int> m_LstVoies;            // liste du numï¿½ro de la voie pour chaque ligne associï¿½e
+    std::vector<bool>   m_LstDureeArretDynamique;   // liste des flags indiquant si la durï¿½e des arrï¿½ts est dynamique pour chaque ligne de l'arrï¿½t
+    std::vector<bool>   m_LstPoissonCreation;       // Liste indiquant si on doit utiliser une distribution de poisson pour gï¿½rer le nombre de piï¿½tons crï¿½ï¿½s
+    std::vector<double> m_LstRatioDescente; // liste des ratios de descente pour chaque ligne passant par l'arrï¿½t
+    std::vector<bool>   m_LstBinomialDescente;      // Liste indiquant si on doit utiliser une loi binomiale pour gï¿½rer le nombre de descentes ï¿½ l'arrï¿½t
+    std::vector<int> m_LstStockRestant;     // liste des stocks initial de piï¿½tons en attente d'un bus de la ligne ï¿½ cet arrï¿½t
+    std::deque<TimeVariation<tracked_double>> m_LstDemandes; // liste des variations de demande pour cet arrï¿½t et pour chaque ligne
 
-    std::vector<double> m_LstDernierRamassage; // Sauvegarde de l'instant de dernier ramassage des passagers à l'arrêt pour chaque ligne
+    std::vector<double> m_LstDernierRamassage; // Sauvegarde de l'instant de dernier ramassage des passagers ï¿½ l'arrï¿½t pour chaque ligne
 
     std::map<Trip*, std::map<int, std::pair<double, double> > > m_LastPassingTimes;
     std::vector<std::vector<Passenger> > m_LstWaitingUsers;
@@ -133,7 +135,7 @@ private:
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Sérialisation
+// Sï¿½rialisation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 private:
 	friend class boost::serialization::access;

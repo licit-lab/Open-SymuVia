@@ -116,12 +116,11 @@ public:
 
 private:
     double      m_dbDureeTotale;                // durée totale de la séquence
-
-
-    std::vector<SignalActif*>    m_LstSignActif;     // Liste des signaux actifs de la séquence
     int                         m_nNum;             // Numéro d'orde de la séquence dans le plan de feux associé
 
 public:
+	std::vector<SignalActif*>    m_LstSignActif;     // Liste des signaux actifs de la séquence
+
     std::vector<SignalActif*>    GetLstActiveSignals(){return m_LstSignActif;};
 
     double                  GetTotalLength(){return m_dbDureeTotale;};
@@ -194,6 +193,8 @@ public:
 	void                    SetHrDeb(STime tHrDeb){m_tHrDeb = tHrDeb;}
 
     void                    CopyTo(PlanDeFeux * pTarget);
+
+	std::string				GetJsonDescription();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Sérialisation
@@ -320,6 +321,8 @@ public:
     void SetSeqRetour2(CDFSequence * pSeq) {m_pSeqRetour2 = pSeq;}
     int GetTypeGestionPrePriorite() {return m_nTypeGestionPrePriorite;}
     void SetTypeGestionPrePriorite(int nTypeGestionPrePriorite) {m_nTypeGestionPrePriorite = nTypeGestionPrePriorite;}
+
+	bool ReplaceSignalPlan(std::string strJsonSignalPlan);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Sérialisation
