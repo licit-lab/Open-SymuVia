@@ -5,6 +5,7 @@
 #include "AbstractSensor.h"
 
 #include <vector>
+#include <list>
 
 class EdieSensorSnapshot;
 class EdieSensor;
@@ -20,7 +21,7 @@ public:
     std::vector<PonctualSensorSnapshot> ponctualData;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Sérialisation
+// Sï¿½rialisation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 private:
 	friend class boost::serialization::access;
@@ -64,6 +65,8 @@ public:
 	double GetTotalTravelTime() { return m_dbTotalTravelTime; };
 	double GetTotalTravelDistance() { return m_dbTotalTravelDistance; };
 
+    std::vector<int> GetListOfVehicleIDs();
+
 protected:
     std::vector<EdieSensor*> lstSensors;
     std::vector<PonctualSensor*> lstPonctualSensors;
@@ -71,15 +74,15 @@ protected:
     std::vector<PonctualSensor*> lstStrictPonctualSensors;
     bool m_bEnableStrictSensors;
 
-    // flag indiquant si ce capteur MFD a été défini par l'utilisateur comme un capteur d'Edie 
+    // flag indiquant si ce capteur MFD a ï¿½tï¿½ dï¿½fini par l'utilisateur comme un capteur d'Edie 
     bool                     m_bIsEdie;
 
-    // Longueurs géométriques calculées une fois pour toutes
+    // Longueurs gï¿½omï¿½triques calculï¿½es une fois pour toutes
     double                   m_bGeomLength1;
     double                   m_bGeomLength2;
     double                   m_bGeomLength3;
 
-    // true si capteur MFD simple (on veut uniquement le temps passé et distance parcourue pour calcul vitesse moyenne spatialisée pour SymuMaster, sans créer de capteurs ponctuels par exemple)
+    // true si capteur MFD simple (on veut uniquement le temps passï¿½ et distance parcourue pour calcul vitesse moyenne spatialisï¿½e pour SymuMaster, sans crï¿½er de capteurs ponctuels par exemple)
     bool                     m_bSimpleMFD;
 
 	// Last computed value of total travel time;
@@ -89,7 +92,7 @@ protected:
 	double					m_dbTotalTravelDistance;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Sérialisation
+// Sï¿½rialisation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 private:
 	friend class boost::serialization::access;

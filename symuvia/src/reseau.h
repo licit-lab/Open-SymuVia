@@ -979,8 +979,11 @@ public:
 		std::deque<TraceDocTrafic*>		GetXmlDocTrafic() const;
 
 		SensorsManagers*				GetGestionsCapteur(){return m_pGestionsCapteur;}
+
+        // Access to sensor indicators
 		double							GetTotalTravelTime(std::string sMFDSensorID);
 		double							GetTotalTravelDistance(std::string sMFDSensorID);
+        std::vector<int>                GetListofVehicleIds(std::string sMFDSensorID);
 
 		std::string						GetTitre() { return m_strTitre; }
 

@@ -13,6 +13,8 @@
 
 #include <boost/serialization/vector.hpp>
 
+#include <iostream>
+
 MFDSensor::MFDSensor() : AbstractSensor()
 {
     m_bIsEdie = false;
@@ -52,7 +54,7 @@ MFDSensor::MFDSensor(Reseau * pNetwork,
 	m_dbTotalTravelTime = -1;
 	m_dbTotalTravelDistance = -1;
 
-    // on regarde si on doit utiliser des capteurs pour les débits stricts (uniquement si capteur MFD avec un seul tronçon défini par l'utilisateur)
+    // on regarde si on doit utiliser des capteurs pour les dï¿½bits stricts (uniquement si capteur MFD avec un seul tronï¿½on dï¿½fini par l'utilisateur)
     int nbNonInternalLink = 0;
     for(size_t i = 0; i < eTuyauType.size() && nbNonInternalLink <= 1; i++)
     {
@@ -73,13 +75,13 @@ MFDSensor::MFDSensor(Reseau * pNetwork,
         if (bIsMFD && eTuyauType[i] == EdieSensor::TT_Link && !m_bSimpleMFD)
         {
             // *************************************
-            // Définition des capteurs de débit
+            // Dï¿½finition des capteurs de dï¿½bit
             // *************************************
 
-            // Cas de la sortie du réseau (la connexion aval est ue sortie ou un parking)
+            // Cas de la sortie du rï¿½seau (la connexion aval est ue sortie ou un parking)
             if (pLink->get_Type_aval() == 'S' || pLink->get_Type_aval() == 'P')
             {
-                // On utilise dans ce cas forcément un capteur à la fin du tronçon
+                // On utilise dans ce cas forcï¿½ment un capteur ï¿½ la fin du tronï¿½on
                 PonctualSensor * pNewSensor = new PonctualSensor(pLink, pLink->GetLength());
                 pLink->getLstRelatedSensorsBySensorsManagers()[pParentSensorsManager].push_back(pNewSensor);
                 lstPonctualSensors.push_back(pNewSensor);
@@ -88,7 +90,7 @@ MFDSensor::MFDSensor(Reseau * pNetwork,
             }
             else
             {
-                // Ajout d'un capteur pour chaque tronçon aval accessible à partir du tuyau amont et qui sort de la zone MFD
+                // Ajout d'un capteur pour chaque tronï¿½on aval accessible ï¿½ partir du tuyau amont et qui sort de la zone MFD
                 Tuyau * pTuyAm = pLink;
                 Connexion * pConnexionAval;
                 if(pTuyAm->GetBriqueAval())
@@ -102,10 +104,10 @@ MFDSensor::MFDSensor(Reseau * pNetwork,
                 for(size_t iTuyAv = 0; iTuyAv < pConnexionAval->m_LstTuyAv.size(); iTuyAv++)
                 {
                     Tuyau * pTuyAv = pConnexionAval->m_LstTuyAv[iTuyAv];
-                    // Le tronçon aval ne doit pas être dans la zone MFD
+                    // Le tronï¿½on aval ne doit pas ï¿½tre dans la zone MFD
                     if(std::find(Tuyaux.begin(), Tuyaux.end(), pTuyAv) == Tuyaux.end())
                     {
-                        // Le tuyau aval doit être accessible depuis le tuyau amont (sinon pas la peine de mettre un capteur couteux en temps de traitement)
+                        // Le tuyau aval doit ï¿½tre accessible depuis le tuyau amont (sinon pas la peine de mettre un capteur couteux en temps de traitement)
                         if(pConnexionAval->IsMouvementAutorise(pTuyAm, pTuyAv, NULL, NULL))
                         {
                             PonctualSensor * pNewSensor = new PonctualSensor(pTuyAv, 0);
@@ -117,7 +119,7 @@ MFDSensor::MFDSensor(Reseau * pNetwork,
                     }
                 }
 
-                // Si besoin (cas d'un capteur MFD avec un seul tronçon, pour lequel on doit ressortir les données strictes)
+                // Si besoin (cas d'un capteur MFD avec un seul tronï¿½on, pour lequel on doit ressortir les donnï¿½es strictes)
                 if(m_bEnableStrictSensors)
                 {
                     PonctualSensor * pNewSensor = new PonctualSensor(pLink, pLink->GetLength());
@@ -129,14 +131,14 @@ MFDSensor::MFDSensor(Reseau * pNetwork,
 
 
             // *************************************
-            // Calcul des longueurs géométriques
+            // Calcul des longueurs gï¿½omï¿½triques
             // *************************************
             double dbLength = pLink->GetLength() * pLink->getNb_voies();
             m_bGeomLength1 += dbLength;
             m_bGeomLength2 += dbLength;
             m_bGeomLength3 += dbLength;
 
-            // Pour m_bGeomLength1, ajout de la distance entre les extremités du tronçon et les barycentres des briques amont et aval
+            // Pour m_bGeomLength1, ajout de la distance entre les extremitï¿½s du tronï¿½on et les barycentres des briques amont et aval
             if (pLink->GetBriqueAmont())
             {
                 Point * pBaryCentre = pLink->GetBriqueAmont()->CalculBarycentre();
@@ -226,8 +228,8 @@ bool MFDSensor::IsEdie()
 
 void MFDSensor::CalculInfoCapteur(Reseau * pNetwork, double dbInstant, bool bNewPeriod, double dbInstNewPeriode, boost::shared_ptr<Vehicule> pVeh)
 {
-    // rien a calculer ici pour les capteurs internes constituant le capteur MFD car ils sont rattachés au SensorsManager parent
-    // et ont été traités dans le CalculInfoCapteur de ce SensorsManager (ou indépendamment si pas de SensorsManager parent)
+    // rien a calculer ici pour les capteurs internes constituant le capteur MFD car ils sont rattachï¿½s au SensorsManager parent
+    // et ont ï¿½tï¿½ traitï¿½s dans le CalculInfoCapteur de ce SensorsManager (ou indï¿½pendamment si pas de SensorsManager parent)
 }
 
 void MFDSensor::AddMesoVehicle(double dbInstant, Vehicule * pVeh, Tuyau * pLink, Tuyau * pDownstreamLink, double dbLengthInLink)
@@ -279,8 +281,8 @@ void MFDSensor::Write(double dbInstant, Reseau * pReseau, double dbPeriodeAgrega
             double dbTempsTotalPasse = 0.0;
             double dbTempsTotalPasseStrict = 0.0;
             double dbDebitSortie = 0.0;
-			double dbIntDebitSortie = 0.0;			// Débit de sortie (véh disparaissnt à l'intérieur dee la zone)
-			double dbTransDebitSortie = 0.0;		// Débit de sortie (véh traversant la zone)
+			double dbIntDebitSortie = 0.0;			// Dï¿½bit de sortie (vï¿½h disparaissnt ï¿½ l'intï¿½rieur dee la zone)
+			double dbTransDebitSortie = 0.0;		// Dï¿½bit de sortie (vï¿½h traversant la zone)
             double dbDebitSortieStrict = 0.0;
             double dbLongueurDeplacement = 0.0;
             double dbLongueurDeplacementStricte = 0.0;
@@ -365,8 +367,8 @@ void MFDSensor::Write(double dbInstant, Reseau * pReseau, double dbPeriodeAgrega
                 dbLongueurDeplacementStricte = dbDistanceTotaleStricte / nbVehFranchissantStrictTotal;
             }
 
-            // Pour éviter la division par 0 
-			// Calcul du débit et de la concentration en utilisant les formules d'Edie et la longueur géométrique barycentre pour la longueur du capteur
+            // Pour ï¿½viter la division par 0 
+			// Calcul du dï¿½bit et de la concentration en utilisant les formules d'Edie et la longueur gï¿½omï¿½trique barycentre pour la longueur du capteur
             if(dbFin > dbDebut && m_bGeomLength2 > 0)
             {
 				dbDebitEdie			= dbDistanceTotale  / ((dbFin - dbDebut) * m_bGeomLength2);
@@ -376,28 +378,28 @@ void MFDSensor::Write(double dbInstant, Reseau * pReseau, double dbPeriodeAgrega
 			m_dbTotalTravelTime = dbTempsTotalPasse;
 			m_dbTotalTravelDistance = dbDistanceTotale;
 
-            // écriture
+            // ï¿½criture
             for( itDocTraf = docTrafics.begin(); itDocTraf != docTrafics.end(); itDocTraf++ )
             {
                 (*itDocTraf)->AddInfoCapteurMFD(m_strNom,                                        // identifiant capteur
                     m_bEnableStrictSensors,
-                    SystemUtil::ToString(3, m_bGeomLength1),   // Longueur géométrique barycentre
-                    SystemUtil::ToString(3, m_bGeomLength2),   // Longueur géométrique mvtaval
-                    SystemUtil::ToString(3, m_bGeomLength3),   // Longueur géométrique stricte
+                    SystemUtil::ToString(3, m_bGeomLength1),   // Longueur gï¿½omï¿½trique barycentre
+                    SystemUtil::ToString(3, m_bGeomLength2),   // Longueur gï¿½omï¿½trique mvtaval
+                    SystemUtil::ToString(3, m_bGeomLength3),   // Longueur gï¿½omï¿½trique stricte
                     SystemUtil::ToString(3, dbDistanceTotale), // Distance totale parcourue
                     SystemUtil::ToString(3, dbDistanceTotaleStricte),  // Distance totale parcourue stricte
-                    SystemUtil::ToString(3, dbTempsTotalPasse),        // Temps total passé
-                    SystemUtil::ToString(3, dbTempsTotalPasseStrict),  // Temps total passé stricte
-                    SystemUtil::ToString(3, dbDebitSortie),            // Débit de sortie
-					SystemUtil::ToString(3, dbIntDebitSortie),            // Débit de sortie du aux véhicules disparaissant dans la zone
-					SystemUtil::ToString(3, dbTransDebitSortie),            // Débit de sortie du aux véhicules ayant traversé la zone
-                    SystemUtil::ToString(3, dbDebitSortieStrict),      // Débit de sortie strict
-                    SystemUtil::ToString(3, dbLongueurDeplacement),        // Longueur de déplacement
-                    SystemUtil::ToString(3, dbLongueurDeplacementStricte), // Longueur de déplacement stricte
+                    SystemUtil::ToString(3, dbTempsTotalPasse),        // Temps total passï¿½
+                    SystemUtil::ToString(3, dbTempsTotalPasseStrict),  // Temps total passï¿½ stricte
+                    SystemUtil::ToString(3, dbDebitSortie),            // Dï¿½bit de sortie
+					SystemUtil::ToString(3, dbIntDebitSortie),            // Dï¿½bit de sortie du aux vï¿½hicules disparaissant dans la zone
+					SystemUtil::ToString(3, dbTransDebitSortie),            // Dï¿½bit de sortie du aux vï¿½hicules ayant traversï¿½ la zone
+                    SystemUtil::ToString(3, dbDebitSortieStrict),      // Dï¿½bit de sortie strict
+                    SystemUtil::ToString(3, dbLongueurDeplacement),        // Longueur de dï¿½placement
+                    SystemUtil::ToString(3, dbLongueurDeplacementStricte), // Longueur de dï¿½placement stricte
                     SystemUtil::ToString(3, dbVitesseSpatiale),            // Vitesse spatiale
                     SystemUtil::ToString(3, dbVitesseSpatialeStricte),     // Vitesse spatiale stricte
-                    SystemUtil::ToString(3, dbConcentrationEdie),               // Concentration calculée à partir des formules d'Edie
-					SystemUtil::ToString(3, dbDebitEdie)               // Débit calculée à partir des formules d'Edie
+                    SystemUtil::ToString(3, dbConcentrationEdie),               // Concentration calculï¿½e ï¿½ partir des formules d'Edie
+					SystemUtil::ToString(3, dbDebitEdie)               // Dï¿½bit calculï¿½e ï¿½ partir des formules d'Edie
                     ); 
             }
         }
@@ -448,8 +450,28 @@ void MFDSensor::Restore(Reseau * pNetwork, AbstractSensorSnapshot * backup)
     }
 }
 
+std::vector<int> MFDSensor::GetListOfVehicleIDs()
+{
+    std::vector<int> lstofIDs;
+
+    for(size_t iEdie = 0; iEdie < lstSensors.size(); iEdie++)
+    {
+        std::vector<int> lstofEdiesVehIds = lstSensors[iEdie]->GetPreviousData().vectofvehicleIDs;
+        std::vector<int>::iterator itID;
+
+        for(itID = lstofEdiesVehIds.begin(); itID != lstofEdiesVehIds.end(); itID++)
+        {
+            int vehID = *itID;
+            
+            if( std::find(lstofIDs.begin(), lstofIDs.end(), vehID )== lstofIDs.end())
+		        lstofIDs.push_back(vehID);
+        }
+    }
+    return lstofIDs;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Sérialisation
+// Sï¿½rialisation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 template void MFDSensorSnapshot::serialize(boost::archive::xml_woarchive & ar, const unsigned int version);

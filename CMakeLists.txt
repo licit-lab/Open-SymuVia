@@ -70,7 +70,8 @@ find_package(Boost COMPONENTS
     serialization 
     wserialization 
     filesystem 
-    system 
+    system
+    program_options 
     ${BOOST_PYTHONLIB} 
     REQUIRED)
 
@@ -85,6 +86,7 @@ find_package(Boost COMPONENTS
         message(STATUS "\t ${Boost_LOG_LIBRARY}")
         message(STATUS "\t ${Boost_FILESYSTEM_LIBRARY}")
         message(STATUS "\t ${Boost_THREAD_LIBRARY}")
+        message(STATUS "\t ${Boost_PROGRAM_OPTIONS}")
         message(STATUS "\t ${Boost_SYSTEM_LIBRARY}")
         include_directories(${Boost_INCLUDE_DIRS})
         message(STATUS "\t Boost headers included")
@@ -206,3 +208,4 @@ file(COPY symuvia/config/ DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
 add_subdirectory(symucore)
 add_subdirectory(symuvia)
+add_subdirectory(symumaster)

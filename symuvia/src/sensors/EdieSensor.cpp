@@ -13,6 +13,9 @@
 
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/map.hpp>
+#include <boost/serialization/list.hpp>
+
+#include <iostream>
 
 EdieSensor::EdieSensor() : LongitudinalSensor()
 {
@@ -26,7 +29,7 @@ EdieSensor::EdieSensor(const std::string & strNom, Tuyau * pTuyau, double startP
     eTuyauType = tuyauType;
     m_pParentMFD = pParent;
 
-    // Initialisation d'un résultat par voie (+ 1 pour l'ensemble des voies)
+    // Initialisation d'un rï¿½sultat par voie (+ 1 pour l'ensemble des voies)
 	int countNbVoies = pTuyau->getNbVoiesDis();
     
 
@@ -61,7 +64,7 @@ void EdieSensor::CalculInfoCapteur(Reseau * pNetwork, double dbInstant, bool bNe
     bool bFranchissement;
 	if (!pVeh->IsMeso())
 	{
-		// on teste le franchissement potentiel du capteur (le véhicule passe-t-il sur le tronçon du capteur pendant le PDT ? et si oui, entre quelles positions ?)
+		// on teste le franchissement potentiel du capteur (le vï¿½hicule passe-t-il sur le tronï¿½on du capteur pendant le PDT ? et si oui, entre quelles positions ?)
 		bFranchissement = false;
 		double dbPosDebut, dbPosFin;
 		int numVoie = 0;
@@ -109,7 +112,7 @@ void EdieSensor::CalculInfoCapteur(Reseau * pNetwork, double dbInstant, bool bNe
 		}
 		else
 		{
-			// test des voies empruntées au cas où le véhicule "saute" le tronçon pendant le pas de temps
+			// test des voies empruntï¿½es au cas oï¿½ le vï¿½hicule "saute" le tronï¿½on pendant le pas de temps
 			for (unsigned int t = 0; t < pVeh->m_LstUsedLanes.size(); t++)
 			{
 				if (m_pTuyau == pVeh->m_LstUsedLanes[t]->GetParent())
@@ -129,14 +132,14 @@ void EdieSensor::CalculInfoCapteur(Reseau * pNetwork, double dbInstant, bool bNe
 
 			if (dbDistance >= 0)
 			{
-				// remaque : dans le cas des capteurs MFD internes aux briques, on ignore les véhicules qui ne proviennent pas de la zone MFD.
+				// remaque : dans le cas des capteurs MFD internes aux briques, on ignore les vï¿½hicules qui ne proviennent pas de la zone MFD.
 				bool bIgnoreVehicle = false;
 				if (eTuyauType != TT_Link && m_pParentMFD)
 				{
-					// détermination du tronçon amont du véhicule à la brique
+					// dï¿½termination du tronï¿½on amont du vï¿½hicule ï¿½ la brique
 					const std::vector<Tuyau*> & tuyauxParcourus = pVeh->GetTuyauxParcourus();
 					Tuyau * pUpstreamLink = NULL;
-					// on parcours à rebours cette liste. Le premier tronçon non interne est le tronçon amont de la brique
+					// on parcours ï¿½ rebours cette liste. Le premier tronï¿½on non interne est le tronï¿½on amont de la brique
 					for (int iTuy = (int)tuyauxParcourus.size() - 1; iTuy >= 0 && !pUpstreamLink; iTuy--)
 					{
 						if (tuyauxParcourus[iTuy]->GetBriqueAval() == m_pTuyau->GetBriqueParente())
@@ -158,24 +161,24 @@ void EdieSensor::CalculInfoCapteur(Reseau * pNetwork, double dbInstant, bool bNe
 					}
 					else
 					{
-						///assert(false); // c'est possible, ça ?? un véhicule créé dans un CAF ? A reprendre pourquoi on arrive là ?
+						///assert(false); // c'est possible, ï¿½a ?? un vï¿½hicule crï¿½ï¿½ dans un CAF ? A reprendre pourquoi on arrive lï¿½ ?
 						bIgnoreVehicle = true;	
 					}
 				}
-				// Fin de la vérification du tronçon amont à la brique
+				// Fin de la vï¿½rification du tronï¿½on amont ï¿½ la brique
 
 				if (bIgnoreVehicle)
 				{
 					return;
 				}
 
-				// Distance parcourue pour la voie du véhicule
+				// Distance parcourue pour la voie du vï¿½hicule
 				data.workingData.dbTotalTravelledDistance[numVoie][pVeh->GetType()] += dbDistance;
-				// distance parcourue pour l' ensemble du tronçon
+				// distance parcourue pour l' ensemble du tronï¿½on
 				data.workingData.dbTotalTravelledDistance[m_pTuyau->getNb_voies()][pVeh->GetType()] += dbDistance;
 
-				// temps passé pour la voie du véhicule
-				double dbPasTemps = pNetwork->GetTimeStep();				// Calcul du pas de temps 'actif' (inférieur au pas de temps défini si le véhicule a été cré au cours du pas de temps)
+				// temps passï¿½ pour la voie du vï¿½hicule
+				double dbPasTemps = pNetwork->GetTimeStep();				// Calcul du pas de temps 'actif' (infï¿½rieur au pas de temps dï¿½fini si le vï¿½hicule a ï¿½tï¿½ crï¿½ au cours du pas de temps)
 				if (pVeh->GetInstantEntree() > 0)
 				{
 					dbPasTemps = dbInstant - pVeh->GetInstantEntree(), pNetwork->GetTimeStep();
@@ -184,7 +187,7 @@ void EdieSensor::CalculInfoCapteur(Reseau * pNetwork, double dbInstant, bool bNe
 				if (pVeh->GetExitInstant() > -1)
 					dbPasTemps = pVeh->GetExitInstant() - (dbInstant - pNetwork->GetTimeStep());
 
-				// Pour éviter la division par zero dans le cas rare ou le véhicule est sorti pile au début du pas de temps
+				// Pour ï¿½viter la division par zero dans le cas rare ou le vï¿½hicule est sorti pile au dï¿½but du pas de temps
 				if (dbPasTemps > 0)
 				{
 					double dbVitMoy = pVeh->GetDstParcourueEx() / dbPasTemps;		// Calcul de la vitesse moyenne
@@ -196,7 +199,7 @@ void EdieSensor::CalculInfoCapteur(Reseau * pNetwork, double dbInstant, bool bNe
 					}
 					else
 					{
-						// tout le pas de temps si arrété dans le capteur
+						// tout le pas de temps si arrï¿½tï¿½ dans le capteur
 						if (dbPosFin <= dbPositionFin && dbPosFin >= dbPositionDebut)
 						{
 							dbTemps = pNetwork->GetTimeStep();
@@ -207,14 +210,17 @@ void EdieSensor::CalculInfoCapteur(Reseau * pNetwork, double dbInstant, bool bNe
 						}
 					}
 					data.workingData.dbTotalTravelledTime[numVoie][pVeh->GetType()] += dbTemps;
-					// temps passé sur toutes les voies :
+					// temps passï¿½ sur toutes les voies :
 					data.workingData.dbTotalTravelledTime[m_pTuyau->getNb_voies()][pVeh->GetType()] += dbTemps;
+
+					if( std::find(data.workingData.vectofvehicleIDs.begin(), data.workingData.vectofvehicleIDs.end(), pVeh->GetID() )== data.workingData.vectofvehicleIDs.end())
+						data.workingData.vectofvehicleIDs.push_back(pVeh->GetID());
 				}
 			}
 		}
 	}
 
-	// CP des véhicules qui disparaissent durant le pas de temps
+	// CP des vï¿½hicules qui disparaissent durant le pas de temps
 	if (!pVeh->GetLink(0))
 	{
 		if (pVeh->GetTrip()->GetFinalDestination()->GetInputPosition().IsLink())
@@ -235,12 +241,12 @@ void EdieSensor::AddMesoVehicle(double dbInstant, Vehicule * pVeh, Tuyau * pLink
 
         if(dbDistance >= 0)
         {
-            // Pas de voie en meso : on laisse tomber les résultats par voie ici
+            // Pas de voie en meso : on laisse tomber les rï¿½sultats par voie ici
             //int numVoie = std::min<int>( std::max<int>( pVeh->GetNumVoieMeso(),0), pLink->getNb_voies()-1);
 
-            // distance parcourue pour la voie du véhicule
+            // distance parcourue pour la voie du vï¿½hicule
             //data.dbTotalTravelledDistance[numVoie] += dbDistance;
-            // distance parcourue pour l' ensemble du tronçon
+            // distance parcourue pour l' ensemble du tronï¿½on
 			data.workingData.dbTotalTravelledDistance[m_pTuyau->getNb_voies()][pVeh->GetType()] += dbDistance;
 
             double dbTemps = 0;
@@ -249,29 +255,29 @@ void EdieSensor::AddMesoVehicle(double dbInstant, Vehicule * pVeh, Tuyau * pLink
             {
                 // Cas du capteur Edie classique
                 double dbInputTime = pVeh->GetTimeCode(pLink, Vehicule::TC_INCOMMING);
-                assert(dbInputTime != DBL_MAX); // en principe le temps d'entrée du véhicule sur le tronçon doit être défini !
+                assert(dbInputTime != DBL_MAX); // en principe le temps d'entrï¿½e du vï¿½hicule sur le tronï¿½on doit ï¿½tre dï¿½fini !
                 dbTemps = dbInstant - dbInputTime;
             }
             else
             {
-                // Cas de la prise en compte d'un mouvement interne pour un capteur MFD et un véhicule méso :
-                // on fait au plus simple en utilisant le temps de parcours à la vitesse nominale sur le tuyau
+                // Cas de la prise en compte d'un mouvement interne pour un capteur MFD et un vï¿½hicule mï¿½so :
+                // on fait au plus simple en utilisant le temps de parcours ï¿½ la vitesse nominale sur le tuyau
                 //dbTemps = m_pTuyau->GetLength() / std::min<double>( pVeh->GetVitMax(), m_pTuyau->GetVitReg() );
-                // EN FAIT, suite aux dernière smodifs pour prendre en compte le temps passé dans les briques dans le modèle meso,
+                // EN FAIT, suite aux derniï¿½re smodifs pour prendre en compte le temps passï¿½ dans les briques dans le modï¿½le meso,
                 // il suffit ici d'ajouter la distance, mais pas le temps (il est inclus dans le tuyau amont !)
                 dbTemps = 0;
             }
 
             //data.dbAcumulation[numVoie] += dbTemps;
-            // temps passé pour toutes les voies :
+            // temps passï¿½ pour toutes les voies :
 			data.workingData.dbTotalTravelledTime[m_pTuyau->getNb_voies()][pVeh->GetType()] += dbTemps;
         }
 
-        // gestion ici du cas où la connexion aval est une brique franchie par le véhicule en mode meso,
-        // pour laquelle il faut prendre en compte les capteurs sur les tuyaux internes empruntés
+        // gestion ici du cas oï¿½ la connexion aval est une brique franchie par le vï¿½hicule en mode meso,
+        // pour laquelle il faut prendre en compte les capteurs sur les tuyaux internes empruntï¿½s
         if(pLink->GetBriqueAval() && dbLengthInLink == DBL_MAX && m_pParentMFD && pDownstreamLink)
         {
-            // Détermination du chemin interne du véhicule
+            // Dï¿½termination du chemin interne du vï¿½hicule
             std::vector<Tuyau*> lstTuyauxInternes;
             if(pLink->GetBriqueAval()->GetTuyauxInternes(pLink, pDownstreamLink, lstTuyauxInternes))
             {
@@ -317,12 +323,12 @@ void EdieSensor::Write(double dbInstant, Reseau * pReseau, double dbPeriodeAgreg
         std::deque<TraceDocTrafic* >::const_iterator itDocTraf;
         for( itDocTraf = docTrafics.begin(); itDocTraf != docTrafics.end(); itDocTraf++ )
         {
-            // écriture
+            // ï¿½criture
             (*itDocTraf)->AddInfoCapteurEdie(m_strNom,   // identifiant capteur
 				SystemUtil::ToString(3, data.workingData.GetTotalTravelledTime() / (dbPeriodeAgregation*dbLongueurCpt*nbVoie)),  // Concentration globale
-				SystemUtil::ToString(3, data.workingData.GetTotalTravelledDistance() / (dbPeriodeAgregation*dbLongueurCpt*nbVoie)),// Débit global
+				SystemUtil::ToString(3, data.workingData.GetTotalTravelledDistance() / (dbPeriodeAgregation*dbLongueurCpt*nbVoie)),// Dï¿½bit global
                 strConcentration,                                                                                                                   // Concentration voie par voie
-                strDebit);                                                                                                                          // Débit voie par voie
+                strDebit);                                                                                                                          // Dï¿½bit voie par voie
         }
     }
 }
@@ -345,6 +351,8 @@ void EdieSensor::PrepareNextPeriod()
 
 	for (size_t iTypeVeh = 0; iTypeVeh < m_pTuyau->GetReseau()->m_LstTypesVehicule.size(); iTypeVeh++)
 		data.workingData.nNumberOfRemovalVehicles[pTypeVeh] = 0;
+
+	data.workingData.vectofvehicleIDs.clear();
 }
 
 
@@ -431,7 +439,7 @@ int EdieSensorData::GetTotalNumberOfRemovalVehicles() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Sérialisation
+// Sï¿½rialisation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 template void EdieSensorData::serialize(boost::archive::xml_woarchive & ar, const unsigned int version);
@@ -443,6 +451,7 @@ void EdieSensorData::serialize(Archive& ar, const unsigned int version)
 	ar & BOOST_SERIALIZATION_NVP(dbTotalTravelledDistance);
     ar & BOOST_SERIALIZATION_NVP(dbTotalTravelledTime);
 	ar & BOOST_SERIALIZATION_NVP(nNumberOfRemovalVehicles);
+	ar & BOOST_SERIALIZATION_NVP(vectofvehicleIDs);
 }
 
 template void EdieSensor::serialize(boost::archive::xml_woarchive & ar, const unsigned int version);

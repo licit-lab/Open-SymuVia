@@ -3068,7 +3068,7 @@ SYMUBRUIT_EXPORT char * SYMUBRUIT_CDECL SymGetAlternatePathsFromNodeJSON(char* l
         // rmq. : pour cette fonction, on calcule le cout de référence ici pour ne pas être gené 
         // par la pénalisation arbitraire de pLink
         refPathCost = pReseau->GetSymuScript()->ComputeCost(pVehicule->GetType(), refPath, false);
-		//std::cout << "refPathCost " << refPathCost << std::endl;
+		
     }
 
     std::vector<Tuyau*> linksToAvoid;
@@ -3090,7 +3090,7 @@ SYMUBRUIT_EXPORT char * SYMUBRUIT_CDECL SymGetAlternatePathsFromNodeJSON(char* l
                 if (!pReseau->GetPredefinedAlternativeRoutes(pTV, pDownLink, pDestinationNode, pTD, pDestinationCon, paths))
 				{
 					double refPathCostTmp;
-					//std::cout << "ComputeRoutes 1 " << destinationId << std::endl;
+					
 					if (pReseau->ComputeRoutes(pDownLink->GetLabel(), destinationId, typeVeh, dbTime, 1, refPath.empty() ? 0 : nMethod, refPath, linksToAvoid, paths, refPathCostTmp) != 0)
 					{
 						paths.clear();
@@ -4157,7 +4157,7 @@ SYMUBRUIT_EXPORT bool SymSetDemand(std::string originID, double dbValue)
 	return pReseau->SetDemand(originID, sVehicleType, dbValue);
 }
 
-// Return last computed value of total travel time of a MFD sensor
+// Return last computed value of total travel time of a MFD sensor (full previous period)
 SYMUBRUIT_EXPORT double SYMUBRUIT_CDECL SymGetTotalTravelTime(std::string sMFDSensorID)
 {
 	Reseau* pReseau = theApp.GetNetwork(DEFAULT_NETWORK_ID);
@@ -4168,7 +4168,7 @@ SYMUBRUIT_EXPORT double SYMUBRUIT_CDECL SymGetTotalTravelTime(std::string sMFDSe
 	return pReseau->GetTotalTravelTime(sMFDSensorID);
 }
 
-// Return last computed value of total travel distance of a MFD sensor
+// Return last computed value of total travel distance of a MFD sensor (full previous period)
 SYMUBRUIT_EXPORT double SYMUBRUIT_CDECL SymGetTotalTravelDistance(std::string sMFDSensorID)
 {
 	Reseau* pReseau = theApp.GetNetwork(DEFAULT_NETWORK_ID);
@@ -4177,6 +4177,17 @@ SYMUBRUIT_EXPORT double SYMUBRUIT_CDECL SymGetTotalTravelDistance(std::string sM
 		return false;
 
 	return pReseau->GetTotalTravelDistance(sMFDSensorID);
+}
+
+// Return the list of vehicle IDs passing through the zone defined by MFD sensor during the full previous period
+SYMUBRUIT_EXPORT std::vector<int> SYMUBRUIT_CDECL SymGetListofVehicleIds(std::string sMFDSensorID)
+{
+	Reseau* pReseau = theApp.GetNetwork(DEFAULT_NETWORK_ID);
+
+	if (!pReseau)
+		return std::vector<int>(0);
+
+	return pReseau->GetListofVehicleIds(sMFDSensorID);
 }
 
 SYMUBRUIT_EXPORT bool SymSetSignalPlan(std::string strTrafficLightID, std::string strJsonSignalPlan)
@@ -4197,7 +4208,6 @@ SYMUBRUIT_EXPORT std::string SymGetSignalPlan(std::string strTrafficLightID)
 		return "";
 
 	std::string sTmp = pReseau->GetSignalPlan(strTrafficLightID);
-	std::cout << sTmp << std::endl;
 
 	return sTmp;
 
@@ -4417,9 +4427,6 @@ extern "C"
 		
 		vctlinkNames = SystemUtil::split2vct(links, ',');
 
-		for(int i=0;i<vctlinkNames.size();i++)
-			std::cout << vctlinkNames[i] << std::endl;
-
 		int ok=SymForbidLinks(networkId, vctlinkNames);
 		
 		return ok;
@@ -4463,6 +4470,44 @@ extern "C"
 		return SymGetTotalTravelDistance(sMFDSensorID);
 	}
 
+    DECLDIR char* SymGetListofVehicleIdsEx(char* MFDSensorID)
+    {
+		std::string sMFDSensorID = std::string(MFDSensorID);
+		std::vector<int> lstOfVehIds = SymGetListofVehicleIds(sMFDSensorID);
+        std::vector<int>::iterator itID;
+        string slstOfVehIds;
+
+        for(itID = lstOfVehIds.begin(); itID != lstOfVehIds.end(); itID++)
+        {
+            slstOfVehIds = slstOfVehIds + to_string( (*itID) ) + ' ';
+        }
+
+        char* retValue = new char[slstOfVehIds.length() + 1];
+        #ifdef WIN32
+                strcpy_s(retValue, slstOfVehIds.length() + 1, slstOfVehIds.c_str());
+        #else
+                strcpy(retValue, slstOfVehIds.c_str());
+        #endif
+
+        return retValue;
+	}
+
+
+    DECLDIR bool SymTakeSimulationSnapshotEx(int networkId)
+    {
+        return SymTakeSimulationSnapshot(networkId);
+    }
+
+    DECLDIR bool SymSimulationRollbackEx(int networkId, size_t c)
+    {
+        return SymSimulationRollback(networkId, c);
+    }
+
+    DECLDIR bool SymSimulationCommitEx(int networkId)
+    {
+        return SymSimulationCommit(networkId);
+    }
+
     	// Pilotage d'un contrôleur de feux
 	DECLDIR int SymSetSignalPlanEx(char* TrafficLightID, char* sJsonSignalPlan)
 	{
@@ -4491,7 +4536,7 @@ extern "C"
 
     DECLDIR bool SymSetDemandEx(char* originID, double dbValue)
 	{
-		std::string sOriginID = std::string(sOriginID);
+		std::string sOriginID(originID);
 		return SymSetDemand(sOriginID, dbValue);
 	}
 

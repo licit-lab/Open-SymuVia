@@ -194,6 +194,7 @@ void SimulationSnapshot::ValidateTempFiles(Reseau * pReseau)
 
 void SimulationSnapshot::DiscardTempFiles()
 {
+    std::cout << "Discard m_XmlDocTraficTmp" << std::endl;
     if (m_XmlDocTraficTmp)
     {
         m_XmlDocTraficTmp->Remove();
@@ -201,6 +202,7 @@ void SimulationSnapshot::DiscardTempFiles()
         m_XmlDocTraficTmp = NULL;
     }
 
+    std::cout << "Discard m_pTrajsOFSTMP" << std::endl;
     if (m_pTrajsOFSTMP)
     {
         if (m_pTrajsOFSTMP->is_open())
@@ -212,6 +214,7 @@ void SimulationSnapshot::DiscardTempFiles()
         m_pTrajsOFSTMP = NULL;
     }
 
+std::cout << "Discard m_pLinkChangesOFSTMP" << std::endl;
     if (m_pLinkChangesOFSTMP)
     {
         if (m_pLinkChangesOFSTMP->is_open())
@@ -223,6 +226,7 @@ void SimulationSnapshot::DiscardTempFiles()
         m_pLinkChangesOFSTMP = NULL;
     }
 
+std::cout << "Discard m_pSensorsOFSTMP" << std::endl;
     if (m_pSensorsOFSTMP)
     {
         if (m_pSensorsOFSTMP->is_open())
@@ -234,6 +238,7 @@ void SimulationSnapshot::DiscardTempFiles()
         m_pSensorsOFSTMP = NULL;
     }
 
+std::cout << "Discard m_TravelTimesTmp" << std::endl;
     if (m_TravelTimesTmp)
     {
         delete m_TravelTimesTmp;
@@ -241,7 +246,9 @@ void SimulationSnapshot::DiscardTempFiles()
     }
 
     // Idem pour le XML SymuCom
+std::cout << "Discard m_pSymuComWriter" << std::endl;
 #ifdef USE_SYMUCOM
+    std::cout << "Discard m_pSymuComWriter 2" << std::endl;
     if (m_pSymuComWriter)
     {
         std::string symuComFile = m_pSymuComWriter->getTargetFileName();
@@ -485,7 +492,7 @@ void SimulationSnapshot::Backup(Reseau *pReseau)
 
     // Convergents
     std::map<std::string, Convergent*>::const_iterator itC;
-    for(itC = pReseau->Liste_convergents.begin(); itC != pReseau->Liste_convergents.end(); ++itC)
+    for(itC = pReseau->Liste_convergents.begin(); itC != pReseau->Liste_convergents.end(); itC++)
     {
         stVarSimConvergent stVarSimCvgt;
         for(size_t iPtCvg = 0; iPtCvg < itC->second->m_LstPtCvg.size(); iPtCvg++)
@@ -493,6 +500,19 @@ void SimulationSnapshot::Backup(Reseau *pReseau)
             stVarSimCvgt.dbInstLastPassage.push_back(itC->second->m_LstPtCvg[iPtCvg]->m_dbInstLastPassage);
         }
         m_mapConvergents.insert( make_pair( itC->second, stVarSimCvgt));
+    }
+
+    // Crossroads
+    std::deque<CarrefourAFeuxEx*>::const_iterator itCr;
+    for(itCr = pReseau->Liste_carrefoursAFeux.begin(); itCr != pReseau->Liste_carrefoursAFeux.end(); itCr++)
+    {
+        stVarSimCrossroads stVarSimCrds;
+        for(size_t iMvt = 0; iMvt < (*itCr)->m_LstMouvements.size(); iMvt++)
+        {
+            for(size_t iPts = 0; iPts < (*itCr)->m_LstMouvements[iMvt]->lstGrpPtsConflitTraversee.size(); iPts++)
+                stVarSimCrds.dbInstLastCrossing.push_back((*itCr)->m_LstMouvements[iMvt]->lstGrpPtsConflitTraversee[iPts]->dbInstLastTraversee);
+        }
+        m_mapCrossroads.insert( make_pair( (*itCr), stVarSimCrds));
     }
 
     // Briques de régulation
@@ -610,7 +630,7 @@ void SimulationSnapshot::Restore(Reseau *pReseau)
     pReseau->m_nNbVehCum = m_nNbVehCumSvg;
 
 	// Suppression des noeuds véhicules du fichier de sortie
-    pReseau->log() << "Vehicles removal since " << m_nLastIdVehSvg << std::endl;
+    pReseau->log() << std::endl << "Vehicles removal since ID " << m_nLastIdVehSvg << std::endl;
     std::deque< TimeVariation<TraceDocTrafic> >::iterator it;
     for( it = pReseau->m_xmlDocTrafics.begin(); it!= pReseau->m_xmlDocTrafics.end(); it++ )
     {
@@ -876,6 +896,22 @@ void SimulationSnapshot::Restore(Reseau *pReseau)
         }
     }
 
+    // Crossroads
+    std::deque<CarrefourAFeuxEx*>::const_iterator itCr;
+    for(itCr = pReseau->Liste_carrefoursAFeux.begin(); itCr != pReseau->Liste_carrefoursAFeux.end(); itCr++)
+    {
+        stVarSimCrossroads stVarSimCrds = m_mapCrossroads.find((*itCr))->second;
+        size_t nit = 0; 
+        for(size_t iMvt = 0; iMvt < (*itCr)->m_LstMouvements.size(); iMvt++)
+        {
+            for(size_t iPts = 0; iPts < (*itCr)->m_LstMouvements[iMvt]->lstGrpPtsConflitTraversee.size(); iPts++)
+            {
+                (*itCr)->m_LstMouvements[iMvt]->lstGrpPtsConflitTraversee[iPts]->dbInstLastTraversee = stVarSimCrds.dbInstLastCrossing[nit];
+                nit++;
+            }
+        }
+    }
+
     // Briques de régulation
     std::vector<RegulationBrique*> & lstBriques = pReseau->GetModuleRegulation()->GetLstBriquesRegulation();
     for(size_t iBrique = 0; iBrique < lstBriques.size(); iBrique++)
@@ -1086,6 +1122,15 @@ void stVarSimConvergent::serialize(Archive & ar, const unsigned int version)
     ar & BOOST_SERIALIZATION_NVP(dbInstLastPassage);
 }
 
+template void stVarSimCrossroads::serialize(boost::archive::xml_woarchive & ar, const unsigned int version);
+template void stVarSimCrossroads::serialize(boost::archive::xml_wiarchive & ar, const unsigned int version);
+
+template<class Archive>
+void stVarSimCrossroads::serialize(Archive & ar, const unsigned int version)
+{
+    ar & BOOST_SERIALIZATION_NVP(dbInstLastCrossing);
+}
+
 template void stVarSimRegulationBrique::serialize(boost::archive::xml_woarchive & ar, const unsigned int version);
 template void stVarSimRegulationBrique::serialize(boost::archive::xml_wiarchive & ar, const unsigned int version);
 
@@ -1118,6 +1163,7 @@ void SimulationSnapshot::serialize(Archive & ar, const unsigned int version)
     ar & BOOST_SERIALIZATION_NVP(m_mapOrigine);
     ar & BOOST_SERIALIZATION_NVP(m_mapCapteur);
     ar & BOOST_SERIALIZATION_NVP(m_mapConvergents);
+    ar & BOOST_SERIALIZATION_NVP(m_mapCrossroads);
     ar & BOOST_SERIALIZATION_NVP(m_mapRegulations);
     ar & BOOST_SERIALIZATION_NVP(m_mapBrique);
     ar & BOOST_SERIALIZATION_NVP(m_mapMesoNode);

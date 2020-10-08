@@ -161,6 +161,8 @@ Reseau::Reseau()
 
 	m_pControlZoneManagement = NULL;
 
+    m_bLightSavingMode = false;
+
     Initialize();
 }
 
@@ -191,6 +193,8 @@ m_sLogOutFile(sLogOutFile)
     m_pXMLUtil = new XMLUtil();
 
 	m_pControlZoneManagement = NULL;
+
+    m_bLightSavingMode = false;
 
     Initialize();
 }
@@ -13588,8 +13592,6 @@ Voie* Reseau::GetVoieFromID(const std::string & sTuyauID, int NumVoie)
 
 		std::string sTmp = pTLC->GetJsonDescription();
 
-		std::cout << sTmp << std::endl;
-
 		return sTmp;
 	}
 
@@ -16705,8 +16707,6 @@ bool Reseau::ForbidLinks(const std::vector<Tuyau*> & links)
 		m_pSymuScriptManager->ForceGraphRefresh();
 	}
 
-	cout << "ForbidLinks OK" << std::endl;
-
 	return true;
 }
 
@@ -18972,6 +18972,21 @@ double Reseau::GetTotalTravelDistance(std::string sMFDSensorID)
 		return -1;
 
 	return pMFDSensor->GetTotalTravelDistance();
+}
+
+std::vector<int> Reseau::GetListofVehicleIds(std::string sMFDSensorID)
+{
+	MFDSensor* pMFDSensor = NULL;
+
+	if (!GetGestionsCapteur() || !(GetGestionsCapteur()->GetGestionCapteursMFD()))
+		return std::vector<int>(0);
+
+	pMFDSensor = (MFDSensor*)GetGestionsCapteur()->GetGestionCapteursMFD()->GetCapteurFromID(sMFDSensorID);
+
+	if (!pMFDSensor)
+		return std::vector<int>(0);
+
+	return pMFDSensor->GetListOfVehicleIDs();
 }
 
 double Reseau::GetPTStopDuration(std::string StopID)

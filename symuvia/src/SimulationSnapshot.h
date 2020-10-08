@@ -21,6 +21,7 @@ class CDFSequence;
 class AbstractFleet;
 class AbstractFleetSnapshot;
 class ControleurDeFeux;
+class CarrefourAFeuxEx;
 class Convergent;
 class RegulationBrique;
 class BriqueDeConnexion;
@@ -34,20 +35,20 @@ namespace SymuCore {
 }
 #endif // USE_SYMUCORE
 
-// Structure permettant le stockage des variables de simulation d'une entrée à un instant donné
+// Structure permettant le stockage des variables de simulation d'une entrï¿½e ï¿½ un instant donnï¿½
 struct stVarSimEntree
 {
-	std::map<Tuyau*, std::map<int, std::deque<boost::shared_ptr<Vehicule>> > >  mapVehEnAttente;    // Map de la liste des véhicules en attente par voie (numéro de voie, map des véhicules)
-	std::map<Tuyau*, std::map<int, int > >						                mapVehPret;			// Map du véhicule pret à partir par voie (numéro de voie, identifiant du véhicule)
-	double                             					                        dbCritCreationVeh;	// Critère de création des véhicule pour l'instant courant
-																		// le critère peut s'exprimer sous forme d'un instant à atteindre ou d'un nombre (<=1) de véhicule 
-    std::deque<CreationVehicule>                                                lstVehiculesACreer; // Liste des véhicules à créer
-    std::vector<double>                                                         lstInstantsSortieStationnement; // Liste des instants de création dues à une sortie de stationnement
+	std::map<Tuyau*, std::map<int, std::deque<boost::shared_ptr<Vehicule>> > >  mapVehEnAttente;    // Map de la liste des vï¿½hicules en attente par voie (numï¿½ro de voie, map des vï¿½hicules)
+	std::map<Tuyau*, std::map<int, int > >						                mapVehPret;			// Map du vï¿½hicule pret ï¿½ partir par voie (numï¿½ro de voie, identifiant du vï¿½hicule)
+	double                             					                        dbCritCreationVeh;	// Critï¿½re de crï¿½ation des vï¿½hicule pour l'instant courant
+																		// le critï¿½re peut s'exprimer sous forme d'un instant ï¿½ atteindre ou d'un nombre (<=1) de vï¿½hicule 
+    std::deque<CreationVehicule>                                                lstVehiculesACreer; // Liste des vï¿½hicules ï¿½ crï¿½er
+    std::vector<double>                                                         lstInstantsSortieStationnement; // Liste des instants de crï¿½ation dues ï¿½ une sortie de stationnement
 
-	std::map<TypeVehicule*, std::map<SymuViaTripNode*, std::vector< std::pair<double, std::vector<Tuyau*> > > > > mapDrivenPaths; // Chemins pilotés de façon externe via SymSetODPaths()
+	std::map<TypeVehicule*, std::map<SymuViaTripNode*, std::vector< std::pair<double, std::vector<Tuyau*> > > > > mapDrivenPaths; // Chemins pilotï¿½s de faï¿½on externe via SymSetODPaths()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Sérialisation
+// Sï¿½rialisation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 private:
 	friend class boost::serialization::access;
@@ -55,24 +56,24 @@ private:
 	void serialize(Archive & ar, const unsigned int version);
 };
 
-// Structure permettant le stockage des variables de simulation d'un controleur de feux à un instant donné
+// Structure permettant le stockage des variables de simulation d'un controleur de feux ï¿½ un instant donnï¿½
 struct stVarSimCDF
 {
     stVarSimCDF() {pPDFActif = NULL; pSeqPrePriorite = NULL; pSeqRetour1 = NULL; pSeqRetour2 = NULL;}
 
     PlanDeFeux*                                         pPDFActif;                  // Plan de feux actif (si pilotage)
-    char                                                cModeFct;                   // Mode de fonctionnement du contrôleur (N : normal, O : pré-priorité, P : priorité, Q : post-priorité)
-    std::deque<std::pair<int,LGP*> >                    dqBus;                      // Liste des bus prioritaires actuellement pris en compte par les LGP du contrôleur
+    char                                                cModeFct;                   // Mode de fonctionnement du contrï¿½leur (N : normal, O : prï¿½-prioritï¿½, P : prioritï¿½, Q : post-prioritï¿½)
+    std::deque<std::pair<int,LGP*> >                    dqBus;                      // Liste des bus prioritaires actuellement pris en compte par les LGP du contrï¿½leur
     boost::shared_ptr<PlanDeFeux>                       pPDFEx;                     // Plan de feu actif durant une phase de VGP prioritaire
-    double                                              dbDebPDFEx;                 // Début de l'application du plan de feux de la phase VGP prioritaire
+    double                                              dbDebPDFEx;                 // Dï¿½but de l'application du plan de feux de la phase VGP prioritaire
     double                                              dbFinPDFEx;                 // Fin de l'application du plan de feux de la phase VGP prioritaire (rteour au plan de feux normal)
-    CDFSequence                                           *pSeqPrePriorite;            // Séquence à appliquer
-    CDFSequence                                           *pSeqRetour1;                // Séquence de retour 1 après la sortie du CDF du VGP
-    CDFSequence                                           *pSeqRetour2;                // Séquence de retour 2 après la sortie du CDF du VGP
-    int                                                 nTypeGestionPrePriorite;    // Type de gestion ( 1: 'respect temps min', 2: 'séquence actuelle écourtée', 3 : 'prolongement séquence actuelle')
+    CDFSequence                                           *pSeqPrePriorite;            // Sï¿½quence ï¿½ appliquer
+    CDFSequence                                           *pSeqRetour1;                // Sï¿½quence de retour 1 aprï¿½s la sortie du CDF du VGP
+    CDFSequence                                           *pSeqRetour2;                // Sï¿½quence de retour 2 aprï¿½s la sortie du CDF du VGP
+    int                                                 nTypeGestionPrePriorite;    // Type de gestion ( 1: 'respect temps min', 2: 'sï¿½quence actuelle ï¿½courtï¿½e', 3 : 'prolongement sï¿½quence actuelle')
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Sérialisation
+// Sï¿½rialisation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 private:
 	friend class boost::serialization::access;
@@ -80,18 +81,18 @@ private:
 	void serialize(Archive & ar, const unsigned int version);
 };
 
-// Structure permettant le stockage des variables de simulation d'un tuyau micro à un instant donné
+// Structure permettant le stockage des variables de simulation d'un tuyau micro ï¿½ un instant donnï¿½
 struct stVarSimTuy
 {
-    int                                 nResolution;                            // Type meso ou micro (à sauvegarder/restituer car peut changer à cause du mode d'hybridation dynamique)
-	std::map<int, std::pair< TypeVehicule*, std::pair<double, double>> > mapVeh;// Map des véhicules sortant du tuyau au cours de la période d'affectation courante
-																				// avec instant exact d'entrée et de sortie du tuyau
-	std::map<TypeVehicule*, std::pair<double, double>> mapDernierVehSortant;	// Map du dernier véhicule sorti par type de véhicule (lors de la période d'affectation précédente) avec instant exact d'entrée et de sorti
+    int                                 nResolution;                            // Type meso ou micro (ï¿½ sauvegarder/restituer car peut changer ï¿½ cause du mode d'hybridation dynamique)
+	std::map<int, std::pair< TypeVehicule*, std::pair<double, double>> > mapVeh;// Map des vï¿½hicules sortant du tuyau au cours de la pï¿½riode d'affectation courante
+																				// avec instant exact d'entrï¿½e et de sortie du tuyau
+	std::map<TypeVehicule*, std::pair<double, double>> mapDernierVehSortant;	// Map du dernier vï¿½hicule sorti par type de vï¿½hicule (lors de la pï¿½riode d'affectation prï¿½cï¿½dente) avec instant exact d'entrï¿½e et de sorti
 
-	std::map<TypeVehicule*, int>		mapNbVehEntre;							// Map du nombre cumulé de véhicule entré sur le tronçon depuis le début de la simulation
-	std::map<TypeVehicule*, int>		mapNbVehSorti;							// Map du nombre cumulé de véhicule sorti du tronçon depuis le début de la simulation
-	std::map<TypeVehicule*, int>		mapNbVehSortiPrev;						// Map du nombre cumulé de véhicule sorti sur le tronçon depuis le début de la simulation jusqu'à la précédente période d'affectation
-	std::map<TypeVehicule*, int>		mapNbVehEntrePrev;						// Map du nombre cumulé de véhicule entré sur le tronçon depuis le début de la simulation jusqu'à la précédente période d'affectation
+	std::map<TypeVehicule*, int>		mapNbVehEntre;							// Map du nombre cumulï¿½ de vï¿½hicule entrï¿½ sur le tronï¿½on depuis le dï¿½but de la simulation
+	std::map<TypeVehicule*, int>		mapNbVehSorti;							// Map du nombre cumulï¿½ de vï¿½hicule sorti du tronï¿½on depuis le dï¿½but de la simulation
+	std::map<TypeVehicule*, int>		mapNbVehSortiPrev;						// Map du nombre cumulï¿½ de vï¿½hicule sorti sur le tronï¿½on depuis le dï¿½but de la simulation jusqu'ï¿½ la prï¿½cï¿½dente pï¿½riode d'affectation
+	std::map<TypeVehicule*, int>		mapNbVehEntrePrev;						// Map du nombre cumulï¿½ de vï¿½hicule entrï¿½ sur le tronï¿½on depuis le dï¿½but de la simulation jusqu'ï¿½ la prï¿½cï¿½dente pï¿½riode d'affectation
 
 	bool								bIsForbidden;							// Le tuyau est interdit ou non
 
@@ -118,7 +119,7 @@ struct stVarSimTuy
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Sérialisation
+// Sï¿½rialisation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 private:
 	friend class boost::serialization::access;
@@ -126,14 +127,14 @@ private:
 	void serialize(Archive & ar, const unsigned int version);
 };
 
-// Structure permettant le stockage des variables de simulation d'un tuyau meso à un instant donné
+// Structure permettant le stockage des variables de simulation d'un tuyau meso ï¿½ un instant donnï¿½
 struct stVarSimTuyMeso
 {
     std::deque<int>                     currentVehicules;
 	double                              dCurrentMeanW;          //! Moyenne courante des w des vehicules du troncon
 	double                              dCurrentMeanK;          //! Moyenne courante des k des vehicules du troncons
-    std::list< std::pair<double, int> > arrivals;               //! Temps d'arrivé des véhicules sur le troncon et le véhicule concerné
-    std::pair<double, int>              nextArrival;            //! Prochain temps d'arrivé des véhicules sur le troncon et le véhicule concerné
+    std::list< std::pair<double, int> > arrivals;               //! Temps d'arrivï¿½ des vï¿½hicules sur le troncon et le vï¿½hicule concernï¿½
+    std::pair<double, int>              nextArrival;            //! Prochain temps d'arrivï¿½ des vï¿½hicules sur le troncon et le vï¿½hicule concernï¿½
     std::deque<double >                 upstreamPassingTimes;   //! Temps de passages depuis la connexion amont 
     std::deque<double>                  downstreamPassingTimes; //! Temps de passage depuis la connexion avale
     double                              dSupplyTime;            //! Temps de fourniture suivant au troncon
@@ -141,7 +142,7 @@ struct stVarSimTuyMeso
 	bool								bIsForbidden;			//! Le tuyau est interdit ou non
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Sérialisation
+// Sï¿½rialisation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 private:
 	friend class boost::serialization::access;
@@ -149,21 +150,21 @@ private:
 	void serialize(Archive & ar, const unsigned int version);
 };
 
-// Structure permettant le stockage des variables de simulation d'un noeud mesoà un instant donné
+// Structure permettant le stockage des variables de simulation d'un noeud mesoï¿½ un instant donnï¿½
 struct stVarSimMesoNode
 {
-    std::map<Tuyau*,std::list< std::pair<double, int > > >                                  arrivals;               //! Liste des couples vehicules; instants d'arrivés depuis une entrée
-    std::map<Tuyau*, std::deque<double >>                                                   upstreamPassingTimes;   //! Liste des temps de passage amont ordonnées dans l'ordre de passage d'après le tuyau d'origine
-    std::map<Tuyau*, std::deque<double >>                                                   downstreamPassingTimes; //! Liste des temps de passage aval ordonnées dans l'ordre de passage
-    std::map<Tuyau*, std::pair<double, int > >                                              nextArrivals;           //! Couples vehicules; instants de la prochaines arrivée depuis une entrée
-    std::map< Tuyau*, int>                                                                  mapRanksIncomming;      //! Nombre de véhicules entrant sur les troncons de la connexion (si tuyau = null il s'agit d'une entrée )
-    std::map< Tuyau*, int>                                                                  mapRanksOutGoing;       //! Nombre de véhicules sortant sur les troncons de la connexion (si tuyau = null il s'agit d'une sortie )
-    Tuyau*                                                                                  pNextEventTuyauEntry;   //! Tuyau d'entrée du prochain évênement
+    std::map<Tuyau*,std::list< std::pair<double, int > > >                                  arrivals;               //! Liste des couples vehicules; instants d'arrivï¿½s depuis une entrï¿½e
+    std::map<Tuyau*, std::deque<double >>                                                   upstreamPassingTimes;   //! Liste des temps de passage amont ordonnï¿½es dans l'ordre de passage d'aprï¿½s le tuyau d'origine
+    std::map<Tuyau*, std::deque<double >>                                                   downstreamPassingTimes; //! Liste des temps de passage aval ordonnï¿½es dans l'ordre de passage
+    std::map<Tuyau*, std::pair<double, int > >                                              nextArrivals;           //! Couples vehicules; instants de la prochaines arrivï¿½e depuis une entrï¿½e
+    std::map< Tuyau*, int>                                                                  mapRanksIncomming;      //! Nombre de vï¿½hicules entrant sur les troncons de la connexion (si tuyau = null il s'agit d'une entrï¿½e )
+    std::map< Tuyau*, int>                                                                  mapRanksOutGoing;       //! Nombre de vï¿½hicules sortant sur les troncons de la connexion (si tuyau = null il s'agit d'une sortie )
+    Tuyau*                                                                                  pNextEventTuyauEntry;   //! Tuyau d'entrï¿½e du prochain ï¿½vï¿½nement
     double                                                                                  dNextEventTime;
     std::map<Tuyau*,  double>                                                               dNextSupplyTime;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Sérialisation
+// Sï¿½rialisation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 private:
 	friend class boost::serialization::access;
@@ -172,12 +173,12 @@ private:
 };
 
 
-// Structure permettant le stockage des variables de simulation d'une brique de connexion à un instant donné
+// Structure permettant le stockage des variables de simulation d'une brique de connexion ï¿½ un instant donnï¿½
 struct stVarSimBrique
 {
-	std::map<std::pair<Tuyau*,Tuyau*>, std::map<TypeVehicule*, double> >  mapCoutsMesures; // temps mesuré pour chaque mouvement de la brique
-    std::map<std::pair<Tuyau*,Tuyau*>, std::map<int, std::pair< TypeVehicule*, std::pair<double,double> > > > mapVeh;	// Map des véhicules traversant le mouvement autorisé au cours de la période d'affectation courante
-																					                                    // avec instant de sortie et durée de traversée du mouvement
+	std::map<std::pair<Tuyau*,Tuyau*>, std::map<TypeVehicule*, double> >  mapCoutsMesures; // temps mesurï¿½ pour chaque mouvement de la brique
+    std::map<std::pair<Tuyau*,Tuyau*>, std::map<int, std::pair< TypeVehicule*, std::pair<double,double> > > > mapVeh;	// Map des vï¿½hicules traversant le mouvement autorisï¿½ au cours de la pï¿½riode d'affectation courante
+																					                                    // avec instant de sortie et durï¿½e de traversï¿½e du mouvement
 #ifdef USE_SYMUCORE
     std::map<std::pair<Tuyau*, Tuyau*>, std::map<SymuCore::MacroType*, double> > mapTTByMacroType;
     std::map<std::pair<Tuyau*, Tuyau*>, std::map<SymuCore::MacroType*, double> > mapMarginalByMacroType;
@@ -187,7 +188,7 @@ struct stVarSimBrique
 #endif // USE_SYMUCORE
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Sérialisation
+// Sï¿½rialisation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 private:
 	friend class boost::serialization::access;
@@ -195,7 +196,7 @@ private:
 	void serialize(Archive & ar, const unsigned int version);
 };
 
-// Structure permettant le stockage des variables de simulation pour une plaque à un instant donné
+// Structure permettant le stockage des variables de simulation pour une plaque ï¿½ un instant donnï¿½
 struct stVarSimPlaque
 {
     std::map<Connexion*, std::map<int, std::pair< TypeVehicule*, std::pair<std::pair<double, double>, double> > > > mapDepartingVeh;
@@ -214,11 +215,11 @@ struct stVarSimPlaque
 	std::map<Connexion*, double > lstDepartingEmissionForAllMacroTypes;
 #endif // USE_SYMUCORE
 
-    // rmq. : pas de sérialisation nécessaire tant qu'on ne se sert de ces classes que pour SymuMaster (qui ne permet pas la sérialisation)
+    // rmq. : pas de sï¿½rialisation nï¿½cessaire tant qu'on ne se sert de ces classes que pour SymuMaster (qui ne permet pas la sï¿½rialisation)
 };
 
 
-// Structure permettant le stockage des variables de simulation d'une zone à un instant donné
+// Structure permettant le stockage des variables de simulation d'une zone ï¿½ un instant donnï¿½
 struct stVarSimZone
 {
 #ifdef USE_SYMUCORE
@@ -245,7 +246,7 @@ struct stVarSimZone
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Sérialisation
+    // Sï¿½rialisation
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 private:
     friend class boost::serialization::access;
@@ -254,13 +255,13 @@ private:
 };
 
 
-// Structure permettant le stockage des variables de simulation d'un voie micro à un instant donné
+// Structure permettant le stockage des variables de simulation d'un voie micro ï¿½ un instant donnï¿½
 struct stVarSimVoie
 {
-	std::map<std::string, double> dbNextInstSortie;      // Instant de sortie du véhicule suivant
+	std::map<std::string, double> dbNextInstSortie;      // Instant de sortie du vï¿½hicule suivant
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Sérialisation
+// Sï¿½rialisation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 private:
 	friend class boost::serialization::access;
@@ -268,13 +269,13 @@ private:
 	void serialize(Archive & ar, const unsigned int version);
 };
 
-// Structure permettant le stockage des variables de simulation d'un convergent à un instant donné
+// Structure permettant le stockage des variables de simulation d'un convergent ï¿½ un instant donnï¿½
 struct stVarSimConvergent
 {
 	std::deque<double> dbInstLastPassage;      // Instant du dernier passage au point de convergence
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Sérialisation
+// Sï¿½rialisation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 private:
 	friend class boost::serialization::access;
@@ -282,14 +283,27 @@ private:
 	void serialize(Archive & ar, const unsigned int version);
 };
 
-
-// Structure permettant le stockage des variables de simulation d'une brique de régulation à un instant donné
-struct stVarSimRegulationBrique
+// Structure permettant le stockage des variables de simulation d'un carrefour Ã  feux Ã  un instant donnï¿½
+struct stVarSimCrossroads
 {
-	std::deque<boost::python::dict> lstContextes;      // Liste des contextes des éléments de la brique de régulation
+	std::deque<double> dbInstLastCrossing;      // Instant du dernier passage au point de convergence
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Sérialisation
+// Sï¿½rialisation
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+private:
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive & ar, const unsigned int version);
+};
+
+// Structure permettant le stockage des variables de simulation d'une brique de rï¿½gulation ï¿½ un instant donnï¿½
+struct stVarSimRegulationBrique
+{
+	std::deque<boost::python::dict> lstContextes;      // Liste des contextes des ï¿½lï¿½ments de la brique de rï¿½gulation
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Sï¿½rialisation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 private:
 	friend class boost::serialization::access;
@@ -304,18 +318,18 @@ class SimulationSnapshot
 {
 private:
 
-	// Variables de stockage d'une capture d'une simu à un instant donné
-	double	m_dbInstSvg;						// Instant sauvegardé dans le cas d'une affectation convergente
-	int		m_nInstSvg;							// Indice de l'instant sauvegardé dans le cas d'une affectation convergente
+	// Variables de stockage d'une capture d'une simu ï¿½ un instant donnï¿½
+	double	m_dbInstSvg;						// Instant sauvegardï¿½ dans le cas d'une affectation convergente
+	int		m_nInstSvg;							// Indice de l'instant sauvegardï¿½ dans le cas d'une affectation convergente
 
-	int		m_nNbVehCumSvg;						// Cumul sauvegardé du nombre de véhicules présents sur le réseau à chaque pas de temps
+	int		m_nNbVehCumSvg;						// Cumul sauvegardï¿½ du nombre de vï¿½hicules prï¿½sents sur le rï¿½seau ï¿½ chaque pas de temps
 
-    unsigned int m_nRandCountSvg;               // Nombre de tirages aléatoire effectués depuis le début de la simulation
+    unsigned int m_nRandCountSvg;               // Nombre de tirages alï¿½atoire effectuï¿½s depuis le dï¿½but de la simulation
 	
-	std::deque<boost::shared_ptr<Vehicule>> m_lstVehSvg;			// Liste des véhicules présents sur le réseau à l'instant 0 de la période d'affectation courante
+	std::deque<boost::shared_ptr<Vehicule>> m_lstVehSvg;			// Liste des vï¿½hicules prï¿½sents sur le rï¿½seau ï¿½ l'instant 0 de la pï¿½riode d'affectation courante
 	int		m_nLastIdVehSvg;
 
-	std::map<AbstractFleet*, AbstractFleetSnapshot*> m_mapFleet;	// Sauvegarde des variables de simulation utiles pour la gestion des flottes de véhicules
+	std::map<AbstractFleet*, AbstractFleetSnapshot*> m_mapFleet;	// Sauvegarde des variables de simulation utiles pour la gestion des flottes de vï¿½hicules
     std::map<ControleurDeFeux*, stVarSimCDF> m_mapCDF;		        // Sauvegarde des variables de simulation utiles pour la gestion des CDF
 	std::map<TuyauMicro*, stVarSimTuy> m_mapTuy;		            // Sauvegarde des variables de simulation utiles pour la gestion des tuyaux micro
     std::map<CTuyauMeso*, stVarSimTuyMeso> m_mapTuyMeso;	        // Sauvegarde des variables de simulation utiles pour la gestion des tuyaux meso
@@ -323,7 +337,8 @@ private:
 	std::map<SymuViaTripNode*, stVarSimEntree> m_mapOrigine;		        // Sauvegarde des variables de simulation utiles pour la gestion des origines
 	std::map<AbstractSensor*, AbstractSensorSnapshot*> m_mapCapteur;	    // Sauvegarde des variables de simulation utiles pour la gestion des capteurs
     std::map<Convergent*, stVarSimConvergent>               m_mapConvergents;   // Sauvegarde des variables de simulation utiles pour la gestion des convergents
-    std::map<RegulationBrique*, stVarSimRegulationBrique>   m_mapRegulations;   // Sauvegarde du contexte d'exécution des briques
+    std::map<CarrefourAFeuxEx*, stVarSimCrossroads>           m_mapCrossroads;   // Sauvegarde des variables de simulation utiles pour la gestion des convergents
+    std::map<RegulationBrique*, stVarSimRegulationBrique>   m_mapRegulations;   // Sauvegarde du contexte d'exï¿½cution des briques
     std::map<BriqueDeConnexion*, stVarSimBrique> m_mapBrique;		            // Sauvegarde des variables de simulation utiles pour la gestion des briques de connexion
     std::map<CMesoNode*, stVarSimMesoNode> m_mapMesoNode;		                // Sauvegarde des variables de simulation utiles pour la gestion des noeuds meso
     std::map<ZoneDeTerminaison*, stVarSimZone>  m_mapZones;                     // Sauvegarde des variables de simulation utiles pour la gestion des zones
@@ -338,7 +353,7 @@ private:
 
     // Pour gestion des fichiers temporaires :
 public:
-    TraceDocTrafic * m_XmlDocTraficTmp;				// Document sauvegarde des instants de simulation de la période d'affectation (avant la convergence)
+    TraceDocTrafic * m_XmlDocTraficTmp;				// Document sauvegarde des instants de simulation de la pï¿½riode d'affectation (avant la convergence)
 
     std::ofstream *m_pTrajsOFSTMP;
     std::ofstream *m_pLinkChangesOFSTMP;
@@ -348,10 +363,10 @@ public:
     std::string    m_strLinkChangesOFSTMP;
     std::string    m_strSensorsOFSTMP;
 
-    rapidjson::Document* m_TravelTimesTmp; // document JSON temporaire ajouté dans le principal uniquement en cas de validation de la période d'agrégation
+    rapidjson::Document* m_TravelTimesTmp; // document JSON temporaire ajoutï¿½ dans le principal uniquement en cas de validation de la pï¿½riode d'agrï¿½gation
 
 #ifdef USE_SYMUCOM
-    DOMLSSerializerSymu* m_pSymuComWriter; // fichier temporaire ajouté dans le principal uniquement en cas de validation de la période d'agrégation
+    DOMLSSerializerSymu* m_pSymuComWriter; // fichier temporaire ajoutï¿½ dans le principal uniquement en cas de validation de la pï¿½riode d'agrï¿½gation
 #endif // USE_SYMUCOM
 
 public:
@@ -371,7 +386,7 @@ public:
 private:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Sérialisation
+// Sï¿½rialisation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     friend class boost::serialization::access;
     template<class Archive>

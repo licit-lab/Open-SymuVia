@@ -1,0 +1,1666 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified">
+    <xs:simpleType name="typeStrictPositiveDouble">
+        <xs:restriction base="xs:double">
+            <xs:minExclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="typeNonNegativeDouble">
+        <xs:restriction base="xs:double">
+            <xs:minInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="typePercentDouble">
+        <xs:restriction base="xs:double">
+            <xs:minInclusive value="0.0"/>
+            <xs:maxInclusive value="1.0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="typeDemand">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="MOTIVES">
+                <xs:annotation>
+                    <xs:documentation>List of motives available</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="1" name="MOTIVE">
+                            <xs:annotation>
+                                <xs:documentation>Settings for the motive. A motive is the purposee of the trip for a SubPopulation</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:attribute name="id" type="xs:string" use="required">
+                                    <xs:annotation>
+                                        <xs:documentation>Name of the motive (unique)</xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="POPULATIONS">
+                <xs:annotation>
+                    <xs:documentation>List of available Populations</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="POPULATION">
+                            <xs:annotation>
+                                <xs:documentation>Settings for a population. A Population is characterized by the different services available to it (driving, public transport, etc...)</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element maxOccurs="1" name="MACRO_TYPE" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>Defines a list of vehicle types for the population</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element maxOccurs="unbounded"
+                                                  name="VEHICLE_TYPE">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Describes a vehicle type defined in the trafic simulator(s)</xs:documentation>
+                                                  </xs:annotation>
+                                                  <xs:complexType>
+                                                  <xs:attribute name="name" type="xs:string"
+                                                  use="required">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Name of the vehicle type in the trafic simulator(s)</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  </xs:complexType>
+                                                </xs:element>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                    <xs:element name="AVAILABLE_SERVICES">
+                                        <xs:annotation>
+                                            <xs:documentation>List of the services accessible to the population</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element maxOccurs="unbounded"
+                                                  name="AVAILABLE_SERVICE">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Defines a service that the population has access to</xs:documentation>
+                                                  </xs:annotation>
+                                                  <xs:complexType>
+                                                  <xs:attribute name="type" use="required">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Name of the service</xs:documentation>
+                                                  </xs:annotation>
+                                                  <xs:simpleType>
+                                                  <xs:restriction base="xs:NMTOKEN">
+                                                  <xs:enumeration value="driving"/>
+                                                  <xs:enumeration value="public_transport"/>
+                                                  <xs:pattern value="\c+"/>
+                                                  </xs:restriction>
+                                                  </xs:simpleType>
+                                                  </xs:attribute>
+                                                  </xs:complexType>
+                                                </xs:element>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                    <xs:element name="SUB_POPULATIONS" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation>List of the child SubPopulations</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element maxOccurs="unbounded"
+                                                  name="SUB_POPULATION">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Settings for the SubPopulation that group users on their perception of the environment</xs:documentation>
+                                                  </xs:annotation>
+                                                  <xs:complexType>
+                                                  <xs:attribute name="id" type="xs:string"
+                                                  use="required">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Name of the SubPopulation (unique)</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  <xs:attribute name="motive" type="xs:string"
+                                                  use="required">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Name of the motive for this SubPopulation. Must be a valid Motive ID.</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  <xs:attribute name="initial_walk_speed"
+                                                  type="typeStrictPositiveDouble" use="optional">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Initial speed for the walking patterns at the beginning of the trip. If nothing, will use the one defined for the parent Population</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  <xs:attribute name="initial_walk_radius"
+                                                  type="typeNonNegativeDouble" use="optional">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Speed for walking patterns on the rest of the trip. If nothing, will use the one defined for the parent Population</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  </xs:complexType>
+                                                </xs:element>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                                <xs:attribute name="id" type="xs:string" use="required">
+                                    <xs:annotation>
+                                        <xs:documentation>Name of the population (unique)</xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                                <xs:attribute default="1.2" name="initial_walk_speed"
+                                    type="typeStrictPositiveDouble" use="optional">
+                                    <xs:annotation>
+                                        <xs:documentation>Itinial speed for the walking patterns at the beginning of the trip</xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                                <xs:attribute default="1.2" name="intermediate_walk_speed"
+                                    type="typeStrictPositiveDouble" use="optional">
+                                    <xs:annotation>
+                                        <xs:documentation>Speed for walking patterns on the rest of the trip</xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                                <xs:attribute default="100" name="initial_walk_radius"
+                                    type="typeNonNegativeDouble" use="optional">
+                                    <xs:annotation>
+                                        <xs:documentation>Distance of nodes accessible for walking patterns on the beginning of the trip</xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                                <xs:attribute default="100" name="intermediate_walk_radius"
+                                    type="typeNonNegativeDouble" use="optional">
+                                    <xs:annotation>
+                                        <xs:documentation>Distance of nodes accessible for walking patterns on the rest of the trip</xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                                <xs:attribute default="false" name="disable_optimization"
+                                    type="xs:boolean">
+                                    <xs:annotation>
+                                        <xs:documentation>If set to true, the optimizer will ignore this population (all users of this population will go to the shortest path)</xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="csv_file_path" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>Path of the csv file to define each trip</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="false" name="ignore_subODs" type="xs:boolean">
+            <xs:annotation>
+                <xs:documentation>Indicate if we ignore SubAreas or not in SymuMaster. If true, all trips assigned to SubAreas as origin and/or destination will be reassigned to the parent Area.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="typeSimulation">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="DEMAND" type="typeDemand">
+                <xs:annotation>
+                    <xs:documentation>Settings for all imformations relative to the demand (requested trips)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ASSIGNMENT">
+                <xs:annotation>
+                    <xs:documentation>Method to find the user equilibrium and assign all user to the paths, dependent on the time</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="typeAssignment">
+                            <xs:sequence>
+                                <xs:element ref="ASSIGNMENT_MODEL"/>
+                            </xs:sequence>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SIMULATORS">
+                <xs:annotation>
+                    <xs:documentation>List of the simulators to use</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="1" ref="SIMULATOR">
+                            <xs:annotation>
+                                <xs:documentation>Setting for a particular simulator</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="network_interfaces_file_path" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>Path of the CSV file that defines the interfaces between the simulator's networks : one line per common node and for each line, the simulator order and the node name for this simulator. Example :
+1;NodeNameForSimulator1;2;NodeNameForSimulator2</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="1" ref="RESTITUTION">
+                <xs:annotation>
+                    <xs:documentation>Restitution define where the output files will be created</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="typeAssignment">
+        <xs:attribute default="20" name="prediction_period" type="xs:positiveInteger">
+            <xs:annotation>
+                <xs:documentation>Defines the time beetwen each prediction_period (in min)</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="15" name="assignment_period" type="xs:positiveInteger">
+            <xs:annotation>
+                <xs:documentation>Defines the time beetwen each assignment_period (in min) (less or equal to prediction_period)</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="1" name="traveltimes_update_period" type="xs:positiveInteger">
+            <xs:annotation>
+                <xs:documentation>Defines the minimum time for updating the pattern and penalties costs</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="false" name="day_to_day_assignment" type="xs:boolean">
+            <xs:annotation>
+                <xs:documentation>If this variable is true, add the user to assignment, starting with his predefined path.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="false" name="use_costs_for_temporal_shortest_path" type="xs:boolean">
+            <xs:annotation>
+                <xs:documentation>if true, use costs (marginals in SO) instead of travel times to determine the right timed value for patterns and penalties costs for the temporal shortest path algorithm.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType abstract="true" name="typeAssignmentModel"/>
+    <xs:complexType name="typeMSADualLoop">
+        <xs:complexContent>
+            <xs:extension base="typeAssignmentModel">
+                <xs:sequence>
+                    <xs:element name="SHORTEST_PATH">
+                        <xs:annotation>
+                            <xs:documentation>Settings specific to the shortest paths algorithms</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:attribute name="is_k_shortest_path_initial" type="xs:boolean"
+                                use="required">
+                                <xs:annotation>
+                                    <xs:documentation>Indicates if we need to use a k-shortest path in the initialization stage. If false, will use a 1-shortest path</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="is_k_shortest_path_iteration" type="xs:boolean"
+                                use="required">
+                                <xs:annotation>
+                                    <xs:documentation>Indicates if we need to use a k-shortest path for all iterations except the first. If false, it will use a 1-shortest path</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="k" type="xs:positiveInteger" use="optional">
+                                <xs:annotation>
+                                    <xs:documentation>Maximum number of shortest paths. If nothing, we will get the value from the symuvia xml scenario</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="threshold_close_shortest_path"
+                                type="typeNonNegativeDouble" use="optional">
+                                <xs:annotation>
+                                    <xs:documentation>Limit cost factor for the k-shortest path algorithm. The algorithm will return only the paths with costs under threshold_close_shortes_path (in %) from the shortest path found.</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="assignment_alpha" type="typeStrictPositiveDouble">
+                                <xs:annotation>
+                                    <xs:documentation>Penalization factor for Dijkstra in k-shortest path. If nothing, we will get the value from the symuvia xml</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="assignment_beta" type="typeStrictPositiveDouble">
+                                <xs:annotation>
+                                    <xs:documentation>Limit factor for the non-penalized cost in k-shortest path. If nothing, we will get the value from the symuvia xml</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="assignment_gamma" type="typeStrictPositiveDouble">
+                                <xs:annotation>
+                                    <xs:documentation>Limit factor for the penalized cost in k-shortest path. If nothing, we will get the value from the symuvia xml</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="wardrope_tolerance" type="typePercentDouble">
+                                <xs:annotation>
+                                    <xs:documentation>In wardrop mode, this is the percentage used to keep shortest paths : those with a cost under (minimum cost) * (1 + wardrop_tolerance)</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute default="false" name="CFK_filter" type="xs:boolean">
+                                <xs:annotation>
+                                    <xs:documentation>Activates or not the filter on itinaries based on the commonality factor (CFk)</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="CFK_alpha" type="xs:double">
+                                <xs:annotation>
+                                    <xs:documentation>Maximum value for the commonality factor that an itinary can reach. </xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="CFK_beta" type="typePercentDouble">
+                                <xs:annotation>
+                                    <xs:documentation>Beta value for the determination of commonality factor</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="CFK_gamma" type="typePercentDouble">
+                                <xs:annotation>
+                                    <xs:documentation>Gamma value for the determination of commonality factor</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="OPTIMIZER">
+                        <xs:annotation>
+                            <xs:documentation>Settings specific to the chosen Optimizer</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" minOccurs="0"
+                                    name="SUBPOPULATION_SPECIALIZATION">
+                                    <xs:annotation>
+                                        <xs:documentation>Defines special optimizer attributes for some subpopulations</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element maxOccurs="unbounded" name="SUBPOPULATION">
+                                                <xs:annotation>
+                                                  <xs:documentation>Subpopulation that uses the parent specialization attribute values</xs:documentation>
+                                                </xs:annotation>
+                                                <xs:complexType>
+                                                  <xs:attribute name="id" type="xs:string"
+                                                  use="required">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Subpopulation ID that uses the parent specialization attribute values</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                </xs:complexType>
+                                            </xs:element>
+                                        </xs:sequence>
+                                        <xs:attribute name="equilibrium_type" use="optional">
+                                            <xs:annotation>
+                                                <xs:documentation>Type of the equilibrium that you want to use</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:NMTOKEN">
+                                                  <xs:enumeration value="UE"/>
+                                                  <xs:enumeration value="BRUE"/>
+                                                  <xs:enumeration value="SO"/>
+                                                  <xs:enumeration value="SSO"/>
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:attribute>
+                                        <xs:attribute name="is_logit_initialize" type="xs:boolean"
+                                            use="optional">
+                                            <xs:annotation>
+                                                <xs:documentation>Indicates if you want to assign paths with logit on Initialization phase</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="is_smart_stepsize" type="xs:boolean"
+                                            use="optional">
+                                            <xs:annotation>
+                                                <xs:documentation>Use smart step size method for MSA methods.</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="sigma_convenience"
+                                            type="typePercentDouble" use="optional">
+                                            <xs:annotation>
+                                                <xs:documentation>Sigma to tell if the user is satisfied with its path (Only in BRUE mode)</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="value_of_time" type="xs:double"
+                                            use="optional">
+                                            <xs:annotation>
+                                                <xs:documentation>Perception of the time for a user</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="is_uniform_initialization"
+                                            type="xs:boolean" use="optional" default="false">
+                                            <xs:annotation>
+                                                <xs:documentation>Indicates if you want to do the initialization at the beginning of outerloop with uniform function</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                            <xs:attribute name="equilibrium_type" use="required">
+                                <xs:annotation>
+                                    <xs:documentation>Type of the equilibrium that you want to use</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:NMTOKEN">
+                                        <xs:enumeration value="UE"/>
+                                        <xs:enumeration value="BRUE"/>
+                                        <xs:enumeration value="SO"/>
+                                        <xs:enumeration value="SSO"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:attribute>
+                            <xs:attribute name="is_logit_initialize" type="xs:boolean"
+                                use="required">
+                                <xs:annotation>
+                                    <xs:documentation>Indicates if you want to assign paths with logit on Initialization phase</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="is_smart_stepsize" type="xs:boolean" use="optional"
+                                default="false">
+                                <xs:annotation>
+                                    <xs:documentation>Use smart step size method for MSA methods.</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="sigma_convenience" type="typePercentDouble"
+                                use="optional" default="0.1">
+                                <xs:annotation>
+                                    <xs:documentation>Sigma to tell if the user is satisfied with its path (Only in BRUE mode)</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="value_of_time" type="xs:double" use="optional"
+                                default="1">
+                                <xs:annotation>
+                                    <xs:documentation>Perception of the time for a user</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="is_uniform_initialization" type="xs:boolean"
+                                use="optional" default="false">
+                                <xs:annotation>
+                                    <xs:documentation>Indicates if you want to do the initialization at the beginning of outerloop with uniform function</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="MSA_TYPE">
+                        <xs:annotation>
+                            <xs:documentation>Settings specific to the MSA used</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:attribute name="msa_type" use="required">
+                                <xs:annotation>
+                                    <xs:documentation>Type of the MSA you want to use</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:NMTOKEN">
+                                        <xs:enumeration value="SIMPLE"/>
+                                        <xs:enumeration value="SMART"/>
+                                        <xs:enumeration value="GAP_BASED"/>
+                                        <xs:enumeration value="GAP_BASED_PROB"/>
+                                        <xs:enumeration value="GAP_BASED_NORMALIZE"/>
+                                        <xs:enumeration value="PROBABILISTIC"/>
+                                        <xs:enumeration value="STEPSIZE_PROB"/>
+                                        <xs:enumeration value="LOGIT"/>
+                                        <xs:enumeration value="GAP_LUDO"/>
+                                        <xs:enumeration value="WITHIN_DAY_FPA"/>
+                                        <xs:enumeration value="INITIAL_BASED_WITHIN_DAY_FPA"/>
+                                        <xs:enumeration value="INITIAL_BASED_SIMPLE"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:attribute>
+                            <xs:attribute name="alpha" type="typeStrictPositiveDouble">
+                                <xs:annotation>
+                                    <xs:documentation>Alpha is a parameter for the fixed point algorithm (WITHIN_DAY_FPA, INITIAL_BASED_WITHIN_DAY_FPA and INITIAL_BASED_SIMPLE)</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="default_logit" type="typeStrictPositiveDouble"
+                                use="optional">
+                                <xs:annotation>
+                                    <xs:documentation>Default value for the logit assignement. If nothing, we will get the value from the symuvia xml</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="is_initialization" type="xs:boolean" use="optional"
+                                default="false">
+                                <xs:annotation>
+                                    <xs:documentation>Use initialization at the begining of each outer loops.</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="is_initial_stepsize_outerloop_index"
+                                type="xs:boolean" use="optional" default="true">
+                                <xs:annotation>
+                                    <xs:documentation>Use outerloop index as initial stepsize value. If false, we use innerloop index.</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:choice>
+                        <xs:element name="GAP_CONVERGENCE">
+                            <xs:annotation>
+                                <xs:documentation>Use the GAP as a convergence criteria</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="OUTERLOOP_GAP_CONVERGENCE">
+                                        <xs:annotation>
+                                            <xs:documentation>Settings for the Outerloop</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element maxOccurs="unbounded" minOccurs="0"
+                                                  name="SUBPOPULATION_SPECIALIZATION">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Defines special gap based outerloop attributes for some subpopulations</xs:documentation>
+                                                  </xs:annotation>
+                                                  <xs:complexType>
+                                                  <xs:sequence>
+                                                  <xs:element maxOccurs="unbounded"
+                                                  name="SUBPOPULATION">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Subpopulation that uses the parent specialization attribute values</xs:documentation>
+                                                  </xs:annotation>
+                                                  <xs:complexType>
+                                                  <xs:attribute name="id" type="xs:string"
+                                                  use="required">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Subpopulation ID that uses the parent specialization attribute values</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  </xs:complexType>
+                                                  </xs:element>
+                                                  </xs:sequence>
+                                                  <xs:attribute name="max_gap_threshold_outerloop"
+                                                  type="typeStrictPositiveDouble" use="optional">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Maximum value of gap per user to reach for convergence</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  <xs:attribute
+                                                  name="max_relative_cost_threshold_outerloop"
+                                                  type="typePercentDouble" use="optional">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Limit of cost difference allowed for the user compared to the shortest path (expressed in %)</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  </xs:complexType>
+                                                </xs:element>
+                                            </xs:sequence>
+                                            <xs:attribute name="max_outerloop_iterations"
+                                                type="xs:nonNegativeInteger" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Max number of iterations for the outerloop</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                            <xs:attribute
+                                                name="use_relative_gap_threshold_convergence"
+                                                type="xs:boolean" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Determine what type of convergence will be used for OuterLoop. If true, the convergence will be based on the relative value of the gap with the previous OuterLoop gap. If false, the convergence test will be a threshold with a fix value (max_gap_threshold should be fill).</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                            <xs:attribute name="max_gap_threshold_outerloop"
+                                                type="typeStrictPositiveDouble" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Maximum value of gap per user to reach for convergence</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                            <xs:attribute
+                                                name="max_relative_gap_difference_outerloop"
+                                                type="typePercentDouble" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Maximum relative difference from this gap and the gap of the previous iteration</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                            <xs:attribute
+                                                name="max_relative_cost_threshold_outerloop"
+                                                type="typePercentDouble" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Limit of cost difference allowed for the user compared to the shortest path (expressed in %)</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                            <xs:attribute
+                                                name="max_relative_user_violation_outerloop"
+                                                type="typePercentDouble" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Maximum number of users that can be in violation on an OD (in %)</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                        </xs:complexType>
+                                    </xs:element>
+                                    <xs:element name="INNERLOOP_GAP_CONVERGENCE">
+                                        <xs:annotation>
+                                            <xs:documentation>Settings for the Innerloop</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:attribute name="max_innerloop_iterations"
+                                                type="xs:nonNegativeInteger" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Max number of iterations for the innerloop</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                            <xs:attribute
+                                                name="max_relative_gap_difference_innerloop"
+                                                type="typePercentDouble" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Maximum relative difference from this gap and the gap of the previous iteration</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="COST_CONVERGENCE">
+                            <xs:annotation>
+                                <xs:documentation>Use travel cost for convergence criteria</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="OUTERLOOP_COST_CONVERGENCE">
+                                        <xs:annotation>
+                                            <xs:documentation>Settings for the Outerloop</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element maxOccurs="unbounded" minOccurs="0"
+                                                  name="SUBPOPULATION_SPECIALIZATION">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Defines special cost based outerloop attributes for some subpopulations</xs:documentation>
+                                                  </xs:annotation>
+                                                  <xs:complexType>
+                                                  <xs:sequence>
+                                                  <xs:element maxOccurs="unbounded"
+                                                  name="SUBPOPULATION">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Subpopulation that uses the parent specialization attribute values</xs:documentation>
+                                                  </xs:annotation>
+                                                  <xs:complexType>
+                                                  <xs:attribute name="id" type="xs:string"
+                                                  use="required">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Subpopulation ID that uses the parent specialization attribute values</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  </xs:complexType>
+                                                  </xs:element>
+                                                  </xs:sequence>
+                                                  <xs:attribute
+                                                  name="max_relative_cost_threshold_outerloop"
+                                                  type="typePercentDouble" use="optional">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Limit of cost difference allowed for the user compared to the shortest path (expressed in %)</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  </xs:complexType>
+                                                </xs:element>
+                                            </xs:sequence>
+                                            <xs:attribute name="max_outerloop_iterations"
+                                                type="xs:nonNegativeInteger" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Max number of iterations for the outerloop</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                            <xs:attribute
+                                                name="max_relative_cost_threshold_outerloop"
+                                                type="typePercentDouble" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Limit of cost difference allowed for the user compared to the shortest path (expressed in %)</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                            <xs:attribute
+                                                name="max_relative_user_violation_outerloop"
+                                                type="typePercentDouble" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Maximum number of users that can be in violation on an OD (in %)</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                            <xs:attribute name="max_relative_OD_violation_outerloop"
+                                                type="typePercentDouble" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Maximum number of OD that can be in violation (in %)</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                        </xs:complexType>
+                                    </xs:element>
+                                    <xs:element name="INNERLOOP_COST_CONVERGENCE">
+                                        <xs:annotation>
+                                            <xs:documentation>Settings for the Innerloop</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:choice>
+                                                <xs:element name="TIME_BASED_TEST">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Innerloop test convergence algorithm based on the difference of travel cost</xs:documentation>
+                                                  </xs:annotation>
+                                                  <xs:complexType>
+                                                  <xs:attribute
+                                                  name="max_relative_cost_threshold_innerloop"
+                                                  type="typePercentDouble" use="optional">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Limit of cost difference allowed for the user compared to the shortest path (expressed in %). If nothing, we will use the outerloop value</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  <xs:attribute
+                                                  name="max_relative_user_violation_innerloop"
+                                                  type="typePercentDouble" use="optional">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Maximum number of users that can be in violation on an OD (in %). If nothing, we will use the outerloop value</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  <xs:attribute
+                                                  name="max_relative_OD_violation_innerloop"
+                                                  type="typePercentDouble" use="optional">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Maximum number of OD that can be in violation (in %). If nothing, we will use the outerloop value</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  </xs:complexType>
+                                                </xs:element>
+                                                <xs:element name="SWAP_BASED_TEST">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Innerloop test convergence algorithm based on the difference of users swapped</xs:documentation>
+                                                  </xs:annotation>
+                                                  <xs:complexType>
+                                                  <xs:attribute
+                                                  name="max_relative_swapping_threshold"
+                                                  type="typePercentDouble" use="required">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Maximum number of swapping allowed (in %)</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  <xs:attribute
+                                                  name="max_relative_OD_violation_innerloop"
+                                                  type="typePercentDouble" use="optional">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Maximum number of OD that can be in violation (in %). If nothing, we will use the outerloop value</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  </xs:complexType>
+                                                </xs:element>
+                                            </xs:choice>
+                                            <xs:attribute name="max_innerloop_iterations"
+                                                type="xs:nonNegativeInteger" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Max number of iterations for the innerloop</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:sequence>
+                <xs:attribute name="sigma_close_shortest_paths" type="typePercentDouble"
+                    use="required">
+                    <xs:annotation>
+                        <xs:documentation>If 2 or more paths are close to each other, determined by this value (in %), they will be grouped together.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="paths_update_nb_periods" type="xs:positiveInteger"
+                    use="required">
+                    <xs:annotation>
+                        <xs:documentation>Number of periods to aggregate the value in the process of updating the costs</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="paths_update_nb_instants" type="xs:positiveInteger"
+                    use="required">
+                    <xs:annotation>
+                        <xs:documentation>Number of instants to aggregate the value in the process of updating the costs. This should be limitited to paths_update_nb_periods +1.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="minimum_swapping_value" type="xs:positiveInteger" use="optional"
+                    default="1">
+                    <xs:annotation>
+                        <xs:documentation>Minimumm swapping treshold for the assignment. If, for all OD, 1/k is less than this value, we stop the assignment.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="fill_from_previous_assignment_period" type="xs:boolean"
+                    use="optional" default="false">
+                    <xs:annotation>
+                        <xs:documentation>Indicates if at the start of a period, we want to assign the users with the ratio from the previous period users.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="predefined_paths_file_path" type="xs:string" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>Path for the csv that contains the predefined paths and also the predefined assignments.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+				<xs:attribute name="predefined_paths_only" type="xs:boolean" use="optional" default="true">
+                    <xs:annotation>
+                        <xs:documentation>If true (default value), SymuMaster will not try to find any other path than the predefined ones</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="improvement_dependant_step_size" type="xs:boolean"
+                    use="optional" default="false">
+                    <xs:annotation>
+                        <xs:documentation>The idea is to determine the step size after check if we still improve the gap by previous step size or not</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="max_iterations_number" type="xs:nonNegativeInteger"
+                    use="optional">
+                    <xs:annotation>
+                        <xs:documentation>Max total number of iterations (innerloop and outerloop)</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute default="true" name="print_affectation" type="xs:boolean"
+                    use="optional">
+                    <xs:annotation>
+                        <xs:documentation>Tell if we should print the current affectation and travel time for each OD.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="typeHeuristicDualLoop">
+        <xs:complexContent>
+            <xs:extension base="typeAssignmentModel">
+                <xs:sequence>
+                    <xs:element name="SHORTEST_PATH">
+                        <xs:annotation>
+                            <xs:documentation>Settings specific to the shortest paths algorithms</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:attribute name="is_k_shortest_path_initial" type="xs:boolean"
+                                use="required">
+                                <xs:annotation>
+                                    <xs:documentation>Indicates if we need to use a k-shortest path in the initialization stage. If false, will use a 1-shortest path</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="is_k_shortest_path_iteration" type="xs:boolean"
+                                use="required">
+                                <xs:annotation>
+                                    <xs:documentation>Indicates if we need to use a k-shortest path for all iterations except the first. If false, it will use a 1-shortest path</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="k" type="xs:positiveInteger" use="optional">
+                                <xs:annotation>
+                                    <xs:documentation>Maximum number of shortest paths. If nothing, we will get the value from the symuvia xml scenario</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="threshold_close_shortest_path"
+                                type="typeNonNegativeDouble" use="optional">
+                                <xs:annotation>
+                                    <xs:documentation>Limit cost factor for the k-shortest path algorithm. The algorithm will return only the paths with costs under threshold_close_shortes_path (in %) from the shortest path found.</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="assignment_alpha" type="typeStrictPositiveDouble">
+                                <xs:annotation>
+                                    <xs:documentation>Penalization factor for Dijkstra in k-shortest path. If nothing, we will get the value from the symuvia xml</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="assignment_beta" type="typeStrictPositiveDouble">
+                                <xs:annotation>
+                                    <xs:documentation>Limit factor for the non-penalized cost in k-shortest path. If nothing, we will get the value from the symuvia xml</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="assignment_gamma" type="typeStrictPositiveDouble">
+                                <xs:annotation>
+                                    <xs:documentation>Limit factor for the penalized cost in k-shortest path. If nothing, we will get the value from the symuvia xml</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="wardrope_tolerance" type="typePercentDouble">
+                                <xs:annotation>
+                                    <xs:documentation>In wardrop mode, this is the percentage used to keep shortest paths : those with a cost under (minimum cost) * (1 + wardrop_tolerance)</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute default="false" name="CFK_filter" type="xs:boolean">
+                                <xs:annotation>
+                                    <xs:documentation>Activates or not the filter on itinaries based on the commonality factor (CFk)</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="CFK_alpha" type="xs:double">
+                                <xs:annotation>
+                                    <xs:documentation>Maximum value for the commonality factor that an itinary can reach. </xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="CFK_beta" type="typePercentDouble">
+                                <xs:annotation>
+                                    <xs:documentation>Beta value for the determination of commonality factor</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="CFK_gamma" type="typePercentDouble">
+                                <xs:annotation>
+                                    <xs:documentation>Gamma value for the determination of commonality factor</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="OPTIMIZER">
+                        <xs:annotation>
+                            <xs:documentation>Settings specific to the chosen Optimizer</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" minOccurs="0"
+                                    name="SUBPOPULATION_SPECIALIZATION">
+                                    <xs:annotation>
+                                        <xs:documentation>Defines special optimizer attributes for some subpopulations</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element maxOccurs="unbounded" name="SUBPOPULATION">
+                                                <xs:annotation>
+                                                  <xs:documentation>Subpopulation that uses the parent specialization attribute values</xs:documentation>
+                                                </xs:annotation>
+                                                <xs:complexType>
+                                                  <xs:attribute name="id" type="xs:string"
+                                                  use="required">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Subpopulation ID that uses the parent specialization attribute values</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                </xs:complexType>
+                                            </xs:element>
+                                        </xs:sequence>
+                                        <xs:attribute name="equilibrium_type" use="optional">
+                                            <xs:annotation>
+                                                <xs:documentation>Type of the equilibrium that you want to use</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:NMTOKEN">
+                                                  <xs:enumeration value="UE"/>
+                                                  <xs:enumeration value="BRUE"/>
+                                                  <xs:enumeration value="SO"/>
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:attribute>
+                                        <xs:attribute name="is_logit_initialize" type="xs:boolean"
+                                            use="optional">
+                                            <xs:annotation>
+                                                <xs:documentation>Indicates if you want to assign paths with logit on Initialization phase</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="is_smart_stepsize" type="xs:boolean"
+                                            use="optional">
+                                            <xs:annotation>
+                                                <xs:documentation>Use smart step size method for MSA methods.</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="sigma_convenience"
+                                            type="typePercentDouble" use="optional">
+                                            <xs:annotation>
+                                                <xs:documentation>Sigma to tell if the user is satisfied with its path (Only in BRUE mode)</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="value_of_time" type="xs:double"
+                                            use="optional">
+                                            <xs:annotation>
+                                                <xs:documentation>Perception of the time for a user</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="is_uniform_initialization"
+                                            type="xs:boolean" use="optional" default="false">
+                                            <xs:annotation>
+                                                <xs:documentation>Indicates if you want to do the initialization at the beginning of outerloop with uniform function</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                            <xs:attribute name="equilibrium_type" use="required">
+                                <xs:annotation>
+                                    <xs:documentation>Type of the equilibrium that you want to use</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:NMTOKEN">
+                                        <xs:enumeration value="UE"/>
+                                        <xs:enumeration value="BRUE"/>
+                                        <xs:enumeration value="SO"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:attribute>
+                            <xs:attribute name="is_logit_initialize" type="xs:boolean"
+                                use="required">
+                                <xs:annotation>
+                                    <xs:documentation>Indicates if you want to assign paths with logit on Initialization phase</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="is_smart_stepsize" type="xs:boolean" use="optional"
+                                default="false">
+                                <xs:annotation>
+                                    <xs:documentation>Use smart step size method for MSA methods.</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="sigma_convenience" type="typePercentDouble"
+                                use="optional" default="0.1">
+                                <xs:annotation>
+                                    <xs:documentation>Sigma to tell if the user is satisfied with its path (Only in BRUE mode)</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="value_of_time" type="xs:double" use="optional"
+                                default="1">
+                                <xs:annotation>
+                                    <xs:documentation>Perception of the time for a user</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="is_uniform_initialization" type="xs:boolean"
+                                use="optional" default="false">
+                                <xs:annotation>
+                                    <xs:documentation>Indicates if you want to do the initialization at the beginning of outerloop with uniform function</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="MH_TYPE">
+                        <xs:annotation>
+                            <xs:documentation>Settings specific to the Meta-heuristic used</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:attribute name="mh_type" use="required">
+                                <xs:annotation>
+                                    <xs:documentation>Meta-heuristic type you want to use</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:NMTOKEN">
+                                        <xs:enumeration value="SIMULATED_ANNEALING"/>
+                                        <xs:enumeration value="GENETIC_ALGORITHM"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:attribute>
+                            <xs:attribute name="default_logit" type="typeStrictPositiveDouble"
+                                use="optional">
+                                <xs:annotation>
+                                    <xs:documentation>Default value for the logit assignement. If nothing, we will get the value from the symuvia xml</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="is_initialization" type="xs:boolean" use="optional"
+                                default="false">
+                                <xs:annotation>
+                                    <xs:documentation>Use initialization at the begining of each outer loops.</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="is_initial_stepsize_outerloop_index"
+                                type="xs:boolean" use="optional" default="true">
+                                <xs:annotation>
+                                    <xs:documentation>Use outerloop index as initial stepsize value. If false, we use innerloop index.</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:choice>
+                        <xs:element name="GAP_CONVERGENCE">
+                            <xs:annotation>
+                                <xs:documentation>Use the GAP as a convergence criteria</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="OUTERLOOP_GAP_CONVERGENCE">
+                                        <xs:annotation>
+                                            <xs:documentation>Settings for the Outerloop</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element maxOccurs="unbounded" minOccurs="0"
+                                                  name="SUBPOPULATION_SPECIALIZATION">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Defines special gap based outerloop attributes for some subpopulations</xs:documentation>
+                                                  </xs:annotation>
+                                                  <xs:complexType>
+                                                  <xs:sequence>
+                                                  <xs:element maxOccurs="unbounded"
+                                                  name="SUBPOPULATION">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Subpopulation that uses the parent specialization attribute values</xs:documentation>
+                                                  </xs:annotation>
+                                                  <xs:complexType>
+                                                  <xs:attribute name="id" type="xs:string"
+                                                  use="required">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Subpopulation ID that uses the parent specialization attribute values</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  </xs:complexType>
+                                                  </xs:element>
+                                                  </xs:sequence>
+                                                  <xs:attribute name="max_gap_threshold_outerloop"
+                                                  type="typeStrictPositiveDouble" use="optional">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Maximum value of gap per user to reach for convergence</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  <xs:attribute
+                                                  name="max_relative_cost_threshold_outerloop"
+                                                  type="typePercentDouble" use="optional">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Limit of cost difference allowed for the user compared to the shortest path (expressed in %)</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  </xs:complexType>
+                                                </xs:element>
+                                            </xs:sequence>
+                                            <xs:attribute name="max_outerloop_iterations"
+                                                type="xs:nonNegativeInteger" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Max number of iterations for the outerloop</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                            <xs:attribute
+                                                name="use_relative_gap_threshold_convergence"
+                                                type="xs:boolean" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Determine what type of convergence will be used for OuterLoop. If true, the convergence will be based on the relative value of the gap with the previous OuterLoop gap. If false, the convergence test will be a threshold with a fix value (max_gap_threshold should be fill).</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                            <xs:attribute name="max_gap_threshold_outerloop"
+                                                type="typeStrictPositiveDouble" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Maximum value of gap per user to reach for convergence</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                            <xs:attribute
+                                                name="max_relative_gap_difference_outerloop"
+                                                type="typePercentDouble" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Maximum relative difference from this gap and the gap of the previous iteration</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                            <xs:attribute
+                                                name="max_relative_cost_threshold_outerloop"
+                                                type="typePercentDouble" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Limit of cost difference allowed for the user compared to the shortest path (expressed in %)</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                            <xs:attribute
+                                                name="max_relative_user_violation_outerloop"
+                                                type="typePercentDouble" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Maximum number of users that can be in violation on an OD (in %)</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                        </xs:complexType>
+                                    </xs:element>
+                                    <xs:element name="INNERLOOP_GAP_CONVERGENCE">
+                                        <xs:annotation>
+                                            <xs:documentation>Settings for the Innerloop</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:attribute name="max_innerloop_iterations"
+                                                type="xs:nonNegativeInteger" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Max number of iterations for the innerloop</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                            <xs:attribute
+                                                name="max_relative_gap_difference_innerloop"
+                                                type="typePercentDouble" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Maximum relative difference from this gap and the gap of the previous iteration</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="COST_CONVERGENCE">
+                            <xs:annotation>
+                                <xs:documentation>Use travel cost for convergence criteria</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="OUTERLOOP_COST_CONVERGENCE">
+                                        <xs:annotation>
+                                            <xs:documentation>Settings for the Outerloop</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element maxOccurs="unbounded" minOccurs="0"
+                                                  name="SUBPOPULATION_SPECIALIZATION">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Defines special cost based outerloop attributes for some subpopulations</xs:documentation>
+                                                  </xs:annotation>
+                                                  <xs:complexType>
+                                                  <xs:sequence>
+                                                  <xs:element maxOccurs="unbounded"
+                                                  name="SUBPOPULATION">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Subpopulation that uses the parent specialization attribute values</xs:documentation>
+                                                  </xs:annotation>
+                                                  <xs:complexType>
+                                                  <xs:attribute name="id" type="xs:string"
+                                                  use="required">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Subpopulation ID that uses the parent specialization attribute values</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  </xs:complexType>
+                                                  </xs:element>
+                                                  </xs:sequence>
+                                                  <xs:attribute
+                                                  name="max_relative_cost_threshold_outerloop"
+                                                  type="typePercentDouble" use="optional">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Limit of cost difference allowed for the user compared to the shortest path (expressed in %)</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  </xs:complexType>
+                                                </xs:element>
+                                            </xs:sequence>
+                                            <xs:attribute name="max_outerloop_iterations"
+                                                type="xs:nonNegativeInteger" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Max number of iterations for the outerloop</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                            <xs:attribute
+                                                name="max_relative_cost_threshold_outerloop"
+                                                type="typePercentDouble" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Limit of cost difference allowed for the user compared to the shortest path (expressed in %)</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                            <xs:attribute
+                                                name="max_relative_user_violation_outerloop"
+                                                type="typePercentDouble" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Maximum number of users that can be in violation on an OD (in %)</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                            <xs:attribute name="max_relative_OD_violation_outerloop"
+                                                type="typePercentDouble" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Maximum number of OD that can be in violation (in %)</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                        </xs:complexType>
+                                    </xs:element>
+                                    <xs:element name="INNERLOOP_COST_CONVERGENCE">
+                                        <xs:annotation>
+                                            <xs:documentation>Settings for the Innerloop</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:choice>
+                                                <xs:element name="TIME_BASED_TEST">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Innerloop test convergence algorithm based on the difference of travel cost</xs:documentation>
+                                                  </xs:annotation>
+                                                  <xs:complexType>
+                                                  <xs:attribute
+                                                  name="max_relative_cost_threshold_innerloop"
+                                                  type="typePercentDouble" use="optional">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Limit of cost difference allowed for the user compared to the shortest path (expressed in %). If nothing, we will use the outerloop value</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  <xs:attribute
+                                                  name="max_relative_user_violation_innerloop"
+                                                  type="typePercentDouble" use="optional">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Maximum number of users that can be in violation on an OD (in %). If nothing, we will use the outerloop value</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  <xs:attribute
+                                                  name="max_relative_OD_violation_innerloop"
+                                                  type="typePercentDouble" use="optional">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Maximum number of OD that can be in violation (in %). If nothing, we will use the outerloop value</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  </xs:complexType>
+                                                </xs:element>
+                                                <xs:element name="SWAP_BASED_TEST">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Innerloop test convergence algorithm based on the difference of users swapped</xs:documentation>
+                                                  </xs:annotation>
+                                                  <xs:complexType>
+                                                  <xs:attribute
+                                                  name="max_relative_swapping_threshold"
+                                                  type="typePercentDouble" use="required">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Maximum number of swapping allowed (in %)</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  <xs:attribute
+                                                  name="max_relative_OD_violation_innerloop"
+                                                  type="typePercentDouble" use="optional">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Maximum number of OD that can be in violation (in %). If nothing, we will use the outerloop value</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:attribute>
+                                                  </xs:complexType>
+                                                </xs:element>
+                                            </xs:choice>
+                                            <xs:attribute name="max_innerloop_iterations"
+                                                type="xs:nonNegativeInteger" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Max number of iterations for the innerloop</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:attribute>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:sequence>
+                <xs:attribute name="sigma_close_shortest_paths" type="typePercentDouble"
+                    use="required">
+                    <xs:annotation>
+                        <xs:documentation>If 2 or more paths are close to each other, determined by this value (in %), they will be grouped together.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="paths_update_nb_periods" type="xs:positiveInteger"
+                    use="required">
+                    <xs:annotation>
+                        <xs:documentation>Number of periods to aggregate the value in the process of updating the costs</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="paths_update_nb_instants" type="xs:positiveInteger"
+                    use="required">
+                    <xs:annotation>
+                        <xs:documentation>Number of instants to aggregate the value in the process of updating the costs. This should be limitited to paths_update_nb_periods +1.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="minimum_swapping_value" type="xs:positiveInteger" use="optional"
+                    default="1">
+                    <xs:annotation>
+                        <xs:documentation>Minimumm swapping treshold for the assignment. If, for all OD, 1/k is less than this value, we stop the assignment.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="fill_from_previous_assignment_period" type="xs:boolean"
+                    use="optional" default="false">
+                    <xs:annotation>
+                        <xs:documentation>Indicates if at the start of a period, we want to assign the users with the ratio from the previous period users.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="predefined_paths_file_path" type="xs:string" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>Path for the csv that contains the predefined paths and also the predefined assignments.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="improvement_dependant_step_size" type="xs:boolean"
+                    use="optional" default="false">
+                    <xs:annotation>
+                        <xs:documentation>The idea is to determine the step size after check if we still improve the gap by previous step size or not</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="max_iterations_number" type="xs:nonNegativeInteger"
+                    use="optional">
+                    <xs:annotation>
+                        <xs:documentation>Max total number of iterations (innerloop and outerloop)</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute default="true" name="print_affectation" type="xs:boolean"
+                    use="optional">
+                    <xs:annotation>
+                        <xs:documentation>Tell if we should print the current affectation and travel time for each OD.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element abstract="true" name="ASSIGNMENT_MODEL">
+        <xs:annotation>
+            <xs:documentation>Settings for the chosen assignment model</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="MSA_DUAL_LOOP" substitutionGroup="ASSIGNMENT_MODEL" type="typeMSADualLoop">
+        <xs:annotation>
+            <xs:documentation>Settings for MSA_DUAL_LOOP. MSA_DUAL_LOOP assignment is the assignment that use two loops to find the optimal convergence of the users </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="HEURISTIC_DUAL_LOOP" substitutionGroup="ASSIGNMENT_MODEL"
+        type="typeHeuristicDualLoop">
+        <xs:annotation>
+            <xs:documentation>Settings for HEURISTIC_DUAL_LOOP. HEURISTIC_DUAL_LOOP assignment is the assignment that use two loops to find the optimal convergence of the users </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:complexType abstract="true" name="typeSimulator"/>
+    <xs:element name="SIMULATOR" abstract="true"/>
+    <xs:element name="SYMUVIA" substitutionGroup="SIMULATOR">
+        <xs:annotation>
+            <xs:documentation>Specific settings for the SymuVia simulator</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="xml_file_path" use="required" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Full path ot the SymuVia XML input scenario</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="travel_times_mode" default="classic_spatial">
+                <xs:annotation>
+                    <xs:documentation>travel times calculation method for private cars</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:NMTOKEN">
+                        <xs:enumeration value="classic_spatial">
+                            <xs:annotation>
+                                <xs:documentation>spatial method with classic travel times calculation method</xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="robust_spatial">
+                            <xs:annotation>
+                                <xs:documentation>spatial method with robust travel times calculation method</xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="output_vehicles">
+                            <xs:annotation>
+                                <xs:documentation>method based on the observation of vehicles exitting the cell</xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute default="true" name="estimate_wait_time_on_traffic_lights"
+                type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>use estimated mean wait time due to red lights on links when estimating empty travel times</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="false" name="use_travel_times_as_marginals_on_areas"
+                type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>Option to disable the marginals computation for driving patterns on areas/subareas (use travel time instead)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="1" name="marginals_deltaN" type="xs:positiveInteger">
+                <xs:annotation>
+                    <xs:documentation>deltaN used for marginal computation when using the output_vehicles mode</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="5" name="history_vehicles_nb" type="xs:positiveInteger">
+                <xs:annotation>
+                    <xs:documentation>Number of vehicle to used when computing travel times and marginals when using the output_vehicles mode</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="1" name="history_travel_times_period_nb"
+                type="xs:positiveInteger">
+                <xs:annotation>
+                    <xs:documentation>Number of travel time update periods to look into when computing travel times and marginals in the output_vehicles mode</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="0.1" name="min_speed_for_travel_times"
+                type="typeNonNegativeDouble">
+                <xs:annotation>
+                    <xs:documentation>Minimum speed to use for travel times (to avoid +INF travel times when the actual speed on the link is null)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="0.5" name="concentration_ratio_for_free_flow_criterion"
+                type="typeNonNegativeDouble">
+                <xs:annotation>
+                    <xs:documentation>Concentration ratio to the Kmax to determine if a cell is fully congested or empty when measured speed is null (a single stationary vehicle at a red light should not lead to the same travel time as a fully congested link)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="1E10" name="max_marginals_value" type="typeNonNegativeDouble">
+                <xs:annotation>
+                    <xs:documentation>Maximum marginals value (equivalent to the min_speed_for_travel_times, but for marginals)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="true" name="use_bus_observations_for_travel_times"
+                type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>If true, use last bust observation for bus travel times estimations</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="false" name="use_empty_travel_times_for_bus_travel_times"
+                type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>If true, use empty travel times for computing buses travel times, instead of the measured private cars travel times</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="4" name="mean_bus_exit_time" type="typeNonNegativeDouble">
+                <xs:annotation>
+                    <xs:documentation>Mean bus exit time for a bus passenger in seconds</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="1" name="nb_stops_to_connect_outside_of_subareas"
+                type="xs:nonNegativeInteger">
+                <xs:annotation>
+                    <xs:documentation>Number of public transport stations to connect to a subarea, in addition to the stations inside the subarea. Those new connected stations must be in the subarea's parent area.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="false" name="use_means_method_for_temporal_marginals"
+                type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>Option to enable the means method to compute marginals in 'vehicle output' mode</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="false" name="use_medians_method_for_temporal_marginals"
+                type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>Option to enable the medians method to compute marginals in 'vehicle output' mode</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="min_length_for_marginals" type="typeNonNegativeDouble" default="0">
+                <xs:annotation>
+                    <xs:documentation>If defined, minimum length in meters for a link or a move inside a connection to compute marginals. Taking 0 for marginals otherwise.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="20" name="class_number_for_robust_travel_times_method"
+                type="xs:int">
+                <xs:annotation>
+                    <xs:documentation>Number of class used by the robust travel indicators calculation method</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="40"
+                name="max_points_number_per_class_for_robust_travel_times_method" type="xs:int">
+                <xs:annotation>
+                    <xs:documentation>Maximum number of points per class used by the robust travel indicators calculation method</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="10"
+                name="min_points_number_for_statistical_filter_for_robust_travel_times_method"
+                type="xs:int">
+                <xs:annotation>
+                    <xs:documentation>Minimum number of points per class for applying statiscal filter used by the robust travel indicators method
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="robust_travel_times_file_path" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Full path of robust travel times data if robust travel times are pre-computed</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="robust_travel_speeds_file_path" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Full path of robust link speed data if they are pre-computed</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="false" name="calculation_of_pollutant_emissions"
+                type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>Indicates if the pollutant emissions are computed. If SO is set up and this attribute is true, the used costs are emissions and SymuMaster computes a SSO (Sustainable System Optimum). </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="MFD" substitutionGroup="SIMULATOR">
+        <xs:annotation>
+            <xs:documentation>Specific settings for the MFD simulator</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="matlab_workspace_dir" use="required" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Full path ot the matlab workspace folder to use for the MFD simulator</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="5" name="demand_periods_nb" type="xs:positiveInteger">
+                <xs:annotation>
+                    <xs:documentation>Number of time periods inside a prediction period for which we must convert trip based demand to per macro route demand (acc based solver only)</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ROOT_SYMUMASTER">
+        <xs:annotation>
+            <xs:documentation>Root of the SymuMaster's configuration</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="SIMULATION">
+                    <xs:annotation>
+                        <xs:documentation>Settings for the simulation</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="typeSimulation">
+                                <xs:attribute name="max_parallel_simulations_nb"
+                                    type="xs:positiveInteger">
+                                    <xs:annotation>
+                                        <xs:documentation>Maximum number of parallel simulations for assignment models that take advantage of parallel simulations. If not set, SymuMaster uses the number of cores of the CPU.</xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="version" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>Version number of the SymuMaster's configuration
+                        model</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+        <xs:key name="vehicleTypeKey">
+            <xs:selector xpath="./SIMULATION/DEMAND/POPULATIONS/POPULATION/MACRO_TYPE/VEHICLE_TYPE"/>
+            <xs:field xpath="@name"/>
+        </xs:key>
+        <xs:key name="populationTypeKey">
+            <xs:selector xpath="./SIMULATION/DEMAND/POPULATIONS/POPULATION"/>
+            <xs:field xpath="@id"/>
+        </xs:key>
+        <xs:key name="motiveTypeKey">
+            <xs:selector xpath="./SIMULATION/DEMAND/MOTIVES/MOTIVE"/>
+            <xs:field xpath="@id"/>
+        </xs:key>
+        <xs:key name="subPopulationTypeKey">
+            <xs:selector
+                xpath="./SIMULATION/DEMAND/POPULATIONS/POPULATION/SUB_POPULATIONS/SUB_POPULATION"/>
+            <xs:field xpath="@id"/>
+        </xs:key>
+        <xs:keyref name="subPopulationMotiveKeyref" refer="motiveTypeKey">
+            <xs:selector
+                xpath="./SIMULATION/DEMAND/POPULATIONS/POPULATION/SUB_POPULATIONS/SUB_POPULATION"/>
+            <xs:field xpath="@motive"/>
+        </xs:keyref>
+        <xs:keyref name="optimizerSubpopulationKeyref" refer="subPopulationTypeKey">
+            <xs:selector xpath=".//SUBPOPULATION_SPECIALIZATION/SUBPOPULATION"/>
+            <xs:field xpath="@id"/>
+        </xs:keyref>
+    </xs:element>
+    <xs:element name="RESTITUTION">
+        <xs:annotation>
+            <xs:documentation>Specific settings for SymuMasters's outputs</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute default="Out_SymuMaster" name="directory_out" type="xs:string"
+                use="optional">
+                <xs:annotation>
+                    <xs:documentation>Output directory for the results of the simulation</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="default" name="prefix_out" type="xs:string" use="optional">
+                <xs:annotation>
+                    <xs:documentation>Prefix for the output files</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="true" name="do_extra_iteration_to_produce_outputs"
+                type="xs:boolean" use="optional">
+                <xs:annotation>
+                    <xs:documentation>If true (default), the full output generated by the simulators is done in a final additional iteration if needed (usefull when output generation is time consuming and there is a lot of iterations). If false, the full output is produced every iteration.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="true" name="write_ppath" type="xs:boolean" use="optional">
+                <xs:annotation>
+                    <xs:documentation>If true (default), will write the path used for every users for every iteration. Else, only the final paths will be write</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="false" name="write_costs" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>if true, write an output file with costs for every pattern and penalty for each iteration and each travel times update period</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="false" name="write_costs_for_every_iteration" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>if true, write costs results for every iteration and not just the final one of each period</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

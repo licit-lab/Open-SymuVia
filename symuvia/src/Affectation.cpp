@@ -1205,27 +1205,41 @@ void Affectation::SimulationCommit(Reseau *pReseau)
 void Affectation::SimulationRollback(Reseau *pReseau, size_t snapshotIdx)
 {
     // rmq. : une si on rollback à un snapshot, on nettoie tous les snapshots antérieurs (on les valide)
+    
     for (size_t iSnapshot = 0; iSnapshot < m_SimulationSnapshots.size(); iSnapshot++)
     {
         SimulationSnapshot * pSnapshot = m_SimulationSnapshots[iSnapshot];
-        if (iSnapshot < snapshotIdx)
+        if(pSnapshot)
         {
-            pSnapshot->ValidateTempFiles(pReseau);
-            pSnapshot->DiscardTempFiles();
-            delete pSnapshot;
-        }
-        else if (iSnapshot > snapshotIdx)
-        {
-            pSnapshot->DiscardTempFiles();
-            delete pSnapshot;
+            if (iSnapshot < snapshotIdx)
+            {
+                pSnapshot->ValidateTempFiles(pReseau);
+                pSnapshot->DiscardTempFiles();
+                delete pSnapshot;
+                pSnapshot = NULL;
+            }
+            else if (iSnapshot > snapshotIdx)
+            {
+                pSnapshot->DiscardTempFiles();
+                delete pSnapshot;
+                pSnapshot = NULL;
+            }
         }
     }
 
     SimulationSnapshot * pNewCurrentSnapshot = m_SimulationSnapshots[snapshotIdx];
-    pNewCurrentSnapshot->DiscardTempFiles();
-    pNewCurrentSnapshot->Restore(pReseau);
-    pNewCurrentSnapshot->SwitchToTempFiles(pReseau, 0);
-    m_SimulationSnapshots.assign(1, pNewCurrentSnapshot);
+    if(pNewCurrentSnapshot)
+    {
+        std::cout << "before pNewCurrentSnapshot->DiscardTempFiles()" << std::endl;
+        pNewCurrentSnapshot->DiscardTempFiles();
+        std::cout << "pNewCurrentSnapshot->DiscardTempFiles() ok" << std::endl;
+        pNewCurrentSnapshot->Restore(pReseau);
+        std::cout << "pNewCurrentSnapshot->Restore(pReseau); ok" << std::endl;
+        pNewCurrentSnapshot->SwitchToTempFiles(pReseau, 0);
+        std::cout << "pNewCurrentSnapshot->SwitchToTempFiles(pReseau, 0) ok" << std::endl;
+        m_SimulationSnapshots.assign(1, pNewCurrentSnapshot);
+        std::cout << "m_SimulationSnapshots.assign(1, pNewCurrentSnapshot) ok" << std::endl;
+    }
 }
 
 // Fonction récursive de détection des connexions en amont d'un tronçon jusqu'à un certain niveau

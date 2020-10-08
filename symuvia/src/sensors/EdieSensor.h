@@ -19,7 +19,8 @@ class EdieSensorData
 public:
         std::vector<std::map<TypeVehicule*,double> > dbTotalTravelledDistance;		// Distance totale parcourue pour chaque voie et pour chaque type de véhicule
         std::vector<std::map<TypeVehicule*, double> > dbTotalTravelledTime;			// Temps total passé pour chaque voie et pour chaque type de véhicule
-		std::map<TypeVehicule*, int> nNumberOfRemovalVehicles;					// Nombre de véhicules supprimé pour chaque type de véhicule 
+		std::map<TypeVehicule*, int> nNumberOfRemovalVehicles;					    // Nombre de véhicules supprimé pour chaque type de véhicule 
+        std::vector<int>       vectofvehicleIDs;                                       // List of IDs of vehicle passing through the Edie sensor during the period
 
         double GetTotalTravelledDistance() const;
         double GetTotalTravelledTime() const;
