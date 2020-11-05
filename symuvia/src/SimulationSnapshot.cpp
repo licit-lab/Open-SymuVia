@@ -194,7 +194,6 @@ void SimulationSnapshot::ValidateTempFiles(Reseau * pReseau)
 
 void SimulationSnapshot::DiscardTempFiles()
 {
-    std::cout << "Discard m_XmlDocTraficTmp" << std::endl;
     if (m_XmlDocTraficTmp)
     {
         m_XmlDocTraficTmp->Remove();
@@ -202,7 +201,6 @@ void SimulationSnapshot::DiscardTempFiles()
         m_XmlDocTraficTmp = NULL;
     }
 
-    std::cout << "Discard m_pTrajsOFSTMP" << std::endl;
     if (m_pTrajsOFSTMP)
     {
         if (m_pTrajsOFSTMP->is_open())
@@ -214,7 +212,6 @@ void SimulationSnapshot::DiscardTempFiles()
         m_pTrajsOFSTMP = NULL;
     }
 
-std::cout << "Discard m_pLinkChangesOFSTMP" << std::endl;
     if (m_pLinkChangesOFSTMP)
     {
         if (m_pLinkChangesOFSTMP->is_open())
@@ -226,7 +223,6 @@ std::cout << "Discard m_pLinkChangesOFSTMP" << std::endl;
         m_pLinkChangesOFSTMP = NULL;
     }
 
-std::cout << "Discard m_pSensorsOFSTMP" << std::endl;
     if (m_pSensorsOFSTMP)
     {
         if (m_pSensorsOFSTMP->is_open())
@@ -238,7 +234,6 @@ std::cout << "Discard m_pSensorsOFSTMP" << std::endl;
         m_pSensorsOFSTMP = NULL;
     }
 
-std::cout << "Discard m_TravelTimesTmp" << std::endl;
     if (m_TravelTimesTmp)
     {
         delete m_TravelTimesTmp;
@@ -246,9 +241,9 @@ std::cout << "Discard m_TravelTimesTmp" << std::endl;
     }
 
     // Idem pour le XML SymuCom
-std::cout << "Discard m_pSymuComWriter" << std::endl;
+
 #ifdef USE_SYMUCOM
-    std::cout << "Discard m_pSymuComWriter 2" << std::endl;
+    
     if (m_pSymuComWriter)
     {
         std::string symuComFile = m_pSymuComWriter->getTargetFileName();

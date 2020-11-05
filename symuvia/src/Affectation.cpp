@@ -1230,15 +1230,15 @@ void Affectation::SimulationRollback(Reseau *pReseau, size_t snapshotIdx)
     SimulationSnapshot * pNewCurrentSnapshot = m_SimulationSnapshots[snapshotIdx];
     if(pNewCurrentSnapshot)
     {
-        std::cout << "before pNewCurrentSnapshot->DiscardTempFiles()" << std::endl;
+        
         pNewCurrentSnapshot->DiscardTempFiles();
-        std::cout << "pNewCurrentSnapshot->DiscardTempFiles() ok" << std::endl;
+        
         pNewCurrentSnapshot->Restore(pReseau);
-        std::cout << "pNewCurrentSnapshot->Restore(pReseau); ok" << std::endl;
+        
         pNewCurrentSnapshot->SwitchToTempFiles(pReseau, 0);
-        std::cout << "pNewCurrentSnapshot->SwitchToTempFiles(pReseau, 0) ok" << std::endl;
+        
         m_SimulationSnapshots.assign(1, pNewCurrentSnapshot);
-        std::cout << "m_SimulationSnapshots.assign(1, pNewCurrentSnapshot) ok" << std::endl;
+        
     }
 }
 
