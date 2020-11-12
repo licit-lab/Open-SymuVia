@@ -1373,8 +1373,6 @@ std::string PlanDeFeux::GetJsonDescription()
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 	JsonSignalPlan.Accept(writer);
 
-	std::cout << buffer.GetString() << std::endl;
-
 	return buffer.GetString();
 }
 
