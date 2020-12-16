@@ -406,6 +406,30 @@ double EdieSensorData::GetTotalTravelledTime() const
     return dbTime;
 }
 
+double EdieSensorData::GetTotalTravelledDistance(TypeVehicule *pTV) const
+{
+	if (dbTotalTravelledDistance.back().find(pTV) != dbTotalTravelledDistance.back().end())
+	{
+		return dbTotalTravelledDistance.back().find(pTV)->second;
+	}
+	else
+	{
+		return -1;
+	}
+}
+
+double EdieSensorData::GetTotalTravelledTime(TypeVehicule *pTV) const
+{
+    if (dbTotalTravelledTime.back().find(pTV) != dbTotalTravelledTime.back().end())
+	{
+		return dbTotalTravelledTime.back().find(pTV)->second;
+	}
+	else
+	{
+		return -1;
+	}
+}
+
 double EdieSensorData::GetTravelledTimeForLane(size_t k) const
 {
     std::map<TypeVehicule*, double> laneTime = dbTotalTravelledTime[k];

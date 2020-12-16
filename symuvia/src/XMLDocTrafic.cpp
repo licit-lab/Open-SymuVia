@@ -848,6 +848,39 @@ XMLDocTrafic::PCAPTEUR XMLDocTrafic::AddInfoCapteurMFD(const std::string & sIdCp
 	return (XMLDocTrafic::PCAPTEUR)xmlnodeCpt;
 }
 
+void XMLDocTrafic::AddInfoCapteurMFDByTypeOfVehicle( const std::string & sIdCpt, const std::string & sIdTV, const std::string & sTTD, const std::string & sTTT)
+{
+    DOMElement* xmlnodeVehicleType;
+    DOMElement* xmlnodeCpts;
+    DOMElement* xmlnodeCpt;
+
+    if( !m_XmlNodeSimuCpts )
+			return;
+
+    xmlnodeCpts = (DOMElement*)m_pNetwork->GetXMLUtil()->SelectSingleNode("CAPTEURS_MFD", m_XmlNodeSimuCpts->getOwnerDocument(), m_XmlNodeSimuCpts);
+
+    if(!xmlnodeCpts)
+        return;
+
+    xmlnodeCpts = (DOMElement*)xmlnodeCpts->getLastChild()->getLastChild();
+
+    if(!xmlnodeCpts)
+        return;
+
+    std::string ssPath = "./CAPTEUR[@id=\"" + sIdCpt + "\"]";
+        xmlnodeCpt = (DOMElement*)m_pNetwork->GetXMLUtil()->SelectSingleNode(ssPath, xmlnodeCpts->getOwnerDocument(), xmlnodeCpts);	
+
+    if(  !xmlnodeCpt	)	// Test de l'existence du noeud CAPTEUR de ID sIdCpt
+        return;		
+
+    xmlnodeVehicleType = m_pTemporaryInstXMLDoc->createElement(XS("VEHICLE_TYPE")); // Création
+        xmlnodeCpt->appendChild(xmlnodeVehicleType);	// Accrochage	
+    										
+    xmlnodeVehicleType->setAttribute(XS("id_vehicle_type"), XS(sIdTV.c_str()));
+    xmlnodeVehicleType->setAttribute(XS("total_travel_time"), XS(sTTT.c_str()));
+    xmlnodeVehicleType->setAttribute(XS("total_travel_distance"), XS(sTTD.c_str()));
+};
+
 XMLDocTrafic::PCAPTEUR XMLDocTrafic::AddInfoCapteurReservoir(const std::string & sIdCpt)
 {
     DOMElement*     xmlnodeCpts;

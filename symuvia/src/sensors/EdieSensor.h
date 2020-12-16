@@ -24,6 +24,8 @@ public:
 
         double GetTotalTravelledDistance() const;
         double GetTotalTravelledTime() const;
+        double GetTotalTravelledDistance(TypeVehicule *pTV) const;
+        double GetTotalTravelledTime(TypeVehicule *pTV) const;
         double GetTravelledTimeForLane(size_t k) const;
         double GetTravelledDistanceForLane(size_t k) const;
 

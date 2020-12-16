@@ -10,6 +10,7 @@
 #include "../BriqueDeConnexion.h"
 #include "../ConnectionPonctuel.h"
 #include "../vehicule.h"
+#include "../reseau.h"
 
 #include <boost/serialization/vector.hpp>
 
@@ -264,14 +265,14 @@ void MFDSensor::WriteDef(DocTrafic* pDocTrafic)
     }
 }
 
-void MFDSensor::Write(double dbInstant, Reseau * pReseau, double dbPeriodeAgregation, double dbDebut, double dbFin, const std::deque<TraceDocTrafic* > & docTrafics, CSVOutputWriter * pCSVOutput)
+void MFDSensor::Write(double dbInstant, Reseau *pNetwork, double dbPeriodeAgregation, double dbDebut, double dbFin, const std::deque<TraceDocTrafic* > & docTrafics, CSVOutputWriter * pCSVOutput)
 {
     if(!docTrafics.empty())
     {
         if(m_bIsEdie)
         {
             assert(lstSensors.size() == 1);
-            lstSensors.front()->Write(dbInstant, pReseau, dbPeriodeAgregation, dbDebut, dbFin, docTrafics, pCSVOutput);
+            lstSensors.front()->Write(dbInstant, pNetwork, dbPeriodeAgregation, dbDebut, dbFin, docTrafics, pCSVOutput);
         }
         else
         {
@@ -291,6 +292,15 @@ void MFDSensor::Write(double dbInstant, Reseau * pReseau, double dbPeriodeAgrega
             double dbConcentrationEdie = 0.0;
 			double dbDebitEdie = 0.0;
 
+            std::deque<TypeVehicule*>::iterator itTV;
+            std::map<TypeVehicule*,double> mapDistanceTotale;
+            std::map<TypeVehicule*,double> mapTempsTotalPasse;
+            for( itTV = pNetwork->m_LstTypesVehicule.begin(); itTV != pNetwork->m_LstTypesVehicule.end(); ++itTV)
+            {
+                mapDistanceTotale.insert( std::pair<TypeVehicule*,double>(*itTV,0.0) );
+                mapTempsTotalPasse.insert( std::pair<TypeVehicule*,double>(*itTV,0.0) );
+            } 
+
             for(size_t j=0; j< lstSensors.size(); j++)
             {
                 EdieSensor * pCptEdie = lstSensors[j];    
@@ -302,6 +312,12 @@ void MFDSensor::Write(double dbInstant, Reseau * pReseau, double dbPeriodeAgrega
 
                 dbTempsTotalPasse += dbTTT;
                 dbDistanceTotale += dbTTD;
+
+                for( itTV = pNetwork->m_LstTypesVehicule.begin(); itTV != pNetwork->m_LstTypesVehicule.end(); ++itTV)
+                {
+                    mapDistanceTotale.find(*itTV)->second+=pCptEdie->GetData().GetTotalTravelledDistance(*itTV);
+                    mapTempsTotalPasse.find(*itTV)->second+=pCptEdie->GetData().GetTotalTravelledTime(*itTV);
+                } 
 
                 if( pCptEdie->GetTuyauType() ==  EdieSensor::TT_Link) 
                 {
@@ -401,8 +417,18 @@ void MFDSensor::Write(double dbInstant, Reseau * pReseau, double dbPeriodeAgrega
                     SystemUtil::ToString(3, dbConcentrationEdie),               // Concentration calcul�e � partir des formules d'Edie
 					SystemUtil::ToString(3, dbDebitEdie)               // D�bit calcul�e � partir des formules d'Edie
                     ); 
+
+                std::deque<TypeVehicule*>::iterator itTV;
+                for( itTV = pNetwork->m_LstTypesVehicule.begin(); itTV != pNetwork->m_LstTypesVehicule.end(); ++itTV)
+                {
+                    (*itDocTraf)->AddInfoCapteurMFDByTypeOfVehicle( m_strNom,                                                       // MFD sensor ID
+                                                                    (*itTV)->GetLabel(),                                            // Type of vehicule ID
+                                                                    SystemUtil::ToString(3, mapDistanceTotale.find(*itTV)->second), // Total travel distance
+                                                                    SystemUtil::ToString(3, mapTempsTotalPasse.find(*itTV)->second) // Total travel time
+                    );
+                }             
             }
-        }
+        }   
     }
 }
 

@@ -37,7 +37,7 @@ class JSONDocTrafic : public DocTrafic
     // Ajout d'un instant
     virtual void AddInstant(double dbInstant, double dbTimeStep, int nNbVeh);
 
-    // Ajout d'une période de surveillance des capteurs
+    // Ajout d'une pï¿½riode de surveillance des capteurs
     virtual void AddPeriodeCapteur(double dbDeb, double dbFin, const std::string& nodeName);
 
     virtual PCAPTEUR AddInfoCapteur(const std::string & sIdCpt, const std::string & sTypeVeh, const std::string & sVitGlob, const std::string & sNbCumGlob, const std::string & sVitVoie, const std::string & sNbCumVoie, const std::string & sFlow, bool bExtractVehicleList);
@@ -50,6 +50,8 @@ class JSONDocTrafic : public DocTrafic
         const std::string & sDistanceTotaleParcourue, const std::string & sDistanceTotaleParcourueStricte, const std::string & sTempsTotalPasse, const std::string & sTempsTotalPasseStrict,
         const std::string & sDebitSortie, const std::string &  sIntDebitSortie, const std::string &  sTransDebitSortie, const std::string & sDebitSortieStrict, const std::string & sLongueurDeplacement, const std::string & sLongueurDeplacementStricte,
         const std::string & sVitesseSpatiale, const std::string & sVitesseSpatialeStricte, const std::string & sConcentration, const std::string & sDebit);
+
+    virtual void AddInfoCapteurMFDByTypeOfVehicle( const std::string & sIdCpt, const std::string & sIdTV, const std::string & sTTD, const std::string & sTTT){};
 
     virtual PCAPTEUR AddInfoCapteurReservoir(const std::string & sIdCpt);
 
@@ -67,7 +69,7 @@ class JSONDocTrafic : public DocTrafic
     // Sauvegarde d'un instant
     virtual void SaveLastInstant();
 
-    // Suppression du dernier instant en mémoire DOM
+    // Suppression du dernier instant en mï¿½moire DOM
     virtual void RemoveLastInstant();
 
     // Ajoute le contenu du document trafic de la source dans le document courant
@@ -75,16 +77,16 @@ class JSONDocTrafic : public DocTrafic
 
     //// Retourne le flux XML du dernier instant
     //virtual DOMNode*	GetLastInstant(bool bFull, bool bTraceIteratif);
-    // Ajout d'une description d'une cellule de discrétisation
+    // Ajout d'une description d'une cellule de discrï¿½tisation
     virtual void AddCellule(int nID, const std::string & strLibelle, const std::string & strTuyau, double dbXam, double dbYam, double dbZam, double dbXav, double dbYav, double dbZav);
 
-    // Ajout d'une description d'un tronçon (défini par l'utilisateur ou construit par Symubruit)
+    // Ajout d'une description d'un tronï¿½on (dï¿½fini par l'utilisateur ou construit par Symubruit)
     virtual void AddTroncon(const std::string & strLibelle, Point * pPtAm, Point * pPtAv, int nVoie, const std::string & ssBrique, std::deque<Point*> & lstPtInterne, double dbLong, std::vector<double> dbLarg, double dbStockMax, double dbStockInitial, Tuyau * pTuyau);
 
-    // Ajout d'une description d'une voie (défini par l'utilisateur ou construit par Symubruit)
+    // Ajout d'une description d'une voie (dï¿½fini par l'utilisateur ou construit par Symubruit)
     virtual void AddVoie(Point * pPtAm, Point * pPtAv, std::deque<Point*> & lstPtInterne, double dbLong);
 
-    // Ajout d'une description d'un capteur (de l'utilisateur ou créé par Symubruit)
+    // Ajout d'une description d'un capteur (de l'utilisateur ou crï¿½ï¿½ par Symubruit)
     virtual void AddDefCapteur(const std::string & sId, const std::string & sT, double dbPos, Point ptCoord);
 
     // Ajout d'une description d'un capteur longitudinal (de l'utilisateur)
@@ -96,7 +98,7 @@ class JSONDocTrafic : public DocTrafic
     // Ajout d'une description d'un capteur MFD (de l'utilisateur)
     virtual void AddDefCapteurMFD(const std::string & sId, bool bIncludeStrictData, const std::vector<Tuyau*>& lstTuyaux);
 
-    // Ajout d'une description d'une entrée
+    // Ajout d'une description d'une entrï¿½e
     virtual void AddDefEntree(const std::string & sId, Point ptCoord);
 
     // Ajout d'une description d'une sortie
@@ -111,56 +113,56 @@ class JSONDocTrafic : public DocTrafic
     // Ajout d'une description d'un CDF
     virtual void AddDefCDF(ControleurDeFeux * pCDF);
 
-    // Ajout d'une description d'un arrêt de bus
+    // Ajout d'une description d'un arrï¿½t de bus
     virtual void AddArret(const std::string & strLibelle, int numVoie, char * strNomLigne);
 
-    // Ajout de la description d'un véhicule
+    // Ajout de la description d'un vï¿½hicule
 	virtual void AddVehicule(int nID, const std::string & strLibelle, const std::string & strType, const std::string & strGMLType, double dbKx, double dbVx, double dbW, const std::string & strEntree, const std::string & strSortie, const std::string &  strZoneEntree, const std::string &  strZoneSortie, const std::string & strPlaqueEntree, const std::string & strRoute, double dbInstCreation, const std::string & sVoie, bool bAgressif, int iLane, const std::string & sLine, const std::vector<std::string> & initialPath, const std::deque<PlageAcceleration> & plagesAcc, const std::string & motifOrigine, const std::string & motifDestination, bool bAddToCreationNode);
 
-    // ajout la description d'un véhicule sur sa création
+    // ajout la description d'un vï¿½hicule sur sa crï¿½ation
     virtual void AddVehiculeToCreationNode(int nID, const std::string & strLibelle, const std::string & strType, double dbKx, double dbVx, double dbW, const std::string & strEntree, const std::string & strSortie, const std::string & strRoute, double dbInstCreation, const std::string & sVoie, bool bAgressif) ;
 
-	// ajout la description d'un véhicule lors de la sortie d'un véhicule du réseau
+	// ajout la description d'un vï¿½hicule lors de la sortie d'un vï¿½hicule du rï¿½seau
 	virtual void AddVehiculeToSortieNode(int nID, const std::string & strSortie, double dbInstSortie, double dbVit) {};
 
-    // Ajout des sorties d'une brique de régulation
+    // Ajout des sorties d'une brique de rï¿½gulation
     virtual void AddSimuRegulation(XERCES_CPP_NAMESPACE::DOMNode * pRestitutionNode);
     
-    // Ajout de la description des données trafic d'une entrée
+    // Ajout de la description des donnï¿½es trafic d'une entrï¿½e
     virtual void AddSimuEntree(const std::string & sEntree, int nVeh);
 
-    // Ajout de la description des données trafic d'un parking
+    // Ajout de la description des donnï¿½es trafic d'un parking
     virtual void AddSimuParking(const std::string & sParking, int nStock, int nVehAttente);
 
-    // Ajout de la description des données trafic d'un troncon de stationnement
+    // Ajout de la description des donnï¿½es trafic d'un troncon de stationnement
     virtual void AddSimuTronconStationnement(const std::string & sTroncon, double dbLongueur);
 
-	// Mise à jour de l'instant d'entrée du véhicule
+	// Mise ï¿½ jour de l'instant d'entrï¿½e du vï¿½hicule
     virtual void UpdateInstEntreeVehicule(int nID, double dbInstEntree);
 
-    // Mise à jour de l'instant de sortie du véhicule
+    // Mise ï¿½ jour de l'instant de sortie du vï¿½hicule
 	virtual void UpdateInstSortieVehicule(int nID, double dbInstSortie, const std::string & sSortie, const std::string & sPlaqueSortie, double dbDstCum, const std::vector<Tuyau*> & itinerary, const std::map<std::string, std::string> & additionalAttributes);
 
-    // Suppression des véhicules mémorisées à partir d'un certain ID
+    // Suppression des vï¿½hicules mï¿½morisï¿½es ï¿½ partir d'un certain ID
     virtual void RemoveVehicules(int nFromID);
 
-    // Ajout de l'état des feux pour l'instant considéré
+    // Ajout de l'ï¿½tat des feux pour l'instant considï¿½rï¿½
     virtual void AddSimFeux(const std::string & sCtrlFeux, const std::string & sTE, const std::string & sTS, int bEtatFeu, int bPremierInstCycle, int bPrioritaire);
 
-    // Ajout de l'état des feux pour l'instant considéré pour EVE
+    // Ajout de l'ï¿½tat des feux pour l'instant considï¿½rï¿½ pour EVE
     virtual void AddSimFeuxEVE(const std::string & sCtrlFeux, const std::string & sTE, const std::string & sTS, int bEtatFeu, int bPremierInstCycle, int bPrioritaire);
 
-    // Ajout des données complète trafic d'une cellule de discrétisation pour l'instant considéré
+    // Ajout des donnï¿½es complï¿½te trafic d'une cellule de discrï¿½tisation pour l'instant considï¿½rï¿½
     virtual void AddCellSimu(int nID, double dbConc, double dbDebit, double dbVitAm, double dbAccAm, double dbNAm, double dbVitAv, double dbAccAv, double dbNAv, const std::string & strLibelle, const std::string & strTuyau, double dbXam, double dbYam, double dbZam, double dbXav, double dbYav, double dbZav);
 
-    // Ajout des données de la trajectoire d'un véhicule à l'instant considéré
+    // Ajout des donnï¿½es de la trajectoire d'un vï¿½hicule ï¿½ l'instant considï¿½rï¿½
     virtual void AddTrajectoire(int nID, Tuyau * pTuyau, const std::string & strTuyau, const std::string & strTuyauEx, const std::string & strNextTuyauEx, int nNumVoie, double dbAbs, double dbOrd, double dbZ, double dbAbsCur, double dbVit, double dbAcc, double dbDeltaN, const std::string & sTypeVehicule, double dbVitMax, double dbLongueur, const std::string & sLib, int nIDVehLeader, int nCurrentLoad, bool bTypeChgtVoie, TypeChgtVoie eTypeChgtVoie,
         bool bVoieCible, int nVoieCible, bool bPi, double dbPi, bool bPhi, double dbPhi, bool bRand, double dbRand, bool bDriven, const std::string & strDriveState, bool bDepassement, bool bRegimeFluide, const std::map<std::string, std::string> & additionalAttributes);
 
-    // Ajout des données du flux d'un véhicule à l'instant considéré
+    // Ajout des donnï¿½es du flux d'un vï¿½hicule ï¿½ l'instant considï¿½rï¿½
     virtual void AddStream(int nID, const std::string & strTuyau, const std::string & strTuyauEx );
 
-    // Ajout des données d'un tuyau à l'instant considéré
+    // Ajout des donnï¿½es d'un tuyau ï¿½ l'instant considï¿½rï¿½
     virtual void AddLink(const std::string &  strTuyau, double dbConcentration);
 
 };
