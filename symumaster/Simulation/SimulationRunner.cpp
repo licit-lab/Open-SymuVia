@@ -63,7 +63,7 @@ bool SimulationRunner::Terminate()
 
 bool SimulationRunner::Run()
 {
-    int start_s = clock();
+    clock_t start_s = clock();
 
     bool bOk = Initialize();
     if(bOk)
@@ -78,7 +78,7 @@ bool SimulationRunner::Run()
 		bOk = false;
 	}
 
-    int stop_s = clock();
+    clock_t stop_s = clock();
     BOOST_LOG_TRIVIAL(info) << "Computation Time in second: " << (stop_s - start_s) / double(CLOCKS_PER_SEC);
 
     return bOk;
@@ -156,7 +156,7 @@ bool SimulationRunner::Initialize()
 		BOOST_LOG_TRIVIAL(info) << "Number of assignment / prediction periods : " << m_nbAssignmentPeriod;
 		BOOST_LOG_TRIVIAL(info) << "Number of travel time update periods by prediction period : " << m_nbTravelTimeUpdatePeriodsByPeriod;
 
-		m_bRedoLastIteration = (m_Config.DoExtraIterationToProduceOutputs() && m_Simulators.IsExtraIterationToProduceOutputsRelevant() || m_pAssignmentModel->NeedsParallelSimulationInstances());
+		m_bRedoLastIteration = ((m_Config.DoExtraIterationToProduceOutputs() && m_Simulators.IsExtraIterationToProduceOutputsRelevant()) || m_pAssignmentModel->NeedsParallelSimulationInstances());
 
 		std::vector<SymuCore::Trip*> listTripsNoOptimizer;
 		SortTrip(m_Simulators.GetPopulations(), m_Simulators.GetSimulationDescriptor().GetStartTime(), m_Config.GetAssignmentPeriod(), m_nbAssignmentPeriod, m_Config.GetPredictionPeriod(), m_listSortedTrips, listTripsNoOptimizer);
