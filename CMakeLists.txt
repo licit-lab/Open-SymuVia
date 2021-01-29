@@ -46,6 +46,8 @@ project (SymuVia VERSION 1.0.0)
 #
 #  cmake ..
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
+
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
@@ -147,66 +149,27 @@ find_package(Python COMPONENTS Interpreter Development REQUIRED)
     endif()
 
 
-find_package(Rapidjson REQUIRED)
+find_package(RapidJSON REQUIRED)
 
-    if(Rapidjson_FOUND)
-        include_directories(${Rapidjson_INCLUDE_DIRS})
+    if(RapidJSON_FOUND)
+        include_directories(${RapidJSON_INCLUDE_DIRS})
         message(STATUS "Rapidjson is available")
     else()
       message(STATUS "\t Rapidjson library is missing")
     endif()
 
 
-find_library(XQILLA_LIB_DIRECTORY name xqilla
-    PATHS ${CMAKE_PREFIX_PATH}/lib/
-    PATH_SUFFIXES lib
-    NO_DEFAULT_PATH
-    REQUIRED)
+find_package(Xqilla REQUIRED)
 
-if(NOT DEFINED XQILLA_LIB_DIRECTORY-NOTFOUND)
-      include_directories(${XQILLA_LIB_DIRECTORY})
-      message(STATUS "xqilla is available")
-      message(STATUS "\t xqilla library: ${XQILLA_LIB_DIRECTORY}\n")
-  else()
-    message(STATUS "\t xqilla library is missing")
-  endif()
+    if(Xqilla_FOUND)
+        include_directories(${XQILLA_INCLUDE_DIRS})
+        message(STATUS "Xqilla is available")
+        message(STATUS "\t Xqilla library: ${XQILLA_LIBRARIES},\n \t Headers in: ${XQILLA_INCLUDE_DIRS}")
+    else()
+        message(STATUS "\t Xqilla library is missing")
+        message(STATUS "\t Xqilla library: ${Xqilla_LIBRARIES},\n \t Headers in: ${Xqilla_INCLUDE_DIRS}")
+    endif()
 
-# Xqilla/Rapidjson Manual add
-
-    # Libraries
-    # if(APPLE)
-    #     set(XQILLA_LIB_DIRECTORY "/usr/local/Cellar/xqilla/2.3.4/lib/libxqilla.dylib" CACHE PATH "Xqilla library folder")
-    #     # set(RAPIDJSON_LIBRARY "/usr/local/lib/" CACHE PATH "Rapidjson library folder")
-    # else()
-    #     set(XQILLA_LIB_DIRECTORY "/usr/lib/x86_64-linux-gnu/libxqilla.so.6" CACHE PATH "Xqilla library folder")
-    #     # set(RAPIDJSON_LIBRARY "/usr/lib/x86_64-linux-gnu/" CACHE PATH "Rapidjson library folder")
-    # endif()
-
-    # Dynamic linking
-    # https://stackoverflow.com/questions/26807329/no-rule-to-make-target-error-in-cmake-when-linking-to-shared-library
-    # link_directories(${XQILLA_LIB_DIRECTORY})
-    # link_directories(${RAPIDJSON_LIBRARY})
-
-    # Adding headers
-    # if(APPLE)
-    #     set(XQILLA_INCLUDE_DIR "/usr/local/Cellar/xqilla/2.3.4/include/xqilla/" CACHE PATH "XQilla include folder")
-    #     set(RAPIDJSON_INCLUDE_DIR "/usr/local/Cellar/rapidjson/1.1.0/include/rapidjson/" CACHE PATH "Rapidjson include folder")
-    # else()
-    #     set(XQILLA_INCLUDE_DIR "/usr/include/x86_64-linux-gnu/" CACHE PATH "XQilla include folder")
-    #     set(RAPIDJSON_INCLUDE_DIR "/usr/include/x86_64-linux-gnu/" CACHE PATH "Rapidjson include folder")
-    # endif()
-    #
-    # message(STATUS "Xqilla Manually added:")
-    # message(STATUS "Xqilla is available at:\n \t Xqilla library: ${XQILLA_LIB_DIRECTORY},\n \t Headers in: ${XQILLA_INCLUDE_DIR}")
-    #
-    # include_directories(${XQILLA_INCLUDE_DIR})
-    # message(STATUS "\t Rapidjson headers included")
-    #
-    # message(STATUS "Rapidjson Manually added:")
-    # message(STATUS "Rapidjson is available at:\n \t Headers in: ${RAPIDJSON_INCLUDE_DIR}")
-    #
-    # include_directories(${RAPIDJSON_INCLUDE_DIR})
-    # message(STATUS "\t Rapidjson headers included")
 
 # Define libraries to link
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)

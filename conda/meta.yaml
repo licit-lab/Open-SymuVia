@@ -12,6 +12,7 @@ build:
 
 requirements:
   build:
+    - {{ compiler("c") }}  # [linux]
     - {{ compiler('cxx') }}  # [linux]
     - make
     - cmake
