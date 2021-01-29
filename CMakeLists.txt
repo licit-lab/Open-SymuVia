@@ -3,20 +3,20 @@ cmake_minimum_required (VERSION 3.10)
 
 project (SymuVia VERSION 1.0.0)
 
-# Package installations 
-# 
+# Package installations
+#
 #       brew install boost boost-python3 gdal xqilla rapidjson python
 #
-# Caveat: 
-# 
-#       For python 2 
-#       
-#       brew install boost-python 
-# 
+# Caveat:
+#
+#       For python 2
+#
+#       brew install boost-python
+#
 #       Also when importing use find_package(Boost COMPONENTS python27 REQUIRED)
-# 
-# Linux: 
-# 
+#
+# Linux:
+#
 #       apt-get update && apt-get install -y \
 #       cmake \
 #       xqilla \
@@ -25,54 +25,50 @@ project (SymuVia VERSION 1.0.0)
 #       gdal-bin \
 #       rapidjson-dev  &&\
 #       aptitude search -y \
-#       boost 
+#       boost
 #
 # Boost search
 #
-# If you have installed via: brew install boost-python 
+# If you have installed via: brew install boost-python
 #
-# The following caveat is messaged 
+# The following caveat is messaged
 #
 #       This formula provides Boost.Python for Python 2. Due to a
 #       collision with boost-python3, the CMake Config files are not
 #       available. Please use -DBoost_NO_BOOST_CMAKE=ON when building
 #       with CMake or switch to Python 3.
 #
-# Hence when building use: 
+# Hence when building use:
 #
-#       cmake -DBoost_NO_BOOST_CMAKE=ON .. 
+#       cmake -DBoost_NO_BOOST_CMAKE=ON ..
 #
-# Regular use is : 
+# Regular use is :
 #
 #  cmake ..
 
-set(Boost_USE_STATIC_LIBS OFF) 
-set(Boost_USE_MULTITHREADED ON)  
-set(Boost_USE_STATIC_RUNTIME OFF) 
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+set(BOOST_PYTHONLIB python)
+
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# Boost python version component for Linux
-if(APPLE)
-    set( BOOST_PYTHONLIB python)
-elseif(UNIX)
-    set( BOOST_PYTHONLIB python3)
-endif()
 
-find_package(Boost COMPONENTS 
-    chrono 
-    date_time 
-    locale 
-    log 
-    thread 
-    serialization 
-    wserialization 
-    filesystem 
+find_package(Boost COMPONENTS
+    chrono
+    date_time
+    locale
+    log
+    thread
+    serialization
+    wserialization
+    filesystem
     system
-    program_options 
-    ${BOOST_PYTHONLIB} 
+    program_options
+    ${BOOST_PYTHONLIB}
     REQUIRED)
 
     if(Boost_FOUND)
@@ -91,28 +87,28 @@ find_package(Boost COMPONENTS
         include_directories(${Boost_INCLUDE_DIRS})
         message(STATUS "\t Boost headers included")
     else()
-        message(STATUS "\t Boost library is missing") 
+        message(STATUS "\t Boost library is missing")
     endif()
 
 # GDAL search
 find_package(GDAL REQUIRED)
 
-    if(GDAL_FOUND)  
-        message(STATUS "Library GDAL is available") 
+    if(GDAL_FOUND)
+        message(STATUS "Library GDAL is available")
         message(STATUS "\t GDAL library: ${GDAL_LIBRARY},\n \t Headers in: ${GDAL_INCLUDE_DIR}")
         include_directories(${GDAL_INCLUDE_DIR})
         message(STATUS "\t GDAL headers included")
     else()
-        message(STATUS "\t GDAL library is missing") 
+        message(STATUS "\t GDAL library is missing")
     endif()
 
     # GDAL Manual set
-    # message(STATUS "GDAL Manually added") 
+    # message(STATUS "GDAL Manually added")
     # set(GDAL_LIBRARY "/usr/local/Cellar/gdal/2.4.4/lib/libgdal.dylib")
     # set(GDAL_INCLUDE_DIR "/usr/local/include")
     # message(STATUS "\t GDAL library: ${GDAL_LIBRARY},\n \t Headers in: ${GDAL_INCLUDE_DIR}")
     # include_directories(${GDAL_INCLUDE_DIR})
-    # message(STATUS "\t GDAL headers included")    
+    # message(STATUS "\t GDAL headers included")
 
 # Xerces Search
 find_package(XercesC REQUIRED)
@@ -121,9 +117,9 @@ find_package(XercesC REQUIRED)
         message(STATUS "Library XercesC is available")
         message(STATUS "\t XercesC library: ${XercesC_LIBRARIES},\n \t Headers in: ${XercesC_INCLUDE_DIRS}")
         include_directories(${XercesC_INCLUDE_DIRS})
-        message(STATUS "\t XercesC headers included")        
+        message(STATUS "\t XercesC headers included")
     else()
-        message(STATUS "\t XercesC library is missing") 
+        message(STATUS "\t XercesC library is missing")
     endif()
 
 # ODBC Search
@@ -133,9 +129,9 @@ find_package(ODBC REQUIRED)
         message(STATUS "Library ODBC is available")
         message(STATUS "\t ODBC library: ${ODBC_LIBRARY},\n \t Headers in: ${ODBC_INCLUDE_DIR}")
         include_directories(${ODBC_INCLUDE_DIR})
-        message(STATUS "\t ODBC headers included")        
+        message(STATUS "\t ODBC headers included")
     else()
-        message(STATUS "\t ODBC library is missing") 
+        message(STATUS "\t ODBC library is missing")
     endif()
 
 # Python Search
@@ -143,49 +139,74 @@ find_package(Python COMPONENTS Interpreter Development REQUIRED)
 
     if(Python_FOUND)
         include_directories(${Python_INCLUDE_DIRS})
-        message(STATUS "Python is available")    
+        message(STATUS "Python is available")
         message(STATUS "\t Python library: ${Python_LIBRARIES},\n \t Headers in: ${Python_INCLUDE_DIRS}")
-        message(STATUS "\t Python headers included")         
+        message(STATUS "\t Python headers included")
     else()
-        message(STATUS "\t Python library is missing") 
+        message(STATUS "\t Python library is missing")
     endif()
+
+
+find_package(Rapidjson REQUIRED)
+
+    if(Rapidjson_FOUND)
+        include_directories(${Rapidjson_INCLUDE_DIRS})
+        message(STATUS "Rapidjson is available")
+    else()
+      message(STATUS "\t Rapidjson library is missing")
+    endif()
+
+
+find_library(XQILLA_LIB_DIRECTORY name xqilla
+    PATHS ${CMAKE_PREFIX_PATH}/lib/
+    PATH_SUFFIXES lib
+    NO_DEFAULT_PATH
+    REQUIRED)
+
+if(NOT DEFINED XQILLA_LIB_DIRECTORY-NOTFOUND)
+      include_directories(${XQILLA_LIB_DIRECTORY})
+      message(STATUS "xqilla is available")
+      message(STATUS "\t xqilla library: ${XQILLA_LIB_DIRECTORY}\n")
+  else()
+    message(STATUS "\t xqilla library is missing")
+  endif()
 
 # Xqilla/Rapidjson Manual add
 
-    # Libraries 
-    if(APPLE)
-        set(XQILLA_LIB_DIRECTORY "/usr/local/Cellar/xqilla/2.3.4/lib/libxqilla.dylib" CACHE PATH "Xqilla library folder")
-        # set(RAPIDJSON_LIBRARY "/usr/local/lib/" CACHE PATH "Rapidjson library folder")
-    else()
-        set(XQILLA_LIB_DIRECTORY "/usr/lib/x86_64-linux-gnu/libxqilla.so.6" CACHE PATH "Xqilla library folder")
-        # set(RAPIDJSON_LIBRARY "/usr/lib/x86_64-linux-gnu/" CACHE PATH "Rapidjson library folder")
-    endif()
+    # Libraries
+    # if(APPLE)
+    #     set(XQILLA_LIB_DIRECTORY "/usr/local/Cellar/xqilla/2.3.4/lib/libxqilla.dylib" CACHE PATH "Xqilla library folder")
+    #     # set(RAPIDJSON_LIBRARY "/usr/local/lib/" CACHE PATH "Rapidjson library folder")
+    # else()
+    #     set(XQILLA_LIB_DIRECTORY "/usr/lib/x86_64-linux-gnu/libxqilla.so.6" CACHE PATH "Xqilla library folder")
+    #     # set(RAPIDJSON_LIBRARY "/usr/lib/x86_64-linux-gnu/" CACHE PATH "Rapidjson library folder")
+    # endif()
 
-    # Dynamic linking 
+    # Dynamic linking
     # https://stackoverflow.com/questions/26807329/no-rule-to-make-target-error-in-cmake-when-linking-to-shared-library
     # link_directories(${XQILLA_LIB_DIRECTORY})
-    # link_directories(${RAPIDJSON_LIBRARY})    
+    # link_directories(${RAPIDJSON_LIBRARY})
 
     # Adding headers
-    if(APPLE)
-        set(XQILLA_INCLUDE_DIR "/usr/local/Cellar/xqilla/2.3.4/include/xqilla/" CACHE PATH "XQilla include folder")
-        set(RAPIDJSON_INCLUDE_DIR "/usr/local/Cellar/rapidjson/1.1.0/include/rapidjson/" CACHE PATH "Rapidjson include folder")
-    else()
-        set(XQILLA_INCLUDE_DIR "/usr/include/x86_64-linux-gnu/" CACHE PATH "XQilla include folder")
-        set(RAPIDJSON_INCLUDE_DIR "/usr/include/x86_64-linux-gnu/" CACHE PATH "Rapidjson include folder")
-    endif()
-
-    message(STATUS "Xqilla Manually added:")  
-    message(STATUS "Xqilla is available at:\n \t Xqilla library: ${XQILLA_LIB_DIRECTORY},\n \t Headers in: ${XQILLA_INCLUDE_DIR}")
-
-    include_directories(${XQILLA_INCLUDE_DIR})
-    message(STATUS "\t Rapidjson headers included")  
-
-    message(STATUS "Rapidjson Manually added:")  
-    message(STATUS "Rapidjson is available at:\n \t Headers in: ${RAPIDJSON_INCLUDE_DIR}")
-
-    include_directories(${RAPIDJSON_INCLUDE_DIR})
-    message(STATUS "\t Rapidjson headers included") 
+    # if(APPLE)
+    #     set(XQILLA_INCLUDE_DIR "/usr/local/Cellar/xqilla/2.3.4/include/xqilla/" CACHE PATH "XQilla include folder")
+    #     set(RAPIDJSON_INCLUDE_DIR "/usr/local/Cellar/rapidjson/1.1.0/include/rapidjson/" CACHE PATH "Rapidjson include folder")
+    # else()
+    #     set(XQILLA_INCLUDE_DIR "/usr/include/x86_64-linux-gnu/" CACHE PATH "XQilla include folder")
+    #     set(RAPIDJSON_INCLUDE_DIR "/usr/include/x86_64-linux-gnu/" CACHE PATH "Rapidjson include folder")
+    # endif()
+    #
+    # message(STATUS "Xqilla Manually added:")
+    # message(STATUS "Xqilla is available at:\n \t Xqilla library: ${XQILLA_LIB_DIRECTORY},\n \t Headers in: ${XQILLA_INCLUDE_DIR}")
+    #
+    # include_directories(${XQILLA_INCLUDE_DIR})
+    # message(STATUS "\t Rapidjson headers included")
+    #
+    # message(STATUS "Rapidjson Manually added:")
+    # message(STATUS "Rapidjson is available at:\n \t Headers in: ${RAPIDJSON_INCLUDE_DIR}")
+    #
+    # include_directories(${RAPIDJSON_INCLUDE_DIR})
+    # message(STATUS "\t Rapidjson headers included")
 
 # Define libraries to link
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
@@ -194,7 +215,7 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 # Activate C++11 support under Linux
 if(CMAKE_COMPILER_IS_GNUCXX OR APPLE)
-    list( APPEND CMAKE_CXX_FLAGS "-std=c++0x")
+    list( APPEND CMAKE_CXX_FLAGS "-std=c++11 -pthread")
 endif()
 
 # Function for printing included files
@@ -209,3 +230,6 @@ file(COPY symuvia/config/ DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 add_subdirectory(symucore)
 add_subdirectory(symuvia)
 add_subdirectory(symumaster)
+
+
+message(STATUS "${CMAKE_CURRENT_SOURCE_DIR}")

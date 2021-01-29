@@ -91,7 +91,7 @@ file(GLOB SymuCore_src
 	"src/Utils/TravelIndicatorClass.h"
     "src/SymuCoreExports.h"
  )
- 
+
 # Files in project
 # print_files(SymuCore_src)
 
@@ -101,8 +101,11 @@ add_library(SymuCore SHARED ${SymuCore_src})
 # Link dependencies
 target_link_libraries(SymuCore ${Boost_DATE_TIME_LIBRARY} ${Boost_LOCALE_LIBRARY})
 
-# Visible                               
+# Visible
 target_include_directories(SymuCore PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 # Set processor flags
 add_definitions(-DSYMUCORE_EXPORTS)
+
+install(TARGETS SymuCore DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+# install(FILES ${SymuCore_src} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/symucore)
