@@ -178,8 +178,8 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 # Activate C++11 support under Linux
 if(CMAKE_COMPILER_IS_GNUCXX OR APPLE)
-    list( APPEND CMAKE_CXX_FLAGS "-std=c++11 -pthread")
-endif()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+endif(CMAKE_COMPILER_IS_GNUCC)
 
 # Function for printing included files
 function(print_files list_files)

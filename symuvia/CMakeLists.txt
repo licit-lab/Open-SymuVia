@@ -155,7 +155,7 @@ target_link_libraries( SymuVia ${Boost_LIBRARIES})
 
 
 # XQilla
-target_link_libraries( SymuVia ${XQILLA_LIB_DIRECTORY})
+target_link_libraries( SymuVia ${XQILLA_LIBRARIES})
 
 # Xerces-c
 target_link_libraries( SymuVia ${XercesC_LIBRARIES})
