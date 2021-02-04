@@ -17,8 +17,7 @@ requirements:
     - make
     - cmake
   host:
-    - boost
-    - boost-cpp
+    - boost=1.73
     - libgdal
     - xerces-c
     - xqilla
@@ -27,8 +26,7 @@ requirements:
     - python
 
   run:
-    - boost
-    - boost-cpp
+    - boost=1.73
     - libgdal
     - xerces-c
     - xqilla
