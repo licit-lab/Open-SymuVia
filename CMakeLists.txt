@@ -137,6 +137,7 @@ find_package(ODBC REQUIRED)
     endif()
 
 # Python Search
+set(Python_FIND_VIRTUALENV FIRST)
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
 
     if(Python_FOUND)
