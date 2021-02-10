@@ -1,4 +1,4 @@
-project(SymuVia)
+project(SymuVia CXX)
 
 set(USE_SYMUCOM OFF CACHE BOOL "Use SymuCom")
 
@@ -132,6 +132,9 @@ endif(NOT USE_SYMUCOM)
 
 # Define SymuCore target: library
 add_library(SymuVia SHARED ${SymuVia_src})
+
+set_property(TARGET SymuVia PROPERTY CXX_STANDARD 11)
+set_property(TARGET SymuVia PROPERTY CXX_STANDARD_REQUIRED)
 
 # Link Library dependencies
 # GDAL

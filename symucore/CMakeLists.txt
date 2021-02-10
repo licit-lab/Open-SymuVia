@@ -1,4 +1,4 @@
-project (SymuCore VERSION 1.0.0)
+project (SymuCore VERSION 1.0.0 LANGUAGES CXX)
 
 file(GLOB SymuCore_src
     "src/Graph/Model/Cost.cpp"
@@ -97,6 +97,10 @@ file(GLOB SymuCore_src
 
 # Define SymuCore target: library
 add_library(SymuCore SHARED ${SymuCore_src})
+
+set_property(TARGET SymuCore PROPERTY CXX_STANDARD 11)
+set_property(TARGET SymuCore PROPERTY CXX_STANDARD_REQUIRED ON)
+
 
 # Link dependencies
 target_link_libraries(SymuCore ${Boost_DATE_TIME_LIBRARY} ${Boost_LOCALE_LIBRARY})

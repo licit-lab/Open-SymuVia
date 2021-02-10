@@ -1,39 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
-
-echo "=====================================
-CONDA_BUILD:        $CONDA_BUILD
-ARCH:               $ARCH
-PREFIX:             $PREFIX
-PYTHON:             $PYTHON
-PY3K:               $PY3K
-STDLIB_DIR:         $STDLIB_DIR
-SP_DIR:             $SP_DIR
-SYS_PREFIX:         $SYS_PREFIX
-SYS_PYTHON:         $SYS_PYTHON
-PY_VER:             $PY_VER
-SRC_DIR:            $SRC_DIR
-
-PATH:               $PATH
-HOME:               $HOME
-LANG:               $LANG
-PKG_CONFIG_PATH:    $PKG_CONFIG_PATH
-
-LD_RUN_PATH:        $LD_RUN_PATH
-
-PKG_NAME:           $PKG_NAME
-PKG_VERSION:        $PKG_VERSION
-RECIPE_DIR:         $RECIPE_DIR
-
--------------------------------------
-PYTHONPATH:         $PYTHONPATH
-
-PWD:                $PWD
-
-====================================="
-
-
 if [[ -d build ]]; then
     rm -rf build
 fi
@@ -44,16 +10,14 @@ cd build
 # Needed for Boost: https://github.com/VowpalWabbit/vowpal_wabbit/issues/1095#issuecomment-330327771
 if [ `uname` == Linux ]
 then
-  export LD_LIBRARY_PATH=${PREFIX}/lib:$LD_LIBRARY_PATH
-  export LIBRARY_PATH=${PREFIX}/lib:LIBRARY_PATH
-  export CPLUS_INCLUDE_PATH=${PREFIX}/include:CPLUS_INCLUDE_PATH
+  export LD_LIBRARY_PATH="${PREFIX}/lib:${LD_LIBRARY_PATH}"
+  export LIBRARY_PATH="${PREFIX}/lib:${LIBRARY_PATH}"
 fi
 
 
 cmake .. \
-      -DCMAKE_INSTALL_PREFIX=${PREFIX} \
-      -DCMAKE_PREFIX_PATH=${PREFIX} \
-      -DCMAKE_INSTALL_LIBDIR=lib
+      -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
+      -DCMAKE_PREFIX_PATH="${PREFIX}"
 
 make -j${CPU_COUNT}
 make install

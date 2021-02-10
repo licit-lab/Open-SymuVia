@@ -9,6 +9,7 @@ source:
 
 build:
   number: 0
+  preserve_egg_dir: True
 
 requirements:
   build:
@@ -17,19 +18,19 @@ requirements:
     - make
     - cmake
   host:
-    - boost=1.73
-    - libgdal
-    - xerces-c
-    - xqilla
+    - boost
+    - boost-cpp
+    - libgdal=3.2.1
+    - xerces-c=3.2.3
+    - xqilla=2.3.4
     - rapidjson
     - unixodbc
-    - python
 
   run:
-    - boost=1.73
-    - libgdal
-    - xerces-c
-    - xqilla
+    - boost
+    - boost-cpp
+    - libgdal=3.2.1
+    - xerces-c=3.2.3
+    - xqilla=2.3.4
     - rapidjson
     - unixodbc
-    - python

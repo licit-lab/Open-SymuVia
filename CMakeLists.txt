@@ -137,7 +137,6 @@ find_package(ODBC REQUIRED)
     endif()
 
 # Python Search
-set(Python_FIND_VIRTUALENV FIRST)
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
 
     if(Python_FOUND)
@@ -174,13 +173,8 @@ find_package(Xqilla REQUIRED)
 
 # Define libraries to link
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-SET(CMAKE_INSTALL_RPATH ${LIB_DIRECTORIES})
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-# Activate C++11 support under Linux
-if(CMAKE_COMPILER_IS_GNUCXX OR APPLE)
-  set( CMAKE_CXX_FLAGS "-std=c++11 -pthread" CACHE STRING "compile flags" FORCE)
-endif(CMAKE_COMPILER_IS_GNUCXX OR APPLE)
 
 # Function for printing included files
 function(print_files list_files)

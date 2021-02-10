@@ -1,4 +1,4 @@
-﻿project (SymuMaster VERSION 1.0.0)
+﻿project(SymuMaster VERSION 1.0.0 LANGUAGES CXX)
 
 # Set processor flags
 add_definitions(-DUSE_SYMUCORE)
@@ -86,6 +86,9 @@ print_files(SymuMaster_src)
 # Define SymuMaster target: library
 add_library(SymuMaster SHARED ${SymuMaster_src})
 
+set_property(TARGET SymuMaster PROPERTY CXX_STANDARD 11)
+set_property(TARGET SymuMaster PROPERTY CXX_STANDARD_REQUIRED)
+
 # Link dependencies
 target_link_libraries(SymuMaster SymuCore)
 target_link_libraries(SymuMaster SymuVia)
@@ -95,6 +98,10 @@ target_include_directories(SymuMaster PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
 # Définition de l'exécutable SymuMasterLauncher
 add_executable(SymuMasterLauncher Launcher/SymuMasterLauncher.cpp Launcher/ColouredConsoleLogger.cpp Launcher/ColouredConsoleLogger.h)
+
+set_property(TARGET SymuMasterLauncher PROPERTY CXX_STANDARD 11)
+set_property(TARGET SymuMasterLauncher PROPERTY CXX_STANDARD_REQUIRED)
+
 target_link_libraries(SymuMasterLauncher SymuMaster)
 target_link_libraries(SymuMasterLauncher ${Boost_LIBRARIES})
 
