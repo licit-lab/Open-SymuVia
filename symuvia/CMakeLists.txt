@@ -1,4 +1,4 @@
-project(SymuVia)
+project(SymuVia CXX)
 
 set(USE_SYMUCOM OFF CACHE BOOL "Use SymuCom")
 
@@ -9,18 +9,18 @@ set(SYMUVIA_VERSION_REVISION 0)
 set(SYMUVIA_VERSION_BUILD 0)
 
 
-# Not clear what this is for. 
+# Not clear what this is for.
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/SymuviaVersion.h.in
   ${CMAKE_CURRENT_SOURCE_DIR}/src/SymuviaVersion.h
   @ONLY)
-  
+
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/Symubruit.rc.in
   ${CMAKE_CURRENT_SOURCE_DIR}/src/Symubruit.rc
   @ONLY)
 
-# Set processor flags 
+# Set processor flags
 add_definitions(-DTRAFFICSTATE_EXPORTS)
 add_definitions(-DSYMUVIA_EXPORTS)
 add_definitions(-DUSE_SYMUCORE)
@@ -67,7 +67,7 @@ list(REMOVE_ITEM SymuVia_src ${CMAKE_CURRENT_SOURCE_DIR}/src/cryptage/Cryptage3D
 list(REMOVE_ITEM SymuVia_src ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/Parallelisation/main.cpp)
 list(REMOVE_ITEM SymuVia_src ${CMAKE_CURRENT_SOURCE_DIR}/src/usage/SymuViaTripNodeDebug.cpp)
 
-if(NOT USE_SYMUCOM)	
+if(NOT USE_SYMUCOM)
     list(REMOVE_ITEM SymuVia_src ${CMAKE_CURRENT_SOURCE_DIR}/src/ITS/Applications/C_ITSApplication.cpp)
     list(REMOVE_ITEM SymuVia_src ${CMAKE_CURRENT_SOURCE_DIR}/src/ITS/Applications/C_ITSApplication.h)
     list(REMOVE_ITEM SymuVia_src ${CMAKE_CURRENT_SOURCE_DIR}/src/ITS/Applications/C_ITSScriptableApplication.cpp)
@@ -133,7 +133,10 @@ endif(NOT USE_SYMUCOM)
 # Define SymuCore target: library
 add_library(SymuVia SHARED ${SymuVia_src})
 
-# Link Library dependencies 
+set_property(TARGET SymuVia PROPERTY CXX_STANDARD 11)
+set_property(TARGET SymuVia PROPERTY CXX_STANDARD_REQUIRED)
+
+# Link Library dependencies
 # GDAL
 target_link_libraries( SymuVia ${GDAL_LIBRARY})
 
@@ -142,7 +145,7 @@ target_link_libraries( SymuVia SymuCore)
 
 # Boost
 # target_link_libraries( SymuVia ${Boost_SERIALIZATION_LIBRARY})
-# target_link_libraries( SymuVia ${Boost_WSERIALIZATION_LIBRARY}) 
+# target_link_libraries( SymuVia ${Boost_WSERIALIZATION_LIBRARY})
 # target_link_libraries( SymuVia ${Boost_PYTHON27_LIBRARY})
 # target_link_libraries( SymuVia ${Boost_LOCALE_LIBRARY})
 # target_link_libraries( SymuVia ${Boost_DATE_TIME_LIBRARY})
@@ -155,7 +158,7 @@ target_link_libraries( SymuVia ${Boost_LIBRARIES})
 
 
 # XQilla
-target_link_libraries( SymuVia ${XQILLA_LIB_DIRECTORY})
+target_link_libraries( SymuVia ${XQILLA_LIBRARIES})
 
 # Xerces-c
 target_link_libraries( SymuVia ${XercesC_LIBRARIES})
@@ -169,7 +172,10 @@ target_link_libraries( SymuVia ${ODBC_LIBRARY})
 # Python
 target_link_libraries( SymuVia ${Python_LIBRARIES})
 
-# Visible                               
+# Visible
 target_include_directories(SymuVia PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/reseau.xsd DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+# file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/reseau.xsd DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/reseau.xsd DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+install(TARGETS SymuVia DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)

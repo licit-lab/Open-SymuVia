@@ -1,0 +1,36 @@
+{% set version = "1.0.0" %}
+
+package:
+  name: symuvia
+  version: {{ version }}
+
+source:
+  path: ../
+
+build:
+  number: 0
+  preserve_egg_dir: True
+
+requirements:
+  build:
+    - {{ compiler("c") }}  # [linux]
+    - {{ compiler('cxx') }}  # [linux]
+    - make
+    - cmake
+  host:
+    - boost
+    - boost-cpp
+    - libgdal=3.2.1
+    - xerces-c=3.2.3
+    - xqilla=2.3.4
+    - rapidjson
+    - unixodbc
+
+  run:
+    - boost
+    - boost-cpp
+    - libgdal=3.2.1
+    - xerces-c=3.2.3
+    - xqilla=2.3.4
+    - rapidjson
+    - unixodbc
