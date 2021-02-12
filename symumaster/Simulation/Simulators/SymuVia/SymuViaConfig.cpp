@@ -68,6 +68,7 @@ bool SymuViaConfig::LoadFromXML(XERCES_CPP_NAMESPACE::DOMNode * pSimulationConfi
     XMLStringUtils::GetAttributeValue(pSimulationConfigNode, "concentration_ratio_for_free_flow_criterion", m_dbConcentrationRatioForFreeFlowCriterion);
 	XMLStringUtils::GetAttributeValue(pSimulationConfigNode, "robust_travel_times_file_path", m_strRobustTravelTimesFilePath);
 	XMLStringUtils::GetAttributeValue(pSimulationConfigNode, "robust_travel_speeds_file_path", m_strRobustTravelSpeedsFilePath);
+	XMLStringUtils::GetAttributeValue(pSimulationConfigNode, "robust_points_backup", m_bRobustPointsBackup);
 	if (m_strRobustTravelTimesFilePath.size() > 0)
 		m_bUsePreComputedRobustTravelTimes = 1;
 	XMLStringUtils::GetAttributeValue(pSimulationConfigNode, "calculation_of_pollutant_emissions", m_bPollutantEmissionsComputation);
@@ -321,6 +322,16 @@ const std::string & SymuViaConfig::GetRobustTravelTimesFilePath() const
 const std::string & SymuViaConfig::GetRobustTravelSpeedsFilePath() const
 {
 	return m_strRobustTravelSpeedsFilePath;
+}
+
+void SymuViaConfig::SetRobustPointsBackup(const bool & bRobustPointsBackup)
+{
+	m_bRobustPointsBackup = bRobustPointsBackup;
+}
+
+const bool & SymuViaConfig::GetRobustPointsBackup() const
+{
+	return m_bRobustPointsBackup;
 }
 
 void SymuViaConfig::SetPollutantEmissionsComputation(const bool & bPollutantEmissionsComputation)

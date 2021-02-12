@@ -374,7 +374,7 @@ bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> p
 			// Trace
 			std::vector<ControlZone*>::iterator itCCZ;
 			std::vector<ControlZone*> FinalCrossedPassedZones;
-			bool bFound;
+			
 			for (itCZ = m_ControlZones.begin(); itCZ != m_ControlZones.end(); itCZ++)
 			{
 				if( (*itCZ)->IsPathPassesThrough(newremainingpaths.front().links) )
@@ -449,7 +449,7 @@ bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> p
 			// Trace
 			std::vector<ControlZone*>::iterator itCCZ;
 			std::vector<ControlZone*> FinalCrossedPassedZones;
-			bool bFound;
+			
 			for (itCZ = m_ControlZones.begin(); itCZ != m_ControlZones.end(); itCZ++)
 			{
 				if( (*itCZ)->IsPathPassesThrough(newremainingpaths.front().links) )
@@ -527,7 +527,7 @@ bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> p
 			// Trace
 			std::vector<ControlZone*>::iterator itCCZ;
 			std::vector<ControlZone*> FinalCrossedPassedZones;
-			bool bFound;
+			
 			for (itCZ = m_ControlZones.begin(); itCZ != m_ControlZones.end(); itCZ++)
 			{
 				if( (*itCZ)->IsPathPassesThrough(newremainingpaths.front().links) )
@@ -628,7 +628,7 @@ bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> p
 	// Trace
 	std::vector<ControlZone*>::iterator itCCZ;
 	std::vector<ControlZone*> FinalCrossedPassedZones;
-	bool bFound;
+	
 	for (itCZ = m_ControlZones.begin(); itCZ != m_ControlZones.end(); itCZ++)
 	{
 		if( (*itCZ)->IsPathPassesThrough(newremainingpaths.front().links) )

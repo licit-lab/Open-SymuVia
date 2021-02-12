@@ -3687,7 +3687,7 @@ SYMUBRUIT_EXPORT int SYMUBRUIT_CDECL SymLoadNetwork(SymuCore::IUserHandler * pUs
 	double dbConcentrationRatioForFreeFlowCriterion, int nNbClassRobustTTMethod, int nMaxNbPointsPerClassRobustTTMethod, int nMinNbPointsStatisticalFilterRobustTTMethod,
 	bool bUseLastBusIfAnyForTravelTimes, bool bUseEmptyTravelTimesForBusLines, double dbMeanBusExitTime,
 	int nbStopsToConnectOutsideOfSubAreas, double dbMaxInitialWalkRadius, double dbMaxIntermediateWalkRadius, bool bComputeAllCosts, double dbMinLengthForMarginals,
-	std::string sRobustTravelTimesFile, std::string sRobustTravelSpeedsFile, bool bPollutantEmissionComputation,
+	std::string sRobustTravelTimesFile, std::string sRobustTravelSpeedsFile, bool bRobustPointsBackup, bool bPollutantEmissionComputation,
 	boost::posix_time::ptime & startTime, boost::posix_time::ptime & endTime, boost::posix_time::time_duration & timeStep, bool & bHasTrajectoriesOutput)
 {
 	int networkId = SymLoadNetwork(sTmpXmlDataFile, true, false, false);
@@ -3723,6 +3723,7 @@ SYMUBRUIT_EXPORT int SYMUBRUIT_CDECL SymLoadNetwork(SymuCore::IUserHandler * pUs
 		pNetwork->SetMinNbPointsStatisticalFilterRobustTTMethod(nMinNbPointsStatisticalFilterRobustTTMethod);
 		pNetwork->SetRobustTravelTimesFile(sRobustTravelTimesFile);
 		pNetwork->SetRobustTravelSpeedsFile(sRobustTravelSpeedsFile);
+		pNetwork->SetRobustPointsBackup(bRobustPointsBackup);
 		pNetwork->SetPollutantEmissionComputation(bPollutantEmissionComputation);
 
         startTime = pNetwork->GetSimulationStartTime();

@@ -9,7 +9,9 @@
 
 #include <math.h>
 #include <numeric>
+#include <fstream>
 
+using namespace std;
 using namespace SymuCore;
 
 static std::vector<double> polyfit2(const std::vector<double>& oX,
@@ -17,7 +19,7 @@ static std::vector<double> polyfit2(const std::vector<double>& oX,
 {
 	using namespace boost::numeric::ublas;
 
-	std::cout << std::endl << " oX.size() == oY.size() " << oX.size()  << " " << oY.size() << std::endl;
+	//std::cout << std::endl << " oX.size() == oY.size() " << oX.size()  << " " << oY.size() << std::endl;
 	assert(oX.size() == oY.size());
 
 	// more intuative this way
@@ -125,11 +127,13 @@ SymuCore::RobustTravelIndicatorsHelper::RobustTravelIndicatorsHelper(travelindic
 	m_nc = -1;
 	m_mlec = -1;
 
-	m_nRollingAverageNbOfData = 3;
+	m_nRollingAverageNbOfData = 3;		
+
 }
 
 SymuCore::RobustTravelIndicatorsHelper::~RobustTravelIndicatorsHelper()
 {
+	
 }
 
 // Add travel indicator data to the classes
@@ -158,7 +162,7 @@ bool SymuCore::RobustTravelIndicatorsHelper::AddTravelIndicatorsData(double dbSp
 	if (dbSpatialVehNumber <= DBL_LIMIT)
 		return false;
 
-	std::cout << "Data          " << dbSpatialVehNumber << " " << dbTotalTravelTime << " " << dbTotalTravelDistance << " " << m_lstRollingSpatialVehNumber.size() << std::endl;
+	//std::cout << "Data          " << dbSpatialVehNumber << " " << dbTotalTravelTime << " " << dbTotalTravelDistance << " " << m_lstRollingSpatialVehNumber.size() << std::endl;
 
 
 	m_lstRollingSpatialVehNumber.push_back(dbSpatialVehNumber);
@@ -178,7 +182,7 @@ bool SymuCore::RobustTravelIndicatorsHelper::AddTravelIndicatorsData(double dbSp
 	else
 		return false;
 
-	std::cout << "Rolling average " << dbSpatialVehNumber << " " << dbTotalTravelTime << " " << dbTotalTravelDistance << std::endl;
+	//std::cout << "Rolling average " << dbSpatialVehNumber << " " << dbTotalTravelTime << " " << dbTotalTravelDistance << std::endl;
 
 
 	if (dbTotalTravelDistance < m_dbLowerLimitTTD )
@@ -387,20 +391,20 @@ double SymuCore::RobustTravelIndicatorsHelper::GetRobustTravelIndicator(double d
 			{
 				if ((!boost::math::isnan(polyCoefs[2]) && !boost::math::isnan(polyCoefs[1])) == false)
 				{
-					std::cout << "!boost::math::isnan(polyCoefs[2]) && !boost::math::isnan(polyCoefs[1]) " << oX.size() << " " << oY.size() << std::endl;
+					/*std::cout << "!boost::math::isnan(polyCoefs[2]) && !boost::math::isnan(polyCoefs[1]) " << oX.size() << " " << oY.size() << std::endl;
 					for (int i = 0; i < oX.size(); i++)
 						std::cout << oX[i] << " ";
 					for (int i = 0; i < oY.size(); i++)
-						std::cout << oY[i] << " ";
+						std::cout << oY[i] << " ";*/
 				}
-				std::cout << std::endl << polyCoefs[2] << " " << polyCoefs[1] << polyCoefs[0] << std::endl;
+				//std::cout << std::endl << polyCoefs[2] << " " << polyCoefs[1] << polyCoefs[0] << std::endl;
 				
 				//assert(!boost::math::isnan(polyCoefs[2]) && !boost::math::isnan(polyCoefs[1]));
 
 				if ( (m_indicator == time && 2.0 * polyCoefs[2] * m_dbMinSpatialVehNb + polyCoefs[1] >= -DBL_LIMIT && 2.0 * polyCoefs[2] * m_dbMaxSpatialVehNb + polyCoefs[1] >= -DBL_LIMIT)
 				 || (m_indicator == speed && 2.0 * polyCoefs[2] * m_dbMinSpatialVehNb + polyCoefs[1] <= DBL_LIMIT && 2.0 * polyCoefs[2] * m_dbMaxSpatialVehNb + polyCoefs[1] <= DBL_LIMIT))
 				{
-					std::cout << "REG_QUADRATIC" << std::endl;
+					//std::cout << "REG_QUADRATIC" << std::endl;
 					m_RegressionType = REG_QUADRATIC;
 					m_dbCoefa = polyCoefs[2];
 					m_dbCoefb = polyCoefs[1];
@@ -410,12 +414,12 @@ double SymuCore::RobustTravelIndicatorsHelper::GetRobustTravelIndicator(double d
 				{
 					m_RegressionType = REG_LINEAR;
 
-					std::cout << "REG_LINEAR" << std::endl;
+					//std::cout << "REG_LINEAR" << std::endl;
 
 					polyCoefs.empty();
 					polyCoefs = polyfit2(oX, oY, 1);
 
-					std::cout << std::endl << polyCoefs[2] << " " << polyCoefs[1] << " " << polyCoefs[0] << std::endl;
+					//std::cout << std::endl << polyCoefs[2] << " " << polyCoefs[1] << " " << polyCoefs[0] << std::endl;
 					if (polyCoefs.empty())
 					{
 						// we don't know how to do it :
@@ -460,7 +464,7 @@ double SymuCore::RobustTravelIndicatorsHelper::GetRobustTravelIndicator(double d
 							{
 								polyCoefs.empty();
 								polyCoefs = polyfit2(oX, oY, 1);
-								std::cout << "l 457 " << polyCoefs[2] << " " << polyCoefs[1] << " " << polyCoefs[0] << std::endl;
+								//std::cout << "l 457 " << polyCoefs[2] << " " << polyCoefs[1] << " " << polyCoefs[0] << std::endl;
 								if (polyCoefs.empty())
 								{
 									// we don't know how to do it :
