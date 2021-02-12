@@ -374,7 +374,7 @@ bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> p
 			// Trace
 			std::vector<ControlZone*>::iterator itCCZ;
 			std::vector<ControlZone*> FinalCrossedPassedZones;
-			bool bFound;
+			
 			for (itCZ = m_ControlZones.begin(); itCZ != m_ControlZones.end(); itCZ++)
 			{
 				if( (*itCZ)->IsPathPassesThrough(newremainingpaths.front().links) )
@@ -449,7 +449,7 @@ bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> p
 			// Trace
 			std::vector<ControlZone*>::iterator itCCZ;
 			std::vector<ControlZone*> FinalCrossedPassedZones;
-			bool bFound;
+			
 			for (itCZ = m_ControlZones.begin(); itCZ != m_ControlZones.end(); itCZ++)
 			{
 				if( (*itCZ)->IsPathPassesThrough(newremainingpaths.front().links) )
@@ -510,6 +510,7 @@ bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> p
 	m_output << CSV_SEPARATOR;
 	
 	if (!bRerouted)
+	{
         if(pVeh->IsAlreadyRerouted())
         {
             // Apply new path
@@ -527,7 +528,7 @@ bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> p
 			// Trace
 			std::vector<ControlZone*>::iterator itCCZ;
 			std::vector<ControlZone*> FinalCrossedPassedZones;
-			bool bFound;
+			
 			for (itCZ = m_ControlZones.begin(); itCZ != m_ControlZones.end(); itCZ++)
 			{
 				if( (*itCZ)->IsPathPassesThrough(newremainingpaths.front().links) )
@@ -557,9 +558,10 @@ bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> p
 				if( (*itCZ)->IsPathPassesThrough(remainingPath) )
 					(*itCZ)->IncNbVehsPassingAfterReroutingProcess();
 			}
-		    return false;
+			return false;
 		}
-
+	
+	}
 	//std::cout << "Calculate new path with banned zones " << std::endl; 
 
 	// Calculate new path with banned zones
@@ -628,7 +630,7 @@ bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> p
 	// Trace
 	std::vector<ControlZone*>::iterator itCCZ;
 	std::vector<ControlZone*> FinalCrossedPassedZones;
-	bool bFound;
+	
 	for (itCZ = m_ControlZones.begin(); itCZ != m_ControlZones.end(); itCZ++)
 	{
 		if( (*itCZ)->IsPathPassesThrough(newremainingpaths.front().links) )

@@ -97,6 +97,7 @@ bool SymuViaInstance::Initialize(const SimulationConfiguration & config, SymuCor
 		symuConfig->GetMinLengthForMarginals(),
 		symuConfig->GetRobustTravelTimesFilePath(),
 		symuConfig->GetRobustTravelSpeedsFilePath(),
+		symuConfig->GetRobustPointsBackup(),
 		symuConfig->GetPollutantEmissionsComputation(),
 		startTime, endTime, timeStepDuration, m_bHasTrajectoriesOutput);
 

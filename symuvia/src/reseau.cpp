@@ -155,6 +155,7 @@ Reseau::Reseau()
 	m_bMeso = false;
 
 	m_bUsePreComputedRobustTravelIndicators = false;
+	m_bRobustPointsBackup = false;
 	m_bPollutantEmissionComputation = false;
 
     m_pXMLUtil = new XMLUtil();
@@ -1367,6 +1368,15 @@ bool Reseau::InitSimuTraficMeso()
 		LoadRobustTravelIndicators(m_pLogger,SymuCore::RobustTravelIndicatorsHelper::time);
 		//LoadRobustTravelIndicators(m_pLogger, SymuCore::RobustTravelIndicatorsHelper::speed);
 	}
+	else
+	{
+		if (m_bRobustPointsBackup)
+		{
+			m_RobustPointsBackupFile = new std::ofstream();
+			m_RobustPointsBackupFile->open(m_sOutputDir + DIRECTORY_SEPARATOR + "RobustPoints.csv");
+		}
+	}
+
     // intialisations liées au mode meso
 	if(m_bMeso)
 		InitSimuTraficMeso();
@@ -3057,6 +3067,12 @@ void Reseau::FinSimuTrafic()
         m_pTravelTimesOutputManager = NULL;
     }
 
+	if (m_RobustPointsBackupFile)
+	{
+		m_RobustPointsBackupFile->close();
+		delete m_RobustPointsBackupFile;
+	}
+
 #ifdef USE_SYMUCOM
     if(m_pSymucomSimulator)
         //rmk : Pour l'instant on affiche Tout ce qui correspond à l'ecriture du fichier XML SymuCom seulement à la fin de la simulation
@@ -3473,10 +3489,11 @@ double Reseau::GetTimeStep(void)
 
 			dbPosMax = dbPosTmp;
 			if (lstVehicules.size()>0)
-				if ((dbPos - dbPosMax) < dbDstMax)	// Distance max à surveiller atteinte ?
-					return GetFirstVehicule(lstVehicules);
-				else
-					return boost::shared_ptr<Vehicule>();
+            {
+                // Distance max à surveiller atteinte ?
+				if ((dbPos - dbPosMax) < dbDstMax) return GetFirstVehicule(lstVehicules);
+				else return boost::shared_ptr<Vehicule>();
+            }
 
 			// Si pas de véhicule trouvé et si la connexion amont possède un seul tronçon amont avec une seule voie
 			if (!pTuyau->getConnectionAmont())
@@ -18943,6 +18960,7 @@ void Reseau::SetRobustTravelSpeedsFile(std::string strRobustTravelSpeedsFile)
 	m_strRobustTravelSpeedsFile = strRobustTravelSpeedsFile;
 	m_bUsePreComputedRobustTravelIndicators = (m_strRobustTravelSpeedsFile.size() > 0);
 }
+
 
 double Reseau::GetTotalTravelTime(std::string sMFDSensorID)
 {

@@ -95,6 +95,9 @@ namespace SymuMaster {
 		void SetRobustTravelSpeedsFilePath(const std::string & strRobustTravelSpeedsFilePath);
 		const std::string & GetRobustTravelSpeedsFilePath() const;
 
+		void SetRobustPointsBackup(const bool & bRobustPointsBackup);
+		const bool & GetRobustPointsBackup() const;
+
 		void SetPollutantEmissionsComputation(const bool & PollutantEmissionsComputation);
 		const bool & GetPollutantEmissionsComputation() const;
 
@@ -226,6 +229,11 @@ namespace SymuMaster {
 		* Robust travel speeds file
 		*/
 		std::string m_strRobustTravelSpeedsFilePath;
+
+		/**
+		* Indicates whether the computed points used to build the robust functions are saved
+		*/
+		bool m_bRobustPointsBackup;
 
 		/**
 		* Computation of pollutant emissions

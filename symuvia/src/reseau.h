@@ -528,12 +528,17 @@ private:
 		double                      m_dbWalkSpeed;
 		bool                        m_bComputeAllCosts;
 		double                      m_dbMinLengthForMarginals;
+
 		int							m_nNbClassRobustTTMethod;
 		int							m_nMaxNbPointsPerClassRobustTTMethod;
 		int							m_nMinNbPointsStatisticalFilterRobustTTMethod;
 		std::string					m_strRobustTravelTimesFile;
 		std::string					m_strRobustTravelSpeedsFile;
 		bool						m_bUsePreComputedRobustTravelIndicators;
+
+		bool						m_bRobustPointsBackup;
+		std::ofstream*				m_RobustPointsBackupFile;			// Backup file of all points used to build robust functions
+
 		bool						m_bPollutantEmissionComputation;
 
         SymuCore::IUserHandler*     m_pSymuMasterUserHandler;
@@ -745,11 +750,12 @@ public:
 
 		bool IsPollutantEmissionComputation() { return m_bPollutantEmissionComputation; };
 		void SetPollutantEmissionComputation(bool bPollutantEmissionComputat) { m_bPollutantEmissionComputation = bPollutantEmissionComputat; };
-
+		void SetRobustPointsBackup(bool bRobustPointsBackup) { m_bRobustPointsBackup = bRobustPointsBackup; };
 		void SetRobustTravelTimesFile(std::string strRobustTravelIndicatorsFile);
 		void SetRobustTravelSpeedsFile(std::string strRobustTravelIndicatorsFile);
 		bool WriteRobustTravelIndicators(Logger* pLogger);
 		bool LoadRobustTravelIndicators(Logger * pLogger, SymuCore::RobustTravelIndicatorsHelper::travelindicator ti);
+		std::ofstream* GetRobustPointsBackupStream() { return m_RobustPointsBackupFile; };
 
 #endif // USE_SYMUCORE
 

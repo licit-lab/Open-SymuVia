@@ -3066,17 +3066,17 @@ bool MSADualLoop::InitialAffectation(mapBySubPopulationOriginDestination<vector<
                         mapValuetedPath[listPathFound[i]] = vector<Trip*>();
                     }
 
-                    vector<Trip*>::iterator itUser = lstAllUserByOD.begin();
+                    vector<Trip*>::iterator itUser;
                     Trip* currentTrip;
                     bool pathFound;
-                    for(itUser; itUser!=lstAllUserByOD.end();)
+                    for(itUser=lstAllUserByOD.begin(); itUser!=lstAllUserByOD.end();itUser++)
                     {
                         currentTrip = (*itUser);
                         if(currentTrip->isPredefinedPath())
                         {
                             pathFound = false;
-                            map<boost::shared_ptr<ValuetedPath>, vector<Trip*>, CompareValuetedPath>::iterator itMapValueted = mapValuetedPath.begin();
-                            for(itMapValueted; itMapValueted != mapValuetedPath.end(); itMapValueted++)
+                            map<boost::shared_ptr<ValuetedPath>, vector<Trip*>, CompareValuetedPath>::iterator itMapValueted;
+                            for(itMapValueted= mapValuetedPath.begin(); itMapValueted != mapValuetedPath.end(); itMapValueted++)
                             {
                                 if (itMapValueted->first->GetPath() == currentTrip->GetPath(iSimulationInstanceForBatch))
                                 {
@@ -3184,8 +3184,8 @@ bool MSADualLoop::InitialAffectation(mapBySubPopulationOriginDestination<vector<
                 //erase valuetedPath with no users on it if not in predefined path
                 if(m_mapPredefinedPaths.empty())
                 {
-                    map<boost::shared_ptr<ValuetedPath>, vector<Trip*>, CompareValuetedPath>::iterator itMapValueted = mapValuetedPath.begin();
-                    for(itMapValueted; itMapValueted != mapValuetedPath.end();)
+                    map<boost::shared_ptr<ValuetedPath>, vector<Trip*>, CompareValuetedPath>::iterator itMapValueted;
+                    for(itMapValueted=mapValuetedPath.begin(); itMapValueted != mapValuetedPath.end();itMapValueted++)
                     {
                         if(itMapValueted->second.empty())
                             itMapValueted = mapValuetedPath.erase(itMapValueted);
