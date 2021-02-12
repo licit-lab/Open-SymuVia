@@ -2280,21 +2280,28 @@ void TuyauMicro::CalculTempsDeParcours(double dbInstFinPeriode, SymuCore::MacroT
 				m_pRobustTravelSpeedsHelper = new SymuCore::RobustTravelIndicatorsHelper(SymuCore::RobustTravelIndicatorsHelper::travelindicator::speed,m_pReseau->GetNbClassRobustTTMethod(), maxSpatialVehNumber, Vmax, m_pReseau->GetMinSpeedForTravelTime(), GetLength(), m_pReseau->GetMaxNbPointsPerClassRobustTTMethod(), m_pReseau->GetMinNbPointsStatisticalFilterRobustTTMethod());
 			}
 			
-			std::cout << "CalculTempsDeParcours: " << GetLabel() << "," << dbMeanVehicleNbForMacroType << "," << dbTotalTravelledDistance << std::endl;
+			//std::cout << "CalculTempsDeParcours: " << GetLabel() << "," << dbMeanVehicleNbForMacroType << "," << dbTotalTravelledDistance << std::endl;
 			
 			if (!m_pRobustTravelSpeedsHelper->IsPreComputed())
 			//if (!bPollutantEmissionComputation && !m_pRobustTravelTimesHelper->IsPreComputed())
 			{ 
 				m_pRobustTravelTimesHelper->AddTravelIndicatorsData(dbMeanVehicleNbForMacroType, dbTotalTravelledTime, dbTotalTravelledDistance);
 				m_pRobustTravelSpeedsHelper->AddTravelIndicatorsData(dbMeanVehicleNbForMacroType, dbTotalTravelledTime, dbTotalTravelledDistance);
-				std::cout << "OK" << std::endl;
+				
+				if (m_pReseau->GetRobustPointsBackupStream() && dbMeanVehicleNbForMacroType > 0. )
+				{
+					*(m_pReseau->GetRobustPointsBackupStream()) << dbInstFinPeriode << ";";
+					*(m_pReseau->GetRobustPointsBackupStream()) << GetLabel() << ";";
+					*(m_pReseau->GetRobustPointsBackupStream()) << dbMeanVehicleNbForMacroType << ";";
+					*(m_pReseau->GetRobustPointsBackupStream()) << dbTotalTravelledTime << ";";
+					*(m_pReseau->GetRobustPointsBackupStream()) << dbTotalTravelledDistance << ";" << std::endl;
+				}
 			}
 
 			//TTForMacroType = m_pRobustTravelTimesHelper->GetRobustTravelIndicator(dbMeanVehicleNbForMacroType, dbTotalTravelledDistance);
 			//if(!bPollutantEmissionComputation)
 			TTForMacroType = m_pRobustTravelTimesHelper->GetRobustTravelIndicator(dbMeanVehicleNbForMacroType, dbTotalTravelledDistance, false);
 			//TTForMacroType = m_pRobustTravelSpeedsHelper->GetRobustTravelIndicator(dbMeanVehicleNbForMacroType, dbTotalTravelledDistance, false);
-			std::cout << "OK 2" << std::endl;
 
 			double TEForMacroType = m_pRobustTravelSpeedsHelper->GetRobustTravelIndicator(dbMeanVehicleNbForMacroType, dbTotalTravelledDistance, true);
 			//double TEForMacroType = m_pRobustTravelTimesHelper->GetRobustTravelIndicator(dbMeanVehicleNbForMacroType, dbTotalTravelledDistance, true);
@@ -2302,9 +2309,6 @@ void TuyauMicro::CalculTempsDeParcours(double dbInstFinPeriode, SymuCore::MacroT
 			//std::cout << "CalculTempsDeParcours: " << GetLabel() << "," << dbMeanVehicleNbForMacroType << "," << dbTotalTravelledDistance << ","<< TTForMacroType << std::endl;
 			//std::cout << ";" << TTForMacroType;
 
-			// Pour l'instant !
-			std::cout << "OK 3" << std::endl;
-			
 			if (!bPollutantEmissionComputation)
 			{
 				m_dbTTForAllMacroTypes = TTForMacroType;
@@ -2332,11 +2336,7 @@ void TuyauMicro::CalculTempsDeParcours(double dbInstFinPeriode, SymuCore::MacroT
 				dbITT = m_pRobustTravelTimesHelper->GetDerivative(dbMeanVehicleNbForMacroType, false);
 				dbMarginalForMacroType = m_dbTTForAllMacroTypes + dbITT * dbMeanVehicleNbForMacroType;
 			}
-				
-
-			
-
-			//std::cout << ";" << dbITT << ";" << dbMarginalForMacroType << ";" << std::endl;
+	
 		}
 	}
 	else

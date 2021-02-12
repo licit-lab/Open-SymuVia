@@ -155,6 +155,7 @@ Reseau::Reseau()
 	m_bMeso = false;
 
 	m_bUsePreComputedRobustTravelIndicators = false;
+	m_bRobustPointsBackup = false;
 	m_bPollutantEmissionComputation = false;
 
     m_pXMLUtil = new XMLUtil();
@@ -1367,6 +1368,15 @@ bool Reseau::InitSimuTraficMeso()
 		LoadRobustTravelIndicators(m_pLogger,SymuCore::RobustTravelIndicatorsHelper::time);
 		//LoadRobustTravelIndicators(m_pLogger, SymuCore::RobustTravelIndicatorsHelper::speed);
 	}
+	else
+	{
+		if (m_bRobustPointsBackup)
+		{
+			m_RobustPointsBackupFile = new std::ofstream();
+			m_RobustPointsBackupFile->open(m_sOutputDir + DIRECTORY_SEPARATOR + "RobustPoints.csv");
+		}
+	}
+
     // intialisations liées au mode meso
 	if(m_bMeso)
 		InitSimuTraficMeso();
@@ -3056,6 +3066,12 @@ void Reseau::FinSimuTrafic()
         delete m_pTravelTimesOutputManager;
         m_pTravelTimesOutputManager = NULL;
     }
+
+	if (m_RobustPointsBackupFile)
+	{
+		m_RobustPointsBackupFile->close();
+		delete m_RobustPointsBackupFile;
+	}
 
 #ifdef USE_SYMUCOM
     if(m_pSymucomSimulator)
@@ -18943,6 +18959,7 @@ void Reseau::SetRobustTravelSpeedsFile(std::string strRobustTravelSpeedsFile)
 	m_strRobustTravelSpeedsFile = strRobustTravelSpeedsFile;
 	m_bUsePreComputedRobustTravelIndicators = (m_strRobustTravelSpeedsFile.size() > 0);
 }
+
 
 double Reseau::GetTotalTravelTime(std::string sMFDSensorID)
 {

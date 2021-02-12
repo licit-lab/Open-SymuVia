@@ -809,7 +809,8 @@
                         <xs:documentation>Path for the csv that contains the predefined paths and also the predefined assignments.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-				<xs:attribute name="predefined_paths_only" type="xs:boolean" use="optional" default="true">
+                <xs:attribute name="predefined_paths_only" type="xs:boolean" use="optional"
+                    default="true">
                     <xs:annotation>
                         <xs:documentation>If true (default value), SymuMaster will not try to find any other path than the predefined ones</xs:documentation>
                     </xs:annotation>
@@ -1529,6 +1530,11 @@
                 <xs:annotation>
                     <xs:documentation>Minimum number of points per class for applying statiscal filter used by the robust travel indicators method
                     </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute default="0" name="robust_points_backup" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>Indicates whether the computed points used to build the robust functions are saved</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="robust_travel_times_file_path" type="xs:string">

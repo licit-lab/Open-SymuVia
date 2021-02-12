@@ -436,6 +436,15 @@ void BriqueDeConnexion::CalculTempsParcours(double dbInstFinPeriode, SymuCore::M
 					{
 						pRobustTravelTimesHelper->AddTravelIndicatorsData(dbMeanVehicleNbForMacroType, dbTotalTravelledTime, dbTotalTravelledDistance);
 						pRobustTravelSpeedsHelper->AddTravelIndicatorsData(dbMeanVehicleNbForMacroType, dbTotalTravelledTime, dbTotalTravelledDistance);
+					
+						if (m_pReseau->GetRobustPointsBackupStream() && dbMeanVehicleNbForMacroType > 0.)
+						{
+							*(m_pReseau->GetRobustPointsBackupStream()) << dbInstFinPeriode << ";";
+							*(m_pReseau->GetRobustPointsBackupStream()) << iterMove->first.first->GetLabel() << "->" << iterMove->first.second->GetLabel() << ";";
+							*(m_pReseau->GetRobustPointsBackupStream()) << dbMeanVehicleNbForMacroType << ";";
+							*(m_pReseau->GetRobustPointsBackupStream()) << dbTotalTravelledTime << ";";
+							*(m_pReseau->GetRobustPointsBackupStream()) << dbTotalTravelledDistance << ";" << std::endl;
+						}
 					}
 
 					//TTForMacroType = pRobustTravelTimesHelper->GetRobustTravelIndicator(dbMeanVehicleNbForMacroType, dbTotalTravelledDistance);
