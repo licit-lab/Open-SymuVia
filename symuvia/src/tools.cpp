@@ -715,9 +715,9 @@ bool GetXmlDuree(DOMNode *pXMLNode, Reseau * pReseau, double &dbVal, vector<Plag
     Point pt2
 )
 {
-    return sqrt(((pt1.dbX - pt2.dbX) * (pt1.dbX - pt2.dbX))
-                             + ((pt1.dbY - pt2.dbY, 2) * (pt1.dbY - pt2.dbY, 2))
-                             + ((pt1.dbZ - pt2.dbZ, 2) * (pt1.dbZ - pt2.dbZ, 2)));
+    return sqrt(   ( (pt1.dbX - pt2.dbX) * (pt1.dbX - pt2.dbX) )
+                 + ( (pt1.dbY - pt2.dbY) * (pt1.dbY - pt2.dbY) )
+                 + ( (pt1.dbZ - pt2.dbZ) * (pt1.dbZ - pt2.dbZ) )  );
 }
 
 //================================================================
