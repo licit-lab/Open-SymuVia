@@ -510,6 +510,7 @@ bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> p
 	m_output << CSV_SEPARATOR;
 	
 	if (!bRerouted)
+	{
         if(pVeh->IsAlreadyRerouted())
         {
             // Apply new path
@@ -557,9 +558,10 @@ bool ControlZoneManagement::CheckAndRerouteVehicle(boost::shared_ptr<Vehicule> p
 				if( (*itCZ)->IsPathPassesThrough(remainingPath) )
 					(*itCZ)->IncNbVehsPassingAfterReroutingProcess();
 			}
-		    return false;
+			return false;
 		}
-
+	
+	}
 	//std::cout << "Calculate new path with banned zones " << std::endl; 
 
 	// Calculate new path with banned zones

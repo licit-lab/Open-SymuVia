@@ -1259,7 +1259,10 @@ bool ControleurDeFeux::ReplaceSignalPlan(std::string strJsonSignalPlan)
 	SDateTime dt;
 	dtDebut = dt.ToTime();
 
-	PlanDeFeux *pPlanDeFeux = new PlanDeFeux("NewFromJSON", dtDebut);
+    char* strID;
+    std::string sPdF("NewFromJSON");
+    strcpy(strID, sPdF.c_str());
+	PlanDeFeux *pPlanDeFeux = new PlanDeFeux(strID, dtDebut);
 	bool bOK = true;
 
 	rapidjson::Value sequences = document["sequences"].GetArray();

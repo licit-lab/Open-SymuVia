@@ -3489,10 +3489,11 @@ double Reseau::GetTimeStep(void)
 
 			dbPosMax = dbPosTmp;
 			if (lstVehicules.size()>0)
-				if ((dbPos - dbPosMax) < dbDstMax)	// Distance max à surveiller atteinte ?
-					return GetFirstVehicule(lstVehicules);
-				else
-					return boost::shared_ptr<Vehicule>();
+            {
+                // Distance max à surveiller atteinte ?
+				if ((dbPos - dbPosMax) < dbDstMax) return GetFirstVehicule(lstVehicules);
+				else return boost::shared_ptr<Vehicule>();
+            }
 
 			// Si pas de véhicule trouvé et si la connexion amont possède un seul tronçon amont avec une seule voie
 			if (!pTuyau->getConnectionAmont())

@@ -2377,11 +2377,15 @@ bool Vehicule::CalculChangementVoie
 	bool bMoveBack = false;
 	pVehSamePosition = m_pReseau->GetNearAvalVehicule(pVoieCible, pVoieCible->GetLength() / m_pVoie[1]->GetLength() * GetPos(1) - 0.01, this);
 	if (pVehSamePosition)
+    {
 		if (fabs(pVoieCible->GetLength() / m_pVoie[1]->GetLength() * GetPos(1) - pVehSamePosition->GetPos(1)) < 0.01)
+        {
 			if (fabs(this->GetPos(1) - m_pVoie[1]->GetLength()) < 0.01)		// en bout de tronçon
 			{
 				if(bForce)
+                {
 					if(pVehSamePosition->GetVoieDesiree() == m_pVoie[1]->GetNum() && m_nVoieDesiree == pVehSamePosition->GetVoie(1)->GetNum())
+                    {
 						if (m_pVit[1] < 0.01 && pVehSamePosition->GetVit(1) < 0.01)
 						{
 							// Switch-switch
@@ -2391,14 +2395,14 @@ bool Vehicule::CalculChangementVoie
 
 							return true;
 						}
-
+                    }
+                }
 				m_pPos[1] = m_pPos[1] - 0.5;
 				bMoveBack = true;
-
 			}
-			else
-				return false;
-
+			else return false;
+        }
+    }
     // Recherche des véhicules 'follower' et 'leader' de la voie cible
     pVehFollower = m_pReseau->GetNearAmontVehicule(pVoieCible, pVoieCible->GetLength() / m_pVoie[1]->GetLength() * GetPos(1) + 0.001, -1.0, this);
     pVehLeader = m_pReseau->GetNearAvalVehicule(pVoieCible, pVoieCible->GetLength() / m_pVoie[1]->GetLength() * GetPos(1) + 0.001, this);
