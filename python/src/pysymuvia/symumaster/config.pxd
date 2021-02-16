@@ -11,3 +11,4 @@ cdef extern from "symumaster/Simulation/Config/SimulationConfiguration.h" namesp
         const string & GetLoadedConfigurationFilePath() const
         const string GetStrOutpuDirectoryPath() const
         const string GetStrOutputPrefix() const
+        const string & GetDemandFilePath() const

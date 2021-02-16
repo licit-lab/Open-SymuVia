@@ -9,15 +9,17 @@ print('='*20, 'INSTALLING HEADERS SymuCore', '='*20)
 
 HEADERS_SYMUCORE = ['Graph/Model/Graph.h',
                     'SymuCoreExports.h',
-                    'Utils/SymuCoreConstants.h']
+                    'Utils/SymuCoreConstants.h',
+                    'Demand/Populations.h']
 
 
 symucore_install = os.path.expandvars('$CONDA_PREFIX/include/symucore')
-
+shutil.rmtree(symucore_install)
 
 if not os.path.exists(symucore_install):
     os.mkdir(symucore_install)
     os.mkdir(os.path.join(symucore_install, 'Utils'))
+    os.mkdir(os.path.join(symucore_install, 'Demand'))
     os.mkdir(os.path.join(symucore_install, 'Graph'))
     os.mkdir(os.path.join(symucore_install, 'Graph/Model'))
 
@@ -50,10 +52,17 @@ HEADERS_SYMUMASTER = ['SymuMasterExports.h',
                       'Utils/SymuMasterConstants.h',
                       "Simulation/Config/SimulatorConfigurationFactory.h",
                       "Simulation/Assignment/AssignmentModel.h",
-                      "Simulation/Assignment/AssignmentModelFactory.h"]
+                      "Simulation/Assignment/AssignmentModelFactory.h",
+                      "Simulation/Simulators/TraficSimulators.h",
+                      "Simulation/Users/UserEngines.h",
+                      "Simulation/SimulationRunner.h",
+                      "Simulation/Simulators/TraficSimulatorHandler.h",
+                      "Simulation/Simulators/SimulationDescriptor.h",
+                      "Simulation/Simulators/SimulatorsInterface.h"]
 
 symumaster_install = os.path.expandvars('$CONDA_PREFIX/include/symumaster')
 
+shutil.rmtree(symumaster_install)
 
 if not os.path.exists(symumaster_install):
     os.mkdir(symumaster_install)
@@ -63,21 +72,34 @@ if not os.path.exists(symumaster_install):
     os.mkdir(os.path.join(symumaster_install, 'Utils'))
     os.mkdir(os.path.join(symumaster_install, 'Simulation/Config'))
     os.mkdir(os.path.join(symumaster_install, 'Simulation/Assignment'))
+    os.mkdir(os.path.join(symumaster_install, 'Simulation/Simulators'))
+    os.mkdir(os.path.join(symumaster_install, 'Simulation/Users'))
 
 for file in HEADERS_SYMUMASTER:
     print('INSTALLING HEADER:', file, '->', os.path.join(symumaster_install, file))
     shutil.copy(os.path.join(symuvia_src, 'symumaster', file), os.path.join(symumaster_install, file))
 
+
+
 sources = glob.glob('src/pysymuvia/symumaster/**/*.pyx', recursive = True)
 print('SOURCES:', sources)
 
-symucore = Extension(
+symumaster_config = Extension(
     name="pysymuvia.symumaster.config",
-    sources=sources,
+    sources=['src/pysymuvia/symumaster/config.pyx'],
     libraries=["SymuMaster"],
     library_dirs=[os.path.expandvars('$CONDA_PREFIX/lib')],
     include_dirs=[os.path.expandvars('$CONDA_PREFIX/include/symumaster'), os.path.expandvars('$CONDA_PREFIX/include/symucore')]
 )
+
+symumaster_runner = Extension(
+    name="pysymuvia.symumaster.runner",
+    sources=['src/pysymuvia/symumaster/runner.pyx'],
+    libraries=["SymuMaster"],
+    library_dirs=[os.path.expandvars('$CONDA_PREFIX/lib')],
+    include_dirs=[os.path.expandvars('$CONDA_PREFIX/include/symumaster'), os.path.expandvars('$CONDA_PREFIX/include/symucore')]
+)
+
 
 print('='*70)
 
@@ -91,7 +113,7 @@ if os.path.exists('build'):
 
 setup(
     name="pysymuvia",
-    ext_modules=cythonize([symucore]),
+    ext_modules=cythonize([symucore, symumaster_config, symumaster_runner]),
     packages=find_packages('src'),
     package_dir={'': 'src'},
     zip_safe=False,
