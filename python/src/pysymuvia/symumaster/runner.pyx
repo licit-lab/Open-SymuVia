@@ -10,8 +10,9 @@ from pysymuvia.symumaster.config import PySimulationConfiguration
 cdef class PySimulationRunner:
     cdef SimulationRunner *c_runner
     cdef bool bEnd
-    _conf = None
-    _is_initialize = False
+    cdef public:
+        cdef object _is_initialize
+        cdef object _conf
 
     def __cinit__(self, conf=None):
       self.c_runner = NULL
@@ -28,7 +29,7 @@ cdef class PySimulationRunner:
     def step(self):
       if not self._is_initialize:
         self.init()
-        
+
       if self.bEnd:
         self.bEnd = self.c_runner.RunNextAssignmentPeriod(self.bEnd)
 
@@ -43,5 +44,5 @@ cdef class PySimulationRunner:
       self.c_runner = new SimulationRunner(deref(new_conf))
 
     @property
-    def config(self):
-      return self._config
+    def conf(self):
+      return self._conf

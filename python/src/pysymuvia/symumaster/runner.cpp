@@ -877,6 +877,8 @@ struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner {
   PyObject_HEAD
   SymuMaster::SimulationRunner *c_runner;
   bool bEnd;
+  PyObject *_is_initialize;
+  PyObject *_conf;
 };
 
 
@@ -1019,15 +1021,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObjec
 static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func);
 #else
 #define __Pyx_PyObject_CallNoArg(func) __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL)
-#endif
-
-/* PyObjectSetAttrStr.proto */
-#if CYTHON_USE_TYPE_SLOTS
-#define __Pyx_PyObject_DelAttrStr(o,n) __Pyx_PyObject_SetAttrStr(o, n, NULL)
-static CYTHON_INLINE int __Pyx_PyObject_SetAttrStr(PyObject* obj, PyObject* attr_name, PyObject* value);
-#else
-#define __Pyx_PyObject_DelAttrStr(o,n)   PyObject_DelAttr(o,n)
-#define __Pyx_PyObject_SetAttrStr(o,n,v) PyObject_SetAttr(o,n,v)
 #endif
 
 /* PyThreadStateGet.proto */
@@ -1249,8 +1242,6 @@ static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_UTF_8[] = "UTF-8";
-static const char __pyx_k_conf_2[] = "_conf";
-static const char __pyx_k_config[] = "_config";
 static const char __pyx_k_import[] = "__import__";
 static const char __pyx_k_reduce[] = "__reduce__";
 static const char __pyx_k_getstate[] = "__getstate__";
@@ -1258,7 +1249,6 @@ static const char __pyx_k_setstate[] = "__setstate__";
 static const char __pyx_k_TypeError[] = "TypeError";
 static const char __pyx_k_reduce_ex[] = "__reduce_ex__";
 static const char __pyx_k_setConfig[] = "setConfig";
-static const char __pyx_k_is_initialize[] = "_is_initialize";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
 static const char __pyx_k_PySimulationRunner[] = "PySimulationRunner";
@@ -1273,13 +1263,10 @@ static PyObject *__pyx_n_s_TypeError;
 static PyObject *__pyx_kp_s_UTF_8;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_conf;
-static PyObject *__pyx_n_s_conf_2;
-static PyObject *__pyx_n_s_config;
 static PyObject *__pyx_n_s_getLoadedConfigurationFilePath;
 static PyObject *__pyx_n_s_getstate;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_init;
-static PyObject *__pyx_n_s_is_initialize;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_name;
 static PyObject *__pyx_kp_s_no_default___reduce___due_to_non;
@@ -1297,7 +1284,13 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_4
 static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_6step(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_8init(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_10setConfig(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self, PyObject *__pyx_v_conf); /* proto */
-static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_6config___get__(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_4conf___get__(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14_is_initialize___get__(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self); /* proto */
+static int __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14_is_initialize_2__set__(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14_is_initialize_4__del__(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_5_conf___get__(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self); /* proto */
+static int __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_5_conf_2__set__(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_5_conf_4__del__(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_12__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_tp_new_9pysymuvia_10symumaster_6runner_PySimulationRunner(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
@@ -1305,8 +1298,8 @@ static PyObject *__pyx_tuple_;
 static PyObject *__pyx_tuple__2;
 /* Late includes */
 
-/* "pysymuvia/symumaster/runner.pyx":16
- *     _is_initialize = False
+/* "pysymuvia/symumaster/runner.pyx":17
+ *         cdef object _conf
  * 
  *     def __cinit__(self, conf=None):             # <<<<<<<<<<<<<<
  *       self.c_runner = NULL
@@ -1345,7 +1338,7 @@ static int __pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_1__cini
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(1, 16, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(1, 17, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -1359,7 +1352,7 @@ static int __pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_1__cini
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 16, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 17, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("pysymuvia.symumaster.runner.PySimulationRunner.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -1385,7 +1378,7 @@ static int __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner___cinit
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "pysymuvia/symumaster/runner.pyx":17
+  /* "pysymuvia/symumaster/runner.pyx":18
  * 
  *     def __cinit__(self, conf=None):
  *       self.c_runner = NULL             # <<<<<<<<<<<<<<
@@ -1394,7 +1387,7 @@ static int __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner___cinit
  */
   __pyx_v_self->c_runner = NULL;
 
-  /* "pysymuvia/symumaster/runner.pyx":18
+  /* "pysymuvia/symumaster/runner.pyx":19
  *     def __cinit__(self, conf=None):
  *       self.c_runner = NULL
  *       if conf is not None:             # <<<<<<<<<<<<<<
@@ -1405,14 +1398,14 @@ static int __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner___cinit
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "pysymuvia/symumaster/runner.pyx":19
+    /* "pysymuvia/symumaster/runner.pyx":20
  *       self.c_runner = NULL
  *       if conf is not None:
  *         self.setConfig(conf)             # <<<<<<<<<<<<<<
  * 
  *     def __dealloc__(self):
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_setConfig); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 19, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_setConfig); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 20, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_5 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -1426,12 +1419,12 @@ static int __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner___cinit
     }
     __pyx_t_3 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_v_conf) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_conf);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 19, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 20, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "pysymuvia/symumaster/runner.pyx":18
+    /* "pysymuvia/symumaster/runner.pyx":19
  *     def __cinit__(self, conf=None):
  *       self.c_runner = NULL
  *       if conf is not None:             # <<<<<<<<<<<<<<
@@ -1440,8 +1433,8 @@ static int __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner___cinit
  */
   }
 
-  /* "pysymuvia/symumaster/runner.pyx":16
- *     _is_initialize = False
+  /* "pysymuvia/symumaster/runner.pyx":17
+ *         cdef object _conf
  * 
  *     def __cinit__(self, conf=None):             # <<<<<<<<<<<<<<
  *       self.c_runner = NULL
@@ -1462,7 +1455,7 @@ static int __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner___cinit
   return __pyx_r;
 }
 
-/* "pysymuvia/symumaster/runner.pyx":21
+/* "pysymuvia/symumaster/runner.pyx":22
  *         self.setConfig(conf)
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -1486,7 +1479,7 @@ static void __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_2__dea
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("__dealloc__", 0);
 
-  /* "pysymuvia/symumaster/runner.pyx":22
+  /* "pysymuvia/symumaster/runner.pyx":23
  * 
  *     def __dealloc__(self):
  *       if self.c_runner is not NULL:             # <<<<<<<<<<<<<<
@@ -1496,7 +1489,7 @@ static void __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_2__dea
   __pyx_t_1 = ((__pyx_v_self->c_runner != NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "pysymuvia/symumaster/runner.pyx":23
+    /* "pysymuvia/symumaster/runner.pyx":24
  *     def __dealloc__(self):
  *       if self.c_runner is not NULL:
  *         del self.c_runner             # <<<<<<<<<<<<<<
@@ -1505,7 +1498,7 @@ static void __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_2__dea
  */
     delete __pyx_v_self->c_runner;
 
-    /* "pysymuvia/symumaster/runner.pyx":22
+    /* "pysymuvia/symumaster/runner.pyx":23
  * 
  *     def __dealloc__(self):
  *       if self.c_runner is not NULL:             # <<<<<<<<<<<<<<
@@ -1514,7 +1507,7 @@ static void __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_2__dea
  */
   }
 
-  /* "pysymuvia/symumaster/runner.pyx":21
+  /* "pysymuvia/symumaster/runner.pyx":22
  *         self.setConfig(conf)
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -1526,7 +1519,7 @@ static void __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_2__dea
   __Pyx_RefNannyFinishContext();
 }
 
-/* "pysymuvia/symumaster/runner.pyx":25
+/* "pysymuvia/symumaster/runner.pyx":26
  *         del self.c_runner
  * 
  *     def run(self):             # <<<<<<<<<<<<<<
@@ -1556,7 +1549,7 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_4
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("run", 0);
 
-  /* "pysymuvia/symumaster/runner.pyx":26
+  /* "pysymuvia/symumaster/runner.pyx":27
  * 
  *     def run(self):
  *       return self.c_runner.Run()             # <<<<<<<<<<<<<<
@@ -1564,13 +1557,13 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_4
  *     def step(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_v_self->c_runner->Run()); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 26, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_v_self->c_runner->Run()); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "pysymuvia/symumaster/runner.pyx":25
+  /* "pysymuvia/symumaster/runner.pyx":26
  *         del self.c_runner
  * 
  *     def run(self):             # <<<<<<<<<<<<<<
@@ -1589,7 +1582,7 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_4
   return __pyx_r;
 }
 
-/* "pysymuvia/symumaster/runner.pyx":28
+/* "pysymuvia/symumaster/runner.pyx":29
  *       return self.c_runner.Run()
  * 
  *     def step(self):             # <<<<<<<<<<<<<<
@@ -1613,9 +1606,9 @@ static PyObject *__pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_7
 static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_6step(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
+  int __pyx_t_1;
   int __pyx_t_2;
-  int __pyx_t_3;
+  PyObject *__pyx_t_3 = NULL;
   PyObject *__pyx_t_4 = NULL;
   PyObject *__pyx_t_5 = NULL;
   int __pyx_lineno = 0;
@@ -1623,28 +1616,25 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_6
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("step", 0);
 
-  /* "pysymuvia/symumaster/runner.pyx":29
+  /* "pysymuvia/symumaster/runner.pyx":30
  * 
  *     def step(self):
  *       if not self._is_initialize:             # <<<<<<<<<<<<<<
  *         self.init()
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_is_initialize); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 29, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(1, 29, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = ((!__pyx_t_2) != 0);
-  if (__pyx_t_3) {
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_self->_is_initialize); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(1, 30, __pyx_L1_error)
+  __pyx_t_2 = ((!__pyx_t_1) != 0);
+  if (__pyx_t_2) {
 
-    /* "pysymuvia/symumaster/runner.pyx":30
+    /* "pysymuvia/symumaster/runner.pyx":31
  *     def step(self):
  *       if not self._is_initialize:
  *         self.init()             # <<<<<<<<<<<<<<
  * 
  *       if self.bEnd:
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_init); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 30, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_init); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 31, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_5 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -1656,14 +1646,14 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_6
         __Pyx_DECREF_SET(__pyx_t_4, function);
       }
     }
-    __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
+    __pyx_t_3 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 30, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 31, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "pysymuvia/symumaster/runner.pyx":29
+    /* "pysymuvia/symumaster/runner.pyx":30
  * 
  *     def step(self):
  *       if not self._is_initialize:             # <<<<<<<<<<<<<<
@@ -1672,17 +1662,17 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_6
  */
   }
 
-  /* "pysymuvia/symumaster/runner.pyx":32
+  /* "pysymuvia/symumaster/runner.pyx":33
  *         self.init()
  * 
  *       if self.bEnd:             # <<<<<<<<<<<<<<
  *         self.bEnd = self.c_runner.RunNextAssignmentPeriod(self.bEnd)
  * 
  */
-  __pyx_t_3 = (__pyx_v_self->bEnd != 0);
-  if (__pyx_t_3) {
+  __pyx_t_2 = (__pyx_v_self->bEnd != 0);
+  if (__pyx_t_2) {
 
-    /* "pysymuvia/symumaster/runner.pyx":33
+    /* "pysymuvia/symumaster/runner.pyx":34
  * 
  *       if self.bEnd:
  *         self.bEnd = self.c_runner.RunNextAssignmentPeriod(self.bEnd)             # <<<<<<<<<<<<<<
@@ -1691,7 +1681,7 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_6
  */
     __pyx_v_self->bEnd = __pyx_v_self->c_runner->RunNextAssignmentPeriod(__pyx_v_self->bEnd);
 
-    /* "pysymuvia/symumaster/runner.pyx":32
+    /* "pysymuvia/symumaster/runner.pyx":33
  *         self.init()
  * 
  *       if self.bEnd:             # <<<<<<<<<<<<<<
@@ -1700,7 +1690,7 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_6
  */
   }
 
-  /* "pysymuvia/symumaster/runner.pyx":28
+  /* "pysymuvia/symumaster/runner.pyx":29
  *       return self.c_runner.Run()
  * 
  *     def step(self):             # <<<<<<<<<<<<<<
@@ -1712,7 +1702,7 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_6
   __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_AddTraceback("pysymuvia.symumaster.runner.PySimulationRunner.step", __pyx_clineno, __pyx_lineno, __pyx_filename);
@@ -1723,7 +1713,7 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_6
   return __pyx_r;
 }
 
-/* "pysymuvia/symumaster/runner.pyx":35
+/* "pysymuvia/symumaster/runner.pyx":36
  *         self.bEnd = self.c_runner.RunNextAssignmentPeriod(self.bEnd)
  * 
  *     def init(self):             # <<<<<<<<<<<<<<
@@ -1749,7 +1739,7 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_8
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("init", 0);
 
-  /* "pysymuvia/symumaster/runner.pyx":36
+  /* "pysymuvia/symumaster/runner.pyx":37
  * 
  *     def init(self):
  *       self.bEnd = self.c_runner.Initialize()             # <<<<<<<<<<<<<<
@@ -1758,7 +1748,7 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_8
  */
   __pyx_v_self->bEnd = __pyx_v_self->c_runner->Initialize();
 
-  /* "pysymuvia/symumaster/runner.pyx":35
+  /* "pysymuvia/symumaster/runner.pyx":36
  *         self.bEnd = self.c_runner.RunNextAssignmentPeriod(self.bEnd)
  * 
  *     def init(self):             # <<<<<<<<<<<<<<
@@ -1773,7 +1763,7 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_8
   return __pyx_r;
 }
 
-/* "pysymuvia/symumaster/runner.pyx":38
+/* "pysymuvia/symumaster/runner.pyx":39
  *       self.bEnd = self.c_runner.Initialize()
  * 
  *     def setConfig(self, object conf):             # <<<<<<<<<<<<<<
@@ -1810,16 +1800,20 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_1
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("setConfig", 0);
 
-  /* "pysymuvia/symumaster/runner.pyx":39
+  /* "pysymuvia/symumaster/runner.pyx":40
  * 
  *     def setConfig(self, object conf):
  *       self._conf = conf             # <<<<<<<<<<<<<<
  *       new_conf = new SimulationConfiguration()
  *       filename = conf.getLoadedConfigurationFilePath()
  */
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_conf_2, __pyx_v_conf) < 0) __PYX_ERR(1, 39, __pyx_L1_error)
+  __Pyx_INCREF(__pyx_v_conf);
+  __Pyx_GIVEREF(__pyx_v_conf);
+  __Pyx_GOTREF(__pyx_v_self->_conf);
+  __Pyx_DECREF(__pyx_v_self->_conf);
+  __pyx_v_self->_conf = __pyx_v_conf;
 
-  /* "pysymuvia/symumaster/runner.pyx":40
+  /* "pysymuvia/symumaster/runner.pyx":41
  *     def setConfig(self, object conf):
  *       self._conf = conf
  *       new_conf = new SimulationConfiguration()             # <<<<<<<<<<<<<<
@@ -1830,18 +1824,18 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_1
     __pyx_t_1 = new SymuMaster::SimulationConfiguration();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 40, __pyx_L1_error)
+    __PYX_ERR(1, 41, __pyx_L1_error)
   }
   __pyx_v_new_conf = __pyx_t_1;
 
-  /* "pysymuvia/symumaster/runner.pyx":41
+  /* "pysymuvia/symumaster/runner.pyx":42
  *       self._conf = conf
  *       new_conf = new SimulationConfiguration()
  *       filename = conf.getLoadedConfigurationFilePath()             # <<<<<<<<<<<<<<
  *       new_conf.LoadFromXML(bytes(filename, 'UTF-8'))
  *       self.c_runner = new SimulationRunner(deref(new_conf))
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_conf, __pyx_n_s_getLoadedConfigurationFilePath); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 41, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_conf, __pyx_n_s_getLoadedConfigurationFilePath); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -1855,20 +1849,20 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_1
   }
   __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 41, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_filename = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "pysymuvia/symumaster/runner.pyx":42
+  /* "pysymuvia/symumaster/runner.pyx":43
  *       new_conf = new SimulationConfiguration()
  *       filename = conf.getLoadedConfigurationFilePath()
  *       new_conf.LoadFromXML(bytes(filename, 'UTF-8'))             # <<<<<<<<<<<<<<
  *       self.c_runner = new SimulationRunner(deref(new_conf))
  * 
  */
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 42, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_v_filename);
   __Pyx_GIVEREF(__pyx_v_filename);
@@ -1876,14 +1870,14 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_1
   __Pyx_INCREF(__pyx_kp_s_UTF_8);
   __Pyx_GIVEREF(__pyx_kp_s_UTF_8);
   PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_kp_s_UTF_8);
-  __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)(&PyBytes_Type)), __pyx_t_2, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 42, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)(&PyBytes_Type)), __pyx_t_2, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_5 = __pyx_convert_string_from_py_std__in_string(__pyx_t_3); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 42, __pyx_L1_error)
+  __pyx_t_5 = __pyx_convert_string_from_py_std__in_string(__pyx_t_3); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 43, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   (void)(__pyx_v_new_conf->LoadFromXML(__pyx_t_5));
 
-  /* "pysymuvia/symumaster/runner.pyx":43
+  /* "pysymuvia/symumaster/runner.pyx":44
  *       filename = conf.getLoadedConfigurationFilePath()
  *       new_conf.LoadFromXML(bytes(filename, 'UTF-8'))
  *       self.c_runner = new SimulationRunner(deref(new_conf))             # <<<<<<<<<<<<<<
@@ -1894,11 +1888,11 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_1
     __pyx_t_6 = new SymuMaster::SimulationRunner((*__pyx_v_new_conf));
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 43, __pyx_L1_error)
+    __PYX_ERR(1, 44, __pyx_L1_error)
   }
   __pyx_v_self->c_runner = __pyx_t_6;
 
-  /* "pysymuvia/symumaster/runner.pyx":38
+  /* "pysymuvia/symumaster/runner.pyx":39
  *       self.bEnd = self.c_runner.Initialize()
  * 
  *     def setConfig(self, object conf):             # <<<<<<<<<<<<<<
@@ -1922,61 +1916,241 @@ static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_1
   return __pyx_r;
 }
 
-/* "pysymuvia/symumaster/runner.pyx":46
+/* "pysymuvia/symumaster/runner.pyx":47
  * 
  *     @property
- *     def config(self):             # <<<<<<<<<<<<<<
- *       return self._config
+ *     def conf(self):             # <<<<<<<<<<<<<<
+ *       return self._conf
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_6config_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_6config_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_4conf_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_4conf_1__get__(PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_6config___get__(((struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *)__pyx_v_self));
+  __pyx_r = __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_4conf___get__(((struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_6config___get__(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self) {
+static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_4conf___get__(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "pysymuvia/symumaster/runner.pyx":47
+  /* "pysymuvia/symumaster/runner.pyx":48
  *     @property
- *     def config(self):
- *       return self._config             # <<<<<<<<<<<<<<
+ *     def conf(self):
+ *       return self._conf             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_config); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 47, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
+  __Pyx_INCREF(__pyx_v_self->_conf);
+  __pyx_r = __pyx_v_self->_conf;
   goto __pyx_L0;
 
-  /* "pysymuvia/symumaster/runner.pyx":46
+  /* "pysymuvia/symumaster/runner.pyx":47
  * 
  *     @property
- *     def config(self):             # <<<<<<<<<<<<<<
- *       return self._config
+ *     def conf(self):             # <<<<<<<<<<<<<<
+ *       return self._conf
  */
 
   /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("pysymuvia.symumaster.runner.PySimulationRunner.config.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "pysymuvia/symumaster/runner.pyx":14
+ *     cdef bool bEnd
+ *     cdef public:
+ *         cdef object _is_initialize             # <<<<<<<<<<<<<<
+ *         cdef object _conf
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14_is_initialize_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14_is_initialize_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14_is_initialize___get__(((struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14_is_initialize___get__(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->_is_initialize);
+  __pyx_r = __pyx_v_self->_is_initialize;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14_is_initialize_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14_is_initialize_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14_is_initialize_2__set__(((struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14_is_initialize_2__set__(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_INCREF(__pyx_v_value);
+  __Pyx_GIVEREF(__pyx_v_value);
+  __Pyx_GOTREF(__pyx_v_self->_is_initialize);
+  __Pyx_DECREF(__pyx_v_self->_is_initialize);
+  __pyx_v_self->_is_initialize = __pyx_v_value;
+
+  /* function exit code */
+  __pyx_r = 0;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14_is_initialize_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14_is_initialize_5__del__(PyObject *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14_is_initialize_4__del__(((struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14_is_initialize_4__del__(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__", 0);
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->_is_initialize);
+  __Pyx_DECREF(__pyx_v_self->_is_initialize);
+  __pyx_v_self->_is_initialize = Py_None;
+
+  /* function exit code */
+  __pyx_r = 0;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "pysymuvia/symumaster/runner.pyx":15
+ *     cdef public:
+ *         cdef object _is_initialize
+ *         cdef object _conf             # <<<<<<<<<<<<<<
+ * 
+ *     def __cinit__(self, conf=None):
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_5_conf_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_5_conf_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_5_conf___get__(((struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_5_conf___get__(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->_conf);
+  __pyx_r = __pyx_v_self->_conf;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_5_conf_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_5_conf_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_5_conf_2__set__(((struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_5_conf_2__set__(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_INCREF(__pyx_v_value);
+  __Pyx_GIVEREF(__pyx_v_value);
+  __Pyx_GOTREF(__pyx_v_self->_conf);
+  __Pyx_DECREF(__pyx_v_self->_conf);
+  __pyx_v_self->_conf = __pyx_v_value;
+
+  /* function exit code */
+  __pyx_r = 0;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_5_conf_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_5_conf_5__del__(PyObject *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_5_conf_4__del__(((struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9pysymuvia_10symumaster_6runner_18PySimulationRunner_5_conf_4__del__(struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__", 0);
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->_conf);
+  __Pyx_DECREF(__pyx_v_self->_conf);
+  __pyx_v_self->_conf = Py_None;
+
+  /* function exit code */
+  __pyx_r = 0;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
@@ -2160,6 +2334,7 @@ static std::string __pyx_convert_string_from_py_std__in_string(PyObject *__pyx_v
 }
 
 static PyObject *__pyx_tp_new_9pysymuvia_10symumaster_6runner_PySimulationRunner(PyTypeObject *t, PyObject *a, PyObject *k) {
+  struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *p;
   PyObject *o;
   if (likely((t->tp_flags & Py_TPFLAGS_IS_ABSTRACT) == 0)) {
     o = (*t->tp_alloc)(t, 0);
@@ -2167,6 +2342,9 @@ static PyObject *__pyx_tp_new_9pysymuvia_10symumaster_6runner_PySimulationRunner
     o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
   }
   if (unlikely(!o)) return 0;
+  p = ((struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *)o);
+  p->_is_initialize = Py_None; Py_INCREF(Py_None);
+  p->_conf = Py_None; Py_INCREF(Py_None);
   if (unlikely(__pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_1__cinit__(o, a, k) < 0)) goto bad;
   return o;
   bad:
@@ -2175,11 +2353,13 @@ static PyObject *__pyx_tp_new_9pysymuvia_10symumaster_6runner_PySimulationRunner
 }
 
 static void __pyx_tp_dealloc_9pysymuvia_10symumaster_6runner_PySimulationRunner(PyObject *o) {
+  struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *p = (struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *)o;
   #if CYTHON_USE_TP_FINALIZE
-  if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && (!PyType_IS_GC(Py_TYPE(o)) || !_PyGC_FINALIZED(o))) {
+  if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && !_PyGC_FINALIZED(o)) {
     if (PyObject_CallFinalizerFromDealloc(o)) return;
   }
   #endif
+  PyObject_GC_UnTrack(o);
   {
     PyObject *etype, *eval, *etb;
     PyErr_Fetch(&etype, &eval, &etb);
@@ -2188,11 +2368,63 @@ static void __pyx_tp_dealloc_9pysymuvia_10symumaster_6runner_PySimulationRunner(
     __Pyx_SET_REFCNT(o, Py_REFCNT(o) - 1);
     PyErr_Restore(etype, eval, etb);
   }
+  Py_CLEAR(p->_is_initialize);
+  Py_CLEAR(p->_conf);
   (*Py_TYPE(o)->tp_free)(o);
 }
 
-static PyObject *__pyx_getprop_9pysymuvia_10symumaster_6runner_18PySimulationRunner_config(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_6config_1__get__(o);
+static int __pyx_tp_traverse_9pysymuvia_10symumaster_6runner_PySimulationRunner(PyObject *o, visitproc v, void *a) {
+  int e;
+  struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *p = (struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *)o;
+  if (p->_is_initialize) {
+    e = (*v)(p->_is_initialize, a); if (e) return e;
+  }
+  if (p->_conf) {
+    e = (*v)(p->_conf, a); if (e) return e;
+  }
+  return 0;
+}
+
+static int __pyx_tp_clear_9pysymuvia_10symumaster_6runner_PySimulationRunner(PyObject *o) {
+  PyObject* tmp;
+  struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *p = (struct __pyx_obj_9pysymuvia_10symumaster_6runner_PySimulationRunner *)o;
+  tmp = ((PyObject*)p->_is_initialize);
+  p->_is_initialize = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(tmp);
+  tmp = ((PyObject*)p->_conf);
+  p->_conf = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(tmp);
+  return 0;
+}
+
+static PyObject *__pyx_getprop_9pysymuvia_10symumaster_6runner_18PySimulationRunner_conf(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_4conf_1__get__(o);
+}
+
+static PyObject *__pyx_getprop_9pysymuvia_10symumaster_6runner_18PySimulationRunner__is_initialize(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14_is_initialize_1__get__(o);
+}
+
+static int __pyx_setprop_9pysymuvia_10symumaster_6runner_18PySimulationRunner__is_initialize(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14_is_initialize_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_14_is_initialize_5__del__(o);
+  }
+}
+
+static PyObject *__pyx_getprop_9pysymuvia_10symumaster_6runner_18PySimulationRunner__conf(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_5_conf_1__get__(o);
+}
+
+static int __pyx_setprop_9pysymuvia_10symumaster_6runner_18PySimulationRunner__conf(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_5_conf_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_9pysymuvia_10symumaster_6runner_18PySimulationRunner_5_conf_5__del__(o);
+  }
 }
 
 static PyMethodDef __pyx_methods_9pysymuvia_10symumaster_6runner_PySimulationRunner[] = {
@@ -2206,7 +2438,9 @@ static PyMethodDef __pyx_methods_9pysymuvia_10symumaster_6runner_PySimulationRun
 };
 
 static struct PyGetSetDef __pyx_getsets_9pysymuvia_10symumaster_6runner_PySimulationRunner[] = {
-  {(char *)"config", __pyx_getprop_9pysymuvia_10symumaster_6runner_18PySimulationRunner_config, 0, (char *)0, 0},
+  {(char *)"conf", __pyx_getprop_9pysymuvia_10symumaster_6runner_18PySimulationRunner_conf, 0, (char *)0, 0},
+  {(char *)"_is_initialize", __pyx_getprop_9pysymuvia_10symumaster_6runner_18PySimulationRunner__is_initialize, __pyx_setprop_9pysymuvia_10symumaster_6runner_18PySimulationRunner__is_initialize, (char *)0, 0},
+  {(char *)"_conf", __pyx_getprop_9pysymuvia_10symumaster_6runner_18PySimulationRunner__conf, __pyx_setprop_9pysymuvia_10symumaster_6runner_18PySimulationRunner__conf, (char *)0, 0},
   {0, 0, 0, 0, 0}
 };
 
@@ -2240,10 +2474,10 @@ static PyTypeObject __pyx_type_9pysymuvia_10symumaster_6runner_PySimulationRunne
   0, /*tp_getattro*/
   0, /*tp_setattro*/
   0, /*tp_as_buffer*/
-  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
+  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  0, /*tp_traverse*/
-  0, /*tp_clear*/
+  __pyx_tp_traverse_9pysymuvia_10symumaster_6runner_PySimulationRunner, /*tp_traverse*/
+  __pyx_tp_clear_9pysymuvia_10symumaster_6runner_PySimulationRunner, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -2331,13 +2565,10 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_UTF_8, __pyx_k_UTF_8, sizeof(__pyx_k_UTF_8), 0, 0, 1, 0},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_n_s_conf, __pyx_k_conf, sizeof(__pyx_k_conf), 0, 0, 1, 1},
-  {&__pyx_n_s_conf_2, __pyx_k_conf_2, sizeof(__pyx_k_conf_2), 0, 0, 1, 1},
-  {&__pyx_n_s_config, __pyx_k_config, sizeof(__pyx_k_config), 0, 0, 1, 1},
   {&__pyx_n_s_getLoadedConfigurationFilePath, __pyx_k_getLoadedConfigurationFilePath, sizeof(__pyx_k_getLoadedConfigurationFilePath), 0, 0, 1, 1},
   {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_init, __pyx_k_init, sizeof(__pyx_k_init), 0, 0, 1, 1},
-  {&__pyx_n_s_is_initialize, __pyx_k_is_initialize, sizeof(__pyx_k_is_initialize), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
   {&__pyx_kp_s_no_default___reduce___due_to_non, __pyx_k_no_default___reduce___due_to_non, sizeof(__pyx_k_no_default___reduce___due_to_non), 0, 0, 1, 0},
@@ -2697,26 +2928,6 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_PySimulationConfiguration, __pyx_t_1) < 0) __PYX_ERR(1, 7, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "pysymuvia/symumaster/runner.pyx":13
- *     cdef SimulationRunner *c_runner
- *     cdef bool bEnd
- *     _conf = None             # <<<<<<<<<<<<<<
- *     _is_initialize = False
- * 
- */
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_9pysymuvia_10symumaster_6runner_PySimulationRunner->tp_dict, __pyx_n_s_conf_2, Py_None) < 0) __PYX_ERR(1, 13, __pyx_L1_error)
-  PyType_Modified(__pyx_ptype_9pysymuvia_10symumaster_6runner_PySimulationRunner);
-
-  /* "pysymuvia/symumaster/runner.pyx":14
- *     cdef bool bEnd
- *     _conf = None
- *     _is_initialize = False             # <<<<<<<<<<<<<<
- * 
- *     def __cinit__(self, conf=None):
- */
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_9pysymuvia_10symumaster_6runner_PySimulationRunner->tp_dict, __pyx_n_s_is_initialize, Py_False) < 0) __PYX_ERR(1, 14, __pyx_L1_error)
-  PyType_Modified(__pyx_ptype_9pysymuvia_10symumaster_6runner_PySimulationRunner);
 
   /* "pysymuvia/symumaster/runner.pyx":1
  * # distutils: language = c++             # <<<<<<<<<<<<<<
@@ -3219,20 +3430,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
         }
     }
     return __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL);
-}
-#endif
-
-/* PyObjectSetAttrStr */
-#if CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE int __Pyx_PyObject_SetAttrStr(PyObject* obj, PyObject* attr_name, PyObject* value) {
-    PyTypeObject* tp = Py_TYPE(obj);
-    if (likely(tp->tp_setattro))
-        return tp->tp_setattro(obj, attr_name, value);
-#if PY_MAJOR_VERSION < 3
-    if (likely(tp->tp_setattr))
-        return tp->tp_setattr(obj, PyString_AS_STRING(attr_name), value);
-#endif
-    return PyObject_SetAttr(obj, attr_name, value);
 }
 #endif
 
