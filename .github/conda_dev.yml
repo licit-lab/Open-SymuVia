@@ -3,7 +3,7 @@ name: Conda CI
 on:
   push:
     branches:
-      - master
+      - dev
 
 jobs:
   conda-build:
