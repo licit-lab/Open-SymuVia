@@ -13,10 +13,10 @@ build:
 
 requirements:
   build:
-    - {{ compiler("c") }}  # [linux]
-    - {{ compiler('cxx') }}  # [linux]
+    - {{ compiler('cxx') }}
     - make
     - cmake
+    - python=3.9
   host:
     - boost
     - boost-cpp
@@ -25,7 +25,7 @@ requirements:
     - xqilla=2.3.4
     - rapidjson
     - unixodbc
-
+    - python=3.9
   run:
     - boost
     - boost-cpp
@@ -34,3 +34,4 @@ requirements:
     - xqilla=2.3.4
     - rapidjson
     - unixodbc
+    - python=3.9

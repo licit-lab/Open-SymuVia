@@ -137,12 +137,12 @@ find_package(ODBC REQUIRED)
     endif()
 
 # Python Search
-find_package(Python COMPONENTS Interpreter Development REQUIRED)
+find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 
-    if(Python_FOUND)
-        include_directories(${Python_INCLUDE_DIRS})
+    if(Python3_FOUND)
+        include_directories(${Python3_INCLUDE_DIRS})
         message(STATUS "Python is available")
-        message(STATUS "\t Python library: ${Python_LIBRARIES},\n \t Headers in: ${Python_INCLUDE_DIRS}")
+        message(STATUS "\t Python library: ${Python3_LIBRARIES},\n \t Headers in: ${Python3_INCLUDE_DIRS}")
         message(STATUS "\t Python headers included")
     else()
         message(STATUS "\t Python library is missing")

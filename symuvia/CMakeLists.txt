@@ -170,7 +170,7 @@ target_link_libraries( SymuVia ${XercesC_LIBRARIES})
 target_link_libraries( SymuVia ${ODBC_LIBRARY})
 
 # Python
-target_link_libraries( SymuVia ${Python_LIBRARIES})
+target_link_libraries( SymuVia ${Python3_LIBRARIES})
 
 # Visible
 target_include_directories(SymuVia PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
