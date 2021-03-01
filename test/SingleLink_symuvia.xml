@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ROOT_SYMUBRUIT xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../reseau.xsd" version="2.05">
+    <SIMULATIONS>
+        <SIMULATION id="simID" pasdetemps="1" debut="00:00:00" fin="01:00:00" loipoursuite="exacte" comportementflux="iti" date="1985-01-17" titre="" proc_deceleration="false" seed="1">
+            <RESTITUTION trace_route="false" trajectoires="true" debug="false" debug_matrice_OD="false" debug_SAS="false"/>
+        </SIMULATION>
+    </SIMULATIONS>
+    <TRAFICS>
+        <TRAFIC id="trafID" accbornee="true" coeffrelax="0.55" chgtvoie_ghost="false">
+            <TRONCONS>
+                <TRONCON id="L_0"/>
+            </TRONCONS>
+            <TYPES_DE_VEHICULE>
+                <TYPE_DE_VEHICULE id="VL" w="-5.8823" kx="0.17" vx="25"/>
+                
+            </TYPES_DE_VEHICULE>
+            <EXTREMITES>
+                <EXTREMITE id="O">
+                    <FLUX_TYPEVEHS>
+                        <FLUX_TYPEVEH id_typevehicule="VL">
+                            <FLUX><DEMANDES>
+                                <DEMANDE niveau="0.8"/>
+                            </DEMANDES>
+                                <REP_DESTINATIONS>
+                                    <REP_DESTINATION>
+                                        <DESTINATION sortie="D" coeffOD="1"></DESTINATION>
+                                    </REP_DESTINATION>
+                                </REP_DESTINATIONS>
+                            </FLUX>
+                        </FLUX_TYPEVEH>
+                        
+                    </FLUX_TYPEVEHS>
+                </EXTREMITE>
+                <EXTREMITE id="D"></EXTREMITE>
+            </EXTREMITES>
+            
+            
+        </TRAFIC>
+    </TRAFICS>
+    <RESEAUX>
+        <RESEAU id="resID">
+            <TRONCONS>
+                <TRONCON id="L_0" id_eltamont="O" id_eltaval="D" extremite_amont="0.000000 0.000000" extremite_aval="3000.000000 0.000000" nb_voie="1" largeur_voie="3"/>
+                
+                
+            </TRONCONS>
+            <CONNEXIONS>
+                <EXTREMITES>
+                    <EXTREMITE id="O"/>
+                    <EXTREMITE id="D"/>
+                    
+                </EXTREMITES>
+                <REPARTITEURS>
+                    
+                </REPARTITEURS>
+                <GIRATOIRES/>
+                <CARREFOURSAFEUX/>
+            </CONNEXIONS>
+            <PARAMETRAGE_VEHICULES_GUIDES/>
+        </RESEAU>
+    </RESEAUX>
+    <SCENARIOS>
+        <SCENARIO id="defaultScenario" simulation_id="simID" trafic_id="trafID" reseau_id="resID" dirout="OUT" prefout="defaultOut"/>
+    </SCENARIOS>
+</ROOT_SYMUBRUIT>

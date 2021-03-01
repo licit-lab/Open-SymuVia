@@ -1,25 +1,23 @@
-name: Conda CI
+name: Conda CI develop
 
 on:
   push:
     branches:
       - dev
+      - test_ci
 
 jobs:
   conda-build:
     runs-on: ubuntu-latest
 
     steps:
-      - 
-        name: Checkout 
+      - name: Checkout
         uses: actions/checkout@v2
-      - 
-        name: Set up Python 3.9
+      - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - 
-        name: build
+      - name: build
         run: |
           $CONDA/bin/conda update -n base -c defaults conda
           $CONDA/bin/conda install conda-build anaconda-client conda-verify
@@ -31,16 +29,13 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - 
-        name: Checkout 
+      - name: Checkout
         uses: actions/checkout@v2
-      - 
-        name: Set up Python 3.9
+      - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - 
-        name: build
+      - name: build
         run: |
           $CONDA/bin/conda update -n base -c defaults conda
           $CONDA/bin/conda install conda-build anaconda-client conda-verify

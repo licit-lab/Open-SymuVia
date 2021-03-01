@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ROOT_SYMUMASTER xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../SymuMasterConfig.xsd" version="1.00">
+    <SIMULATION>
+        <DEMAND>
+            <MOTIVES>
+                <MOTIVE id="college"/>
+            </MOTIVES>
+            <POPULATIONS>
+                <POPULATION id="P1">
+                    <MACRO_TYPE>
+                        <VEHICLE_TYPE name="VL"/>
+                    </MACRO_TYPE>
+                    <AVAILABLE_SERVICES>
+                        <AVAILABLE_SERVICE type="driving"/>
+                    </AVAILABLE_SERVICES>
+                    <SUB_POPULATIONS>
+                        <SUB_POPULATION id="sp1" motive="college"/>
+                    </SUB_POPULATIONS>
+                </POPULATION>
+            </POPULATIONS>
+        </DEMAND>
+        <ASSIGNMENT prediction_period="3600" assignment_period="3600">
+            <MSA_DUAL_LOOP sigma_close_shortest_paths="0.1" paths_update_nb_periods="4" paths_update_nb_instants="5" fill_from_previous_assignment_period="true" minimum_swapping_value="1" improvement_dependant_step_size="false" print_affectation="false">
+                <SHORTEST_PATH is_k_shortest_path_initial="false" is_k_shortest_path_iteration="false"/>
+                <OPTIMIZER equilibrium_type="UE" is_logit_initialize="false" is_smart_stepsize="false"/>
+                <MSA_TYPE msa_type="SIMPLE" is_initialization="false"/>
+                <GAP_CONVERGENCE>
+                    <OUTERLOOP_GAP_CONVERGENCE max_outerloop_iterations="1" use_relative_gap_threshold_convergence="false" max_relative_gap_difference_outerloop="0.1" max_gap_threshold_outerloop="3" max_relative_cost_threshold_outerloop="0.1" max_relative_user_violation_outerloop="0.1"/>
+                    <INNERLOOP_GAP_CONVERGENCE max_innerloop_iterations="1" max_relative_gap_difference_innerloop="0.1"/>
+                </GAP_CONVERGENCE>
+            </MSA_DUAL_LOOP>
+        </ASSIGNMENT>
+        <SIMULATORS>
+            <SYMUVIA xml_file_path="test/SingleLink_symuvia.xml"/>
+        </SIMULATORS>
+        <RESTITUTION write_ppath="false"/>
+    </SIMULATION>
+</ROOT_SYMUMASTER>

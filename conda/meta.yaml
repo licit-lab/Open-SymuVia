@@ -35,3 +35,11 @@ requirements:
     - rapidjson
     - unixodbc
     - python=3.9
+
+
+test:
+  source_files:
+    - test/SingleLink_symuvia.xml
+    - test/SingleLink_symumaster.xml
+  commands:
+    - SymuMasterLauncher test/SingleLink_symumaster.xml
