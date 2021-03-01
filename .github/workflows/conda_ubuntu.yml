@@ -24,6 +24,6 @@ jobs:
           mkdir conda-bld
           $CONDA/bin/conda build . -c licit-lab -c conda-forge --output-folder conda-bld/
       - name: push anaconda
-        if: {{ github.ref == 'ref/head/test_ci' }} 
+        if: github.ref == 'refs/heads/test_ci'
         run: |
           $CONDA/bin/anaconda --token=${{ secrets.ANACONDA_TOKEN }} upload conda-bld/osx-64/symupy-* --force --user licit-lab
