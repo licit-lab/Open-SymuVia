@@ -7,14 +7,14 @@ on:
       - test_ci
 
 jobs:
-  conda-build:
+  conda-build-ubuntu:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Python 3.9
-        uses: actions/setup-python@v2
+        uses: s-weigand/setup-conda@v1.0.5
         with:
           python-version: 3.9
       - name: build
