@@ -3185,7 +3185,7 @@ bool MSADualLoop::InitialAffectation(mapBySubPopulationOriginDestination<vector<
                 if(m_mapPredefinedPaths.empty())
                 {
                     map<boost::shared_ptr<ValuetedPath>, vector<Trip*>, CompareValuetedPath>::iterator itMapValueted;
-                    for(itMapValueted=mapValuetedPath.begin(); itMapValueted != mapValuetedPath.end();itMapValueted++)
+                    for(itMapValueted=mapValuetedPath.begin(); itMapValueted != mapValuetedPath.end();)
                     {
                         if(itMapValueted->second.empty())
                             itMapValueted = mapValuetedPath.erase(itMapValueted);
