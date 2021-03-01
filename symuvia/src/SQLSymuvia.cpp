@@ -14,8 +14,7 @@
 
 DBSymuvia::DBSymuvia(void)
 {
-	m_henv = NULL;
-	m_hdbc = NULL;
+
 }
 
 DBSymuvia::~DBSymuvia(void)
@@ -26,40 +25,16 @@ DBSymuvia::~DBSymuvia(void)
 void DBSymuvia::Open(const std::string &sDSNName)
 {
 	m_sDSNName = sDSNName;
-	SQLAllocEnv(&m_henv);
-	SQLAllocConnect(m_henv, &m_hdbc);
-#ifdef WIN32
-	m_rc = SQLConnect(m_hdbc, (SQLWCHAR *)SystemUtil::ToWString(sDSNName).c_str(), SQL_NTS, NULL, 0, NULL, 0);
-#else
-	m_rc = SQLConnect(m_hdbc, (SQLCHAR *)sDSNName.c_str(), SQL_NTS, NULL, 0, NULL, 0);
-#endif
-
-	if (!MYSQLSUCCESS(m_rc))
-	{
-		// Désallouer les handles, et quitter.
-		Close();
-		throw ExceptionSymuvia("Unable to connect to DSN : '" + sDSNName + "'");
-	}
 }
 
 void DBSymuvia::Close()
 {
-	if (m_hdbc)
-	{
-		SQLDisconnect(m_hdbc);
-		SQLFreeHandle(SQL_HANDLE_DBC, m_hdbc);
-		m_hdbc = NULL;
-	}
-	if (m_henv)
-	{
-		SQLFreeHandle(SQL_HANDLE_ENV, m_henv);
-		m_henv = NULL;
-	}
+
 }
 
 SQLSymuvia::SQLSymuvia(void)
 {
-	m_hstmt = NULL;
+	
 }
 
 SQLSymuvia::~SQLSymuvia(void)
@@ -89,87 +64,37 @@ void SQLSymuvia::releaseBuffers()
 // Connexion à la base de données
 void SQLSymuvia::sqlConnect(DBSymuvia &Database)
 {
-	m_rc = SQLAllocStmt(Database.m_hdbc, &m_hstmt);
-	if (!MYSQLSUCCESS(m_rc))
-	{
-		// Désallouer les handles, et quitter.
-		sqlDeconnect();
-		std::ostringstream oss;
-		oss << "Unable to connect to database of DSN : '" << Database.m_sDSNName.c_str() << "'";
-		throw ExceptionSymuvia(oss.str());
-	}
+
 }
 
 // Déconnexion
 void SQLSymuvia::sqlDeconnect()
 {
-	if (m_hstmt)
-	{
-		SQLFreeHandle(SQL_HANDLE_STMT, m_hstmt);
-		m_hstmt = NULL;
-	}
 	releaseBuffers();
 }
 
 // Exécution d'une séquence SQL
 void SQLSymuvia::sqlExecDirect(const char *cmdstr)
 {
-#ifdef WIN32
-	m_rc = SQLExecDirect(m_hstmt, (SQLWCHAR *)SystemUtil::ToWString(cmdstr).c_str(), SQL_NTS);
-#else
-	m_rc = SQLExecDirect(m_hstmt, (SQLCHAR *)cmdstr, SQL_NTS);
-#endif
-	if (!MYSQLSUCCESS(m_rc)) //Error
-	{
-		// Désallouer les handles, et quitter.
-		sqlDeconnect();
 
-		std::ostringstream oss;
-		oss << "Unable to process request : '" << cmdstr << "'";
-
-		throw ExceptionSymuvia(oss.str());
-	}
 }
 
 // Préparation d'une séquence SQL
 void SQLSymuvia::sqlPrepare(const char *cmdstr)
 {
-#ifdef WIN32
-	m_rc = SQLPrepare(m_hstmt, (SQLWCHAR *)SystemUtil::ToWString(cmdstr).c_str(), SQL_NTS);
-#else
-	m_rc = SQLPrepare(m_hstmt, (SQLCHAR *)cmdstr, SQL_NTS);
-#endif
-	if (!MYSQLSUCCESS(m_rc)) //Error
-	{
-		// Désallouer les handles, et quitter.
-		sqlDeconnect();
 
-		std::ostringstream oss;
-		oss << "Unable to prepare request : '" << cmdstr << "'";
-
-		throw ExceptionSymuvia(oss.str());
-	}
 }
 
 // Exécution d'une séquence SQL qui a été préparée
 void SQLSymuvia::sqlExec()
 {
-	m_rc = SQLExecute(m_hstmt);
-	//if (!MYSQLSUCCESS(m_rc))   //Error
-	//{
-	//   //error_out();
-	//   // Deallocate handles and disconnect.
-	//   sqlDeconnect();
 
-	//  throw ExceptionSymuvia("Impossible d'exécuter une requête SQL");
-	//}
 }
 
 // Recherche une ligne de données
 bool SQLSymuvia::sqlFetch()
 {
-	m_rc = SQLFetch(m_hstmt);
-	return MYSQLSUCCESS(m_rc);
+	return false;
 }
 
 void SQLSymuvia::sqlSkipData()
@@ -183,8 +108,7 @@ void SQLSymuvia::sqlSkipData()
 std::string SQLSymuvia::getResultStr(int nCol)
 {
 	char szData[512];
-	SQLLEN cbData;
-	SQLGetData(m_hstmt, nCol + 1, SQL_C_CHAR, szData, sizeof(szData), &cbData);
+
 	std::string sValue = szData;
 	return sValue;
 }
@@ -193,8 +117,7 @@ std::string SQLSymuvia::getResultStr(int nCol)
 double SQLSymuvia::getResultDouble(int nCol)
 {
 	double dValue;
-	SQLLEN cbData;
-	SQLGetData(m_hstmt, nCol + 1, SQL_C_DOUBLE, &dValue, sizeof(dValue), &cbData);
+	
 	return dValue;
 }
 
@@ -202,8 +125,7 @@ double SQLSymuvia::getResultDouble(int nCol)
 long SQLSymuvia::getResultInt(int nCol)
 {
 	long dValue;
-	SQLLEN cbData;
-	SQLGetData(m_hstmt, nCol + 1, SQL_C_SLONG, &dValue, sizeof(dValue), &cbData);
+	
 	return dValue;
 }
 
@@ -215,7 +137,7 @@ void SQLSymuvia::AddParamInt(size_t nCol, long nValue)
 		DataBuffer db;
 		db.typ = DataBuffer::TYP_INT;
 		db.iValue = 0;
-		db.realSize = 0;
+		//db.realSize = 0;
 		m_Buffer.resize(nCol + 1, db);
 	}
 
@@ -230,16 +152,7 @@ void SQLSymuvia::AddParamInt(size_t nCol, long nValue)
 	m_Buffer[nCol].typ = DataBuffer::TYP_INT;
 	m_Buffer[nCol].iValue = nValue;
 
-	SQLBindParameter(m_hstmt,
-					 (SQLUSMALLINT)(nCol + 1),
-					 SQL_PARAM_INPUT,
-					 SQL_C_SLONG,
-					 SQL_INTEGER,
-					 0,
-					 0,
-					 &m_Buffer[nCol].iValue,
-					 0,
-					 nullptr);
+	/* SqlBindParameter */
 }
 
 void SQLSymuvia::AddParamStr(size_t nCol, char *s, int max_size)
@@ -256,7 +169,7 @@ void SQLSymuvia::AddParamStr(size_t nCol, const std::string &s, int max_size)
 		DataBuffer db;
 		db.typ = DataBuffer::TYP_INT;
 		db.iValue = 0;
-		db.realSize = 0;
+		//db.realSize = 0;
 		m_Buffer.resize(nCol + 1, db);
 	}
 
@@ -277,16 +190,6 @@ void SQLSymuvia::AddParamStr(size_t nCol, const std::string &s, int max_size)
 #else
 	strcpy(m_Buffer[nCol].sValue, s.c_str());
 #endif
-	m_Buffer[nCol].realSize = SQL_NTS;
 
-	SQLBindParameter(m_hstmt,
-					 (SQLUSMALLINT)(nCol + 1),
-					 SQL_PARAM_INPUT,
-					 SQL_C_CHAR,
-					 SQL_VARCHAR,
-					 max_size,
-					 0,
-					 m_Buffer[nCol].sValue,
-					 m_Buffer[nCol].size,
-					 nullptr);
+	/* SqlBindParameter */
 }

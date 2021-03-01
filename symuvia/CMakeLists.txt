@@ -166,9 +166,6 @@ target_link_libraries( SymuVia ${XercesC_LIBRARIES})
 # Rapidjson
 #target_link_libraries( SymuVia ${RAPIDJSON_LIBRARY}/${RAPIDJSON_LIBRARY})
 
-# ODBC
-target_link_libraries( SymuVia ${ODBC_LIBRARY})
-
 # Python
 target_link_libraries( SymuVia ${Python3_LIBRARIES})
 

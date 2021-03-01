@@ -1,6 +1,5 @@
 #pragma once
 
-#include <sqlext.h>
 #include <string>
 #include <deque>
 
@@ -32,9 +31,6 @@ public:
 
 public:
 	std::string m_sDSNName;			    // Nom du DSN
-	RETCODE m_rc;						// Code de retour ODBC 
-	HENV m_henv;						// Environment   
-	HDBC m_hdbc;						// Handle de Connection 
 };
 
 //
@@ -55,7 +51,7 @@ typedef struct
 			int size;
 		};
 	};
-	SQLINTEGER realSize;
+	
 } DataBuffer;
 
 //
@@ -68,9 +64,6 @@ public:
 	SQLSymuvia(void);
 	virtual ~SQLSymuvia(void);
 
-	RETCODE m_rc;						// Code de retour ODBC 
-	HSTMT m_hstmt;						// Handle de Statement 
-	SDWORD m_cbData;					// Output length of data
 	std::deque<DataBuffer> m_Buffer;	// Liste des buffers des param�tres
 
 	// Connexion � une base de donn�es
