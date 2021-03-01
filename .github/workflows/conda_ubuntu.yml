@@ -3,8 +3,7 @@ name: Conda CI develop
 on:
   push:
     branches:
-      - dev
-      - test_ci
+      - public
 
 jobs:
   conda-build-ubuntu:

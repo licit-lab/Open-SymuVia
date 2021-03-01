@@ -1,0 +1,51 @@
+name: Conda CI develop
+
+on:
+  push:
+    branches:
+      - dev
+      - public
+      - test_ci
+
+jobs:
+  conda-build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: s-weigand/setup-conda@v1.0.5
+        with:
+          python-version: 3.9
+          update-conda: true
+      - name: build
+        run: |
+          conda install conda-build anaconda-client conda-verify
+          mkdir conda-bld
+          conda build . -c licit-lab -c conda-forge --output-folder conda-bld/
+      - name: push anaconda
+        if: github.ref == 'refs/heads/test_ci'
+        run: |
+          anaconda --token=${{ secrets.ANACONDA_TOKEN }} upload conda-bld/osx-64/symupy-* --force --user licit-lab
+
+  conda-build-ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: s-weigand/setup-conda@v1.0.5
+        with:
+          python-version: 3.9
+          update-conda: true
+      - name: build
+        run: |
+          conda install conda-build anaconda-client conda-verify
+          mkdir conda-bld
+          conda build . -c licit-lab -c conda-forge --output-folder conda-bld/
+      - name: push anaconda
+        if: github.ref == 'refs/heads/test_ci'
+        run: |
+          anaconda --token=${{ secrets.ANACONDA_TOKEN }} upload conda-bld/osx-64/symupy-* --force --user licit-lab
