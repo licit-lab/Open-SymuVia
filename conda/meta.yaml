@@ -13,7 +13,7 @@ build:
 
 requirements:
   build:
-    - {{ compiler('cxx') }}
+    - {{ compiler('cxx') }}  #[linux]
     - make
     - cmake
     - python=3.9
