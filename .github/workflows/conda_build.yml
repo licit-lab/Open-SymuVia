@@ -27,7 +27,7 @@ jobs:
       - name: push anaconda
         if: github.ref == 'refs/heads/test_ci'
         run: |
-          anaconda --token=${{ secrets.ANACONDA_TOKEN }} upload conda-bld/osx-64/symupy-* --force --user licit-lab
+          anaconda --token=${{ secrets.ANACONDA_TOKEN }} upload conda-bld/osx-64/symuvia-* --force --user licit-lab
 
   conda-build-ubuntu:
     runs-on: ubuntu-latest
@@ -48,4 +48,4 @@ jobs:
       - name: push anaconda
         if: github.ref == 'refs/heads/test_ci'
         run: |
-          anaconda --token=${{ secrets.ANACONDA_TOKEN }} upload conda-bld/osx-64/symupy-* --force --user licit-lab
+          anaconda --token=${{ secrets.ANACONDA_TOKEN }} upload conda-bld/osx-64/symuvia-* --force --user licit-lab
