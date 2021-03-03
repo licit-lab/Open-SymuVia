@@ -577,7 +577,7 @@ bool SimulationRunner::RunNextAssignmentPeriod(bool &bEnd)
 						bIsRedoingLastIteration = false;
 
 						if (bOk && (m_iAssignmentPeriodIndex + 1) == m_nbAssignmentPeriod)
-							bOk = m_pTripOutputWritings->WriteUserPaths(m_iAssignmentPeriodIndex, iCurrentPeriodIteration, 0, 
+							bOk = m_pTripOutputWritings->WriteUserPaths(m_iAssignmentPeriodIndex, iCurrentPeriodIteration, 0,
 								m_Simulators.GetSimulationDescriptor().GetStartTime(), startPeriodTime, realAssignmentPeriod, realPredictionPeriod, true); // write final paths for trips
 
 						// write costs and travel times if asked and if not already written
@@ -742,7 +742,7 @@ bool SimulationRunner::AssignAllToShortestPath(const std::vector<SymuCore::Trip*
             }
         }
     }
-    
+
     return true;
 }
 
@@ -767,5 +767,3 @@ bool SimulationRunner::ForbidSymuviaLinks(const std::vector<std::string> & linkN
 	}
 	return bOk;
 }
-
-

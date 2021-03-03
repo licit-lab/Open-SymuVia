@@ -6,6 +6,7 @@
 #include "SymuMasterExports.h"
 
 #include <vector>
+#include <map>
 
 namespace SymuCore {
     class Populations;

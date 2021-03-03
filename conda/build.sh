@@ -20,5 +20,5 @@ cmake .. \
       -DCMAKE_PREFIX_PATH="${PREFIX}" \
       -DPython3_FIND_STRATEGY=LOCATION
 
-# make -j${CPU_COUNT}
+make -j${CPU_COUNT}
 make install

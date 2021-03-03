@@ -161,7 +161,7 @@ TrackedUser * UserEngine::CreateTrackedUserFromTrip(SymuCore::Trip * pTrip) cons
     if (tripPath.GetlistPattern().empty())
     {
         BOOST_LOG_TRIVIAL(error) << "Empty path for trip " << pTrip->GetID() << ", ignoring trip...";
-        //return NULL;
+        return NULL;
     }
 
     PPath * pPPath = NULL;
@@ -173,7 +173,7 @@ TrackedUser * UserEngine::CreateTrackedUserFromTrip(SymuCore::Trip * pTrip) cons
     {
         Pattern * pPattern = tripPath.GetlistPattern().at(iPattern);
 
-        // if a PPath is currently in construction : 
+        // if a PPath is currently in construction :
         if (pPPath)
         {
             // If the pattern is a virtual interface between networks pattern, skip this and the next pattern (both are virtual)
@@ -359,5 +359,3 @@ UserPathWriting * UserEngine::GetUserPathWriter() const
 {
     return m_pUserPathWriter;
 }
-
-
