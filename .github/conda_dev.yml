@@ -1,9 +1,7 @@
 name: Conda CI
 
 on:
-  push:
-    branches:
-      - dev
+  workflow_dispatch
 
 jobs:
   conda-build:
@@ -26,23 +24,23 @@ jobs:
           mkdir conda-bld
           $CONDA/bin/conda build . -c licit-lab -c conda-forge --output-folder conda-bld/
 
-jobs:
-  conda-build:
-    runs-on: macos-latest
+# jobs:
+#   conda-build:
+#     runs-on: macos-latest
 
-    steps:
-      - 
-        name: Checkout 
-        uses: actions/checkout@v2
-      - 
-        name: Set up Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - 
-        name: build
-        run: |
-          $CONDA/bin/conda update -n base -c defaults conda
-          $CONDA/bin/conda install conda-build anaconda-client conda-verify
-          mkdir conda-bld
-          $CONDA/bin/conda build . -c licit-lab -c conda-forge --output-folder conda-bld/
+#     steps:
+#       - 
+#         name: Checkout 
+#         uses: actions/checkout@v2
+#       - 
+#         name: Set up Python 3.9
+#         uses: actions/setup-python@v2
+#         with:
+#           python-version: 3.9
+#       - 
+#         name: build
+#         run: |
+#           $CONDA/bin/conda update -n base -c defaults conda
+#           $CONDA/bin/conda install conda-build anaconda-client conda-verify
+#           mkdir conda-bld
+#           $CONDA/bin/conda build . -c licit-lab -c conda-forge --output-folder conda-bld/
