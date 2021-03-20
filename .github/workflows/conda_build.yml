@@ -1,11 +1,6 @@
 name: Conda CI develop
 
-on:
-  push:
-    branches:
-      - dev
-      - public
-      - test_ci
+on: workflow_dispatch
 
 jobs:
   conda-build-macos:
