@@ -1311,7 +1311,7 @@ bool Reseau::InitSimuTraficMeso()
             {
                 std::vector<Tuyau*> iti;
                 iti.push_back(pVeh->GetLink(0));
-                pVeh->GetTrip()->ChangeRemainingPath(iti, pVeh.get());
+                pVeh->GetTrip()->ChangeCurrentPath(iti, 0);
             }
             else
             {
@@ -1326,7 +1326,7 @@ bool Reseau::InitSimuTraficMeso()
                     std::vector<Tuyau*> newIti;
                     newIti.push_back(pVeh->GetLink(0));
                     newIti.insert(newIti.end(), newPaths.front().links.begin(),newPaths.front().links.end());
-                    pVeh->GetTrip()->ChangeRemainingPath(newIti, pVeh.get());
+                    pVeh->GetTrip()->ChangeCurrentPath(newIti, 0);
                 }
                 else
                 {
