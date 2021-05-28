@@ -350,6 +350,13 @@ boost::shared_ptr<Vehicule> SymuViaTripNode::GenerateVehicle
 )
 {
     boost::shared_ptr<Vehicule> pVehicule;
+
+    // if no path, in passed in pIti, use the predefined one if any, and if we are not in directional coefficient mode
+    // and if m_bDemande == false (ie. typeCreationVehicule == "listeVehicules")
+    if ((pIti == NULL || pIti->empty()) && m_pNetwork->IsUsedODMatrix() && !m_bDemande && !m_lstRouteVehiculeACreer.empty()) {
+        pIti = &m_lstRouteVehiculeACreer;
+    }
+
     Connexion * pConnexion = GetOutputConnexion();
     Tuyau * pOutputLink = NULL;						// output link of trip node of origin
 
@@ -906,6 +913,7 @@ boost::shared_ptr<Vehicule> SymuViaTripNode::GenerateVehicle
 			    m_dbCritCreationVeh = creationVeh.dbInstantCreation;
                 m_pTypeVehiculeACreer = creationVeh.pTypeVehicule;
                 m_nVoieACreer = creationVeh.nVoie-1;
+                m_lstRouteVehiculeACreer = creationVeh.route;
                 m_LstCreationsVehicule.erase(m_LstCreationsVehicule.begin() + iVeh);
             }
         }
@@ -1134,7 +1142,8 @@ void SymuViaTripNode::InitLogMatriceOD
     double dbInstant,
     TypeVehicule * pTV,
     SymuViaTripNode * pDest,
-    int nVoie
+    int nVoie,
+    const std::vector<Tuyau*> & route
 )
 {
     CreationVehicule creationVeh;
@@ -1142,6 +1151,7 @@ void SymuViaTripNode::InitLogMatriceOD
     creationVeh.pTypeVehicule = pTV;
     creationVeh.pDest = pDest;
     creationVeh.nVoie = nVoie;
+    creationVeh.route = route;
     m_LstCreationsVehicule.push_back(creationVeh);
 }
 
@@ -2637,6 +2647,7 @@ void CreationVehicule::serialize(Archive & ar, const unsigned int version)
     ar & BOOST_SERIALIZATION_NVP(pTypeVehicule);
     ar & BOOST_SERIALIZATION_NVP(pDest);
     ar & BOOST_SERIALIZATION_NVP(nVoie);
+    ar & BOOST_SERIALIZATION_NVP(route);
 }
 
 template void RepartitionEntree::serialize(boost::archive::xml_woarchive & ar, const unsigned int version);
@@ -2722,6 +2733,7 @@ void SymuViaTripNode::serialize(Archive & ar, const unsigned int version)
     ar & BOOST_SERIALIZATION_NVP(m_pTypeVehiculeACreer);
     ar & BOOST_SERIALIZATION_NVP(m_pDestinationVehiculeACreer);
     ar & BOOST_SERIALIZATION_NVP(m_nVoieACreer);
+    ar & BOOST_SERIALIZATION_NVP(m_lstRouteVehiculeACreer);
 
     ar & BOOST_SERIALIZATION_NVP(m_lstSortiesStationnement);
 
