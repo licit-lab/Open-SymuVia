@@ -5391,10 +5391,10 @@ int Vehicule::Delete()
 int Vehicule::AlterRoute(const std::vector<Tuyau*> & newIti)
 {
     // Check
-    // OTK - TODO - ca ne va pas pour le SG : on doit pouvoir rerouter un véhicule vers un parking qui n'est pas la destination finale du véhicule.
+    // OTK - ca ne va pas pour le SG : on doit pouvoir rerouter un véhicule vers un parking qui n'est pas la destination finale du véhicule.
     // voir s'il ne faut pas faire plus propre et faire une réaffectation de la destination finale dans ce cas ?
-    //if( GetDestination()->GetInputID() != newIti.back()->GetCnxAssAv()->GetID() )
-    //    return -6;	// The destination is wrong
+    if( GetDestination()->GetInputID() != newIti.back()->GetCnxAssAv()->GetID() )
+        return -6;	// The destination is wrong
 
     if (!GetTrip()->ChangeRemainingPath(newIti, this))
         return -7;

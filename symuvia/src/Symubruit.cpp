@@ -2417,21 +2417,15 @@ SYMUBRUIT_EXPORT char* SYMUBRUIT_CDECL SymGetRemainingPathInfoJSON(int vehicleId
 	return retValue;
 }
 
+
 /// <summary>
 /// Alter route function (for one vehicle)
 /// </summary>
 ///<param name="nIdVeh">Vehicle ID</param>
 ///<param name="dqLinks">Links of route</param>
 ///<returns>0 if succeed else negative </returns>
-SYMUBRUIT_EXPORT int SYMUBRUIT_CDECL SymAlterRoute(int nIdVeh, char*  links[] , int iLength)
+SYMUBRUIT_EXPORT int SYMUBRUIT_CDECL SymAlterRoute(int nIdVeh, std::deque<string> dqLinks)
 {
-    std::deque<string> dqLinks;
-    for( int i = 0; i <iLength; ++i)
-    {
-         string strlinkId = links[i];
-         dqLinks.push_back(strlinkId);
-    }
-
     Reseau* pReseau = theApp.GetNetwork(DEFAULT_NETWORK_ID);    
     // No load network, error output
     if(!pReseau)
@@ -2441,6 +2435,7 @@ SYMUBRUIT_EXPORT int SYMUBRUIT_CDECL SymAlterRoute(int nIdVeh, char*  links[] , 
 
 	return pReseau->AlterRoute(nIdVeh, dqLinks);
 }
+
 
 SYMUBRUIT_EXPORT int SYMUBRUIT_CDECL SymSetRoutes(char* originId, char* destinationId, char* typeVeh, char** links[] , double coeffs[], int iLength)
 {
@@ -4470,6 +4465,19 @@ extern "C"
 		return SymGetTotalTravelDistance(sMFDSensorID);
 	}
 
+    /**
+     * \brief   List of vehicle crossing a MFD sensor  
+     *
+     * \details This function returns the list of vehicles crossing an area defined by a MFD sensor during the previous period
+     *
+     * \note    
+     *
+     * \param[in]     MFDSensorID     ID of the MFD sensor
+     *
+     * \return        A string containing the list of vehicle IDs
+     *
+     */
+
     DECLDIR char* SymGetListofVehicleIdsEx(char* MFDSensorID)
     {
 		std::string sMFDSensorID = std::string(MFDSensorID);
@@ -4553,5 +4561,38 @@ extern "C"
 		std::string strStopID = std::string(StopID);
 
 		return SymGetPTStopDuration(strStopID);
+    }
+
+    /**
+     * \brief   Alter route function 
+     *
+     * \details This function modifies the remaining route of a vehicle
+     *
+     * \note    The first link of the new route must be connected to the current link of the vehicle or the new route and the remaining route must have a common link
+     *
+     * \param[in]     nIVeh     ID of the vehicle to reroute
+     * \param[in]     links     New route (list of links ID)
+     *
+     * \return                  The error return code of the function.
+     *
+     * \retval        0         The function is successfully executed
+     * \retval        -1        No network loaded
+     * \retval        -2        The vehicle doesn't exist
+     * \retval        -3        The new route is empty
+     * \retval        -4        A link of the new route does not belong to the simulated network
+     * \retval        -5        The new route is incorrect (some links are not connected).
+     * \retval        -6        The destination of the new route is diffrerent from the original
+     * \retval        -7        The new route cannot be reached by the vehicle
+     */
+
+    DECLDIR int  SymAlterRouteEx(int nIdVeh, char*  links)
+    {
+        std::deque<std::string> linkNames;
+		std::string slinks = std::string(links);
+
+		linkNames = SystemUtil::split(slinks, ' ');
+
+        return SymAlterRoute(nIdVeh, linkNames);
+
     }
 }
