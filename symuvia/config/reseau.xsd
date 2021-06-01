@@ -3849,6 +3849,11 @@ Le VGP disparaît du réseau après avoir atteint le dernier arrêt de la ligne,
                         <xsd:documentation>Numéro de voie du véhicule à créer</xsd:documentation>
                       </xsd:annotation>
                     </xsd:attribute>
+                    <xsd:attribute name="route" type="xsd:string" use="optional">
+                      <xsd:annotation>
+                        <xsd:documentation>Itinéraire imposé pour le véhicule</xsd:documentation>
+                      </xsd:annotation>
+                    </xsd:attribute>
                   </xsd:complexType>
                 </xsd:element>
               </xsd:sequence>
@@ -5611,6 +5616,12 @@ Le VGP disparaît du réseau après avoir atteint le dernier arrêt de la ligne,
                                       <xsd:annotation>
                                         <xsd:documentation>Destination du véhicule (identifiant de la sortie). Cet attribut doit être obligatoirement présent dans le cas d'une simulation avec un flux de type 'destination' ou 'itineraire'.
 								</xsd:documentation>
+                                      </xsd:annotation>
+                                    </xsd:attribute>
+                                    <xsd:attribute name="route" type="xsd:string"
+                                      use="optional">
+                                      <xsd:annotation>
+                                        <xsd:documentation>Itinéraire imposé pour le véhicule</xsd:documentation>
                                       </xsd:annotation>
                                     </xsd:attribute>
                                   </xsd:complexType>

@@ -1303,15 +1303,15 @@ bool Reseau::InitSimuTraficMeso()
         AddVehicule(pVeh);
         m_nLastVehicleID = max(m_nLastVehicleID, pVeh->GetID()+1);
 
-        // Calcul des itinéraires des véhicules déjà présent sur le réseau à l'instant 0
-        if(IsCptItineraire())
+        // Calcul des itinéraires des véhicules déjà présent sur le réseau à l'instant 0 (pour lesquels on n'a pas d'itinéraire prédéfini)
+        if(IsCptItineraire() && pVeh->GetTrip()->GetFullPath()->size() == 0)
         {
             // Cas particulier origine == destination qui fait boucler à l'infini dijkstra
             if(pVeh->GetLink(0)->GetCnxAssAv() == ((SymuViaTripNode*)pVeh->GetDestination())->GetInputConnexion())
             {
                 std::vector<Tuyau*> iti;
                 iti.push_back(pVeh->GetLink(0));
-                pVeh->GetTrip()->ChangeRemainingPath(iti, pVeh.get());
+                pVeh->GetTrip()->ChangeCurrentPath(iti, 0);
             }
             else
             {
@@ -1326,7 +1326,7 @@ bool Reseau::InitSimuTraficMeso()
                     std::vector<Tuyau*> newIti;
                     newIti.push_back(pVeh->GetLink(0));
                     newIti.insert(newIti.end(), newPaths.front().links.begin(),newPaths.front().links.end());
-                    pVeh->GetTrip()->ChangeRemainingPath(newIti, pVeh.get());
+                    pVeh->GetTrip()->ChangeCurrentPath(newIti, 0);
                 }
                 else
                 {
@@ -11698,7 +11698,7 @@ void Reseau::GenerateAssignmentNetwork()
     {
         DOMNode * pXmlNodeTrajs;
         int nID, nVoie;
-        std::string sTr, sTV, sDestination;
+        std::string sTr, sTV, sDestination, sRoute;
         double dbPos, dbVit, dbAcc;
         SymuViaTripNode *pDestination;
 
@@ -11738,6 +11738,21 @@ void Reseau::GenerateAssignmentNetwork()
 
             // Destination
             GetXmlAttributeValue(xmlNode, "destination", sDestination, &logger);
+
+            // Route
+            GetXmlAttributeValue(xmlNode, "route", sRoute, &logger);
+
+            std::deque<std::string> splittedRoute = SystemUtil::split(sRoute, ' ');
+            std::vector<Tuyau*> route;
+            for (size_t iLink = 0; iLink < splittedRoute.size(); iLink++) {
+                Tuyau * pLink = GetLinkFromLabel(splittedRoute[iLink]);
+                if (!pLink) {
+                    logger << Logger::Error << "ERROR : link " << splittedRoute[iLink] << " not found in some initial vehicle's route !" << std::endl;
+                    logger << Logger::Info; // rebascule en mode INFO pour ne pas avoir à reprendre tous les appels aux log en précisant que c'est des INFO. à supprimer si on reprend tous les appels au log.
+                    return;
+                }
+                route.push_back(pLink);
+            }
 
             // Vérifications de l'intégrité des données
             Tuyau* pT = GetLinkFromLabel(sTr);
@@ -11781,6 +11796,7 @@ void Reseau::GenerateAssignmentNetwork()
                 Trip * pTrip = new Trip();
                 TripLeg * pTripLeg = new TripLeg();
                 pTripLeg->SetDestination(pDestination);
+                pTripLeg->SetPath(route);
                 pTrip->AddTripLeg(pTripLeg);
                 pVehicule->SetTrip(pTrip);
                 pVehicule->MoveToNextLeg();
@@ -12210,7 +12226,22 @@ bool Reseau::LoadCreationRepartitions(SymuViaTripNode * pOrigine, DOMNode *pXMLT
                     {
                         GetXmlAttributeValue(xmlChildj, "instant", dbTmp, pChargement);
                         GetXmlAttributeValue(xmlChildj, "num_voie", nVoie, pChargement);
-                        pOrigine->AddCreationVehicule(dbTmp, pTV, pDst, nVoie);
+
+
+                        std::string sRoute;
+                        GetXmlAttributeValue(xmlChildj, "route", sRoute, pChargement);
+                        std::deque<std::string> splittedRoute = SystemUtil::split(sRoute, ' ');
+                        std::vector<Tuyau*> route;
+                        for (size_t iLink = 0; iLink < splittedRoute.size(); iLink++) {
+                            Tuyau * pLink = GetLinkFromLabel(splittedRoute[iLink]);
+                            if (!pLink) {
+                                *pChargement << Logger::Error << "ERROR : link " << splittedRoute[iLink] << " not found in vehicle's route !" << std::endl;
+                                *pChargement << Logger::Info; // rebascule en mode INFO pour ne pas avoir à reprendre tous les appels aux log en précisant que c'est des INFO. à supprimer si on reprend tous les appels au log.
+                                return false;
+                            }
+                            route.push_back(pLink);
+                        }
+                        pOrigine->AddCreationVehicule(dbTmp, pTV, pDst, nVoie, route);
                     }
                     else
                     {

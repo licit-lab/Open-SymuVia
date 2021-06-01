@@ -39,6 +39,7 @@ public:
     TypeVehicule * pTypeVehicule;
     SymuViaTripNode * pDest;
     int nVoie;
+    std::vector<Tuyau*> route;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Sérialisation
@@ -183,7 +184,7 @@ public:
     std::deque<SymuViaTripNode*>* GetLstDestinations(){return &m_LstDestinations;}
     void AddDestinations(SymuViaTripNode* pDst);
     
-    void AddCreationVehicule(double dbInstant, TypeVehicule * pTV, SymuViaTripNode * pDest, int nVoie);
+    void AddCreationVehicule(double dbInstant, TypeVehicule * pTV, SymuViaTripNode * pDest, int nVoie, const std::vector<Tuyau*> & route);
     
     // Gestion du log de la matrice OD de l'origine
     int                 GetLogMatriceODSize(){return (int)m_LogMatriceOD.size();};
@@ -330,6 +331,7 @@ protected:
     TypeVehicule*                   m_pTypeVehiculeACreer;
     SymuViaTripNode*                m_pDestinationVehiculeACreer;
     int                             m_nVoieACreer;
+    std::vector<Tuyau*>             m_lstRouteVehiculeACreer;
 
     // Liste des variantes des distributions de motifs
     std::map<TypeVehicule*, std::deque<TimeVariation<CRepMotif> > >               m_lstRepMotif;
