@@ -12,13 +12,15 @@
 
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
+#include <map>
+
 namespace SymuCore {
     class MultiLayersGraph;
     class SubPopulation;
 }
 
-#pragma warning( push )  
-#pragma warning( disable : 4251 )  
+#pragma warning( push )
+#pragma warning( disable : 4251 )
 
 namespace SymuMaster {
 
@@ -72,6 +74,6 @@ namespace SymuMaster {
 
 }
 
-#pragma warning( pop ) 
+#pragma warning( pop )
 
 #endif // _SYMUMASTER_SIMULATIONDESCRIPTOR_

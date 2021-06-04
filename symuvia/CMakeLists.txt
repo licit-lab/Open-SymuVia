@@ -174,5 +174,14 @@ target_include_directories(SymuVia PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 # file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/reseau.xsd DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
+add_executable(SymuViaLauncher src/launcher/SymuViaLauncher.cpp)
+
+set_property(TARGET SymuViaLauncher PROPERTY CXX_STANDARD 11)
+set_property(TARGET SymuViaLauncher PROPERTY CXX_STANDARD_REQUIRED)
+
+target_link_libraries(SymuViaLauncher SymuVia)
+target_link_libraries(SymuViaLauncher ${Boost_LIBRARIES})
+
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/reseau.xsd DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 install(TARGETS SymuVia DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+install(TARGETS SymuViaLauncher DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)

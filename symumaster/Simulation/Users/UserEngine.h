@@ -9,6 +9,8 @@
 
 #include <Users/IUserHandler.h>
 
+#include <map>
+
 namespace SymuCore {
     class Populations;
     class Population;

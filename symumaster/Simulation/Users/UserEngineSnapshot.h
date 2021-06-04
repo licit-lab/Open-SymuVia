@@ -8,6 +8,7 @@
 #include "TrackedUser.h"
 
 #include <vector>
+#include <map>
 
 namespace SymuCore {
     class Population;
