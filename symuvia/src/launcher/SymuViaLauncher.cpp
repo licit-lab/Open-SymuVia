@@ -18,6 +18,7 @@ namespace po = boost::program_options;
 
 SYMUBRUIT_EXPORT bool SYMUBRUIT_CDECL SymLoadNetwork(std::string sTmpXmlDataFile, std::string sScenarioID = "", std::string sOutdir = "");
 SYMUBRUIT_EXPORT bool SYMUBRUIT_CDECL SymRunNextStep(std::string &sXmlFluxInstant, bool bTrace, bool &bNEnd);
+SYMUBRUIT_EXPORT int SYMUBRUIT_CDECL SymQuit();
 
 int main(int argc, char* argv[])
 {
@@ -77,6 +78,9 @@ int main(int argc, char* argv[])
         else
             std::cout << "Microscopic simulation completed" << std::endl;
     }
+
+    // Terminate properly
+    SymQuit();
 
     return SUCCESS;  
 }
