@@ -307,6 +307,8 @@ void Reseau::Initialize()
     m_XmlDocSirane = NULL;
     m_CSVOutputWriter = NULL;
     m_pTravelTimesOutputManager = NULL;
+    m_RobustPointsBackupFile = NULL;
+    
 
     m_bSaveAffectation = false;
 
