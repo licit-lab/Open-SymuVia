@@ -3,6 +3,8 @@
 #ifndef _SYMUMASTER_SIMULATIONDESCRIPTOR_
 #define _SYMUMASTER_SIMULATIONDESCRIPTOR_
 
+#include <map>
+
 #include "SymuMasterExports.h"
 
 #include "SimulatorsInterface.h"

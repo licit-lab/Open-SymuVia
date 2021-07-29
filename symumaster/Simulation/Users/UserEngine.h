@@ -3,6 +3,8 @@
 #ifndef _SYMUMASTER_USERENGINE_
 #define _SYMUMASTER_USERENGINE_
 
+#include <map>
+
 #include "SymuMasterExports.h"
 
 #include "TrackedUser.h"
