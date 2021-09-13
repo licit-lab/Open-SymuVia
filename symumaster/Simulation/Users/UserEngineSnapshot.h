@@ -3,6 +3,8 @@
 #ifndef _SYMUMASTER_USERENGINE_SNAPSHOT_
 #define _SYMUMASTER_USERENGINE_SNAPSHOT_
 
+#include <map>
+
 #include "SymuMasterExports.h"
 
 #include "TrackedUser.h"
