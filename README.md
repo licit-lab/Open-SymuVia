@@ -1,5 +1,8 @@
 # Open-SymuVia
 
+**Note**:
+This repository is an archive: For recent relases and more information, please visit: [licit-lab/symuvia](https://github.com/licit-lab/symuvia)
+
 **Open-SymuVia** is an open-source traffic simulator. 
 It compounds of:
 - a dynamic microscopic traffic simulator based on the kinematic wave model with a Lagrangian resolution,
